@@ -21,8 +21,8 @@ def updateData(request):
            "playerName": "Sean Plott",
            "cheatMode": False
          }), {
-           "X-Parse-Application-Id": "",
-           "X-Parse-REST-API-Key": "",
+           "X-Parse-Application-Id": "Tmc3061ld3cqheKXqO7siG17ikGtlBD7L9MJaCpi",
+           "X-Parse-REST-API-Key": "e3LQvCK3xjuXwBDKtsErPbGF1fwZsRMTMUN799FB",
            "Content-Type": "application/json"
          })
     
@@ -34,8 +34,8 @@ def getData(request):
     connection = http.client.HTTPSConnection('api.parse.com', 443)
     connection.connect()
     connection.request('GET', '/1/classes/GameScore/S1Wh1aOR2q', '', {
-           "X-Parse-Application-Id": "",
-           "X-Parse-REST-API-Key": ""
+           "X-Parse-Application-Id": "Tmc3061ld3cqheKXqO7siG17ikGtlBD7L9MJaCpi",
+           "X-Parse-REST-API-Key": "e3LQvCK3xjuXwBDKtsErPbGF1fwZsRMTMUN799FB"
          })
          
     result = json.loads(connection.getresponse().read().decode('utf-8'))
@@ -49,21 +49,26 @@ class ChartView(generic.ListView):
     def get_queryset(self):
         connection = http.client.HTTPSConnection('api.parse.com', 443)
         params = urllib.parse.urlencode({"where":json.dumps({
-        #        "deviceId":"wemo:insight:221443K12004E2",
-               "deviceId":"wemo:insight:221443K1200046",
-               "date":"20151103",
-             })
+                # "deviceId":"wemo:insight:221443K1200252",
+                # "deviceId":"wemo:insight:221443K12004E2",
+              "deviceId":"wemo:insight:221443K1200046",
+               "date":"20151103"
+             }),
+             "limit":720
             })
         
         connection.connect()
         connection.request('GET', '/1/classes/WeMo_Insight_Log?%s' % params, '', {
-               "X-Parse-Application-Id": "",
-               "X-Parse-REST-API-Key": ""
+              "X-Parse-Application-Id": "6599V3t4EzZy6D1UtfjDrFE8rc71TiYvAXowS1fM",
+              "X-Parse-REST-API-Key": "SqF6YfaQTEGHVBGKFI7aQ3wACkqaSUv5IOWdwS1z"
+            #   "X-Parse-Application-Id": "VmAHfBnxs0KLknkCg9mR6GjaRhuBJEvu5lZ00uP1",
+            #   "X-Parse-REST-API-Key": "1MvXdA8xG2toKLiw2iFQiha2hLeqcdHMxIREqart"
              })
         result = json.loads(connection.getresponse().read().decode('utf-8'))
         
         acc = [0]*60
         for ss in result.values():
+            print("size: ", len(ss))
             for s in ss:
                 idx = int(int(s['time'])/60)
                 acc[idx] = acc[idx] + int(s['current_spent_power_mw'])
