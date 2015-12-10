@@ -57,8 +57,6 @@ class ChartView(generic.ListView):
         
         connection.connect()
         connection.request('GET', '/1/classes/WeMo_Insight_Log?%s' % params, '', {
-               "X-Parse-Application-Id": "",
-               "X-Parse-REST-API-Key": ""
              })
         result = json.loads(connection.getresponse().read().decode('utf-8'))
         
