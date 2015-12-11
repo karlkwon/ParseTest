@@ -17,7 +17,9 @@ dataIntf = ParseIntf()
 @api_view(['GET'])
 def getData(request):
     if request.method == 'GET':
-        date_ = request.GET.get('date', 20151103)
+        date_ = request.GET.get('date', '20151103')
+        date_ = int(date_)
+
         deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
 
         data = dataIntf.getHourlyData(deviceId_, date_)
