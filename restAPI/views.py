@@ -7,17 +7,27 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
+from .parseIntf import ParseIntf
+import json
+
 # http://www.django-rest-framework.org/
+
+dataIntf = ParseIntf()
 
 @api_view(['GET'])
 def getData(request):
     if request.method == 'GET':
-        tmp = request.GET['date']
+        date_ = request.GET.get('date', 20151103)
+        deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
+
+        data = dataIntf.getHourlyData(deviceId_, date_)
         
-        if tmp is not None:
+        print(data)
+
+        if data is None:
             return Response({'url':'a', 'username':'b', 'email':'c', 'groups':'d', 'date':tmp})
         else:
-            return Response({'url':'a', 'username':'b', 'email':'c', 'groups':'d'})
+            return Response(data)
 
 
 class UserViewSet(viewsets.ModelViewSet):
