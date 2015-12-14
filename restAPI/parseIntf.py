@@ -25,9 +25,9 @@ class ParseIntf():
         connection.connect()
 
         connection.request('GET', '/1/classes/WeMoInsight?%s' % params, '', {
-              "X-Parse-Application-Id": "",
-              "X-Parse-REST-API-Key": ""
-             })
+            "X-Parse-Application-Id": "",    
+            "X-Parse-REST-API-Key": ""
+            })
         result = json.loads(connection.getresponse().read().decode('utf-8'))
 
         return result
