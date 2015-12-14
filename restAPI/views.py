@@ -22,7 +22,7 @@ def getData(request):
 
         deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
 
-        data = dataIntf.getHourlyData(deviceId_, date_)
+        data = dataIntf.getDailyData(deviceId_, date_)
         
         print(data)
 
@@ -30,6 +30,16 @@ def getData(request):
             return Response({'url':'a', 'username':'b', 'email':'c', 'groups':'d', 'date':tmp})
         else:
             return Response(data)
+
+@api_view(['GET'])
+def getDailyData(request):
+    return getData(request)
+
+@api_view(['GET'])
+def getWeeklyData(request):
+        return Response({'current':{"0":145705,"1":143430,"2":143270,"3":143180,"4":142670,"5":0,"6":0}
+                ,'target':{"0":135705,"1":133430,"2":133270,"3":133180,"4":132670,"5":132955,"6":131980}}
+                )
 
 
 class UserViewSet(viewsets.ModelViewSet):
