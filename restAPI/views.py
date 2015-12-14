@@ -18,11 +18,8 @@ dataIntf = ParseIntf()
 def getData(request):
     if request.method == 'GET':
         date_ = request.GET.get('date', '20151103')
-
         date_ = int(date_)
-
         deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
-
         data = dataIntf.getDailyData(deviceId_, date_)
 
         print(data)
@@ -38,9 +35,17 @@ def getDailyData(request):
 
 @api_view(['GET'])
 def getWeeklyData(request):
-        return Response({'current':{"0":145705,"1":143430,"2":143270,"3":143180,"4":142670,"5":0,"6":0}
-                ,'target':{"0":135705,"1":133430,"2":133270,"3":133180,"4":132670,"5":132955,"6":131980}}
-                )
+    if request.method == 'GET':
+        date_ = request.GET.get('date', '20151110')
+        date_ = int(date_)
+        targetDate_ = request.GET.get('targetDate', '20151108')
+        targetDate_ = int(targetDate_)
+        deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
+        data = dataIntf.getWeeklyData(deviceId_, date_, targetDate_)
+
+        print(data)
+
+        return Response(data)
 
 
 class UserViewSet(viewsets.ModelViewSet):

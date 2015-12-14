@@ -12,25 +12,32 @@ class ParseIntf():
         return
     
     def getDateFromInt(self, date_):
-        return datetime(date_//10000, (date_//100)%100, date_%100)
+        return datetime.date(date_//10000, (date_//100)%100, date_%100)
     
     def getIntFromDate(self, date_):
         return date_.year*10000 + date_.month*100 + date_.day
 
     def getStartDayOfWeek(self, date_):
-        
-        return None
+        weekday = date_.weekday()
+        return date_ - datetime.timedelta(days=(weekday))
 
     def getWeeklyParseData(self, deviceId_, date_current):
         print("PARAMS: ", deviceId_, date_current)
         
-        date_start = self.getDate(date_current, 7)
+        ##  int to date
+        start_date = self.getDateFromInt(date_current)
+        ##  get start date
+        start_date = self.getStartDayOfWeek(start_date)
+        ##  date to int
+        start_date_i = self.getIntFromDate(start_date)
+        
+        print("start_date_i: " , start_date_i, ", date_current: " , date_current)
         
         connection = http.client.HTTPSConnection('api.parse.com', 443)
         params = urllib.parse.urlencode({"where":json.dumps({
                "deviceId":"wemo:insight:221443K12004E2",
                "date":{
-                    "$gte": date_start,
+                    "$gte": start_date_i,
                     "$lte": date_current
                 },
                "time":2359
@@ -62,7 +69,6 @@ class ParseIntf():
             })
         
         connection.connect()
-
         connection.request('GET', '/1/classes/WeMoInsight?%s' % params, '', {
               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
@@ -88,24 +94,39 @@ class ParseIntf():
             
         return ret
 
-    def getWeeklyData(self, deviceId_, date_):
+    def getWeeklyData(self, deviceId_, date_, targetDate_):
+        totalRet = dict()
         
-        self.getWeeklyParseData(deviceId_, date_)
+        result = self.getWeeklyParseData(deviceId_, date_).get('results')
         
-        for i in range(7):
-            print(i)
-        
-        result = self.getParseData(deviceId_, date_, 0).get('results') \
-        + self.getParseData(deviceId_, date_, 1).get('results')
-        
-        acc = [0]*24
-        print("size: ", len(result))
+        acc = [0]*7
         for s in result:
-            idx = int(int(s['time'])/100)
-            acc[idx] = acc[idx] + int(s['current_spent_power_mw'])
+            tmp_date = s.get('date')
+            
+            tmp_date_d = self.getDateFromInt(tmp_date)
+            day_idx = tmp_date_d.weekday()
+            acc[day_idx] = s.get('today_spent_energy_mv')
 
         ret = dict()
-        for i in range(24):
+        for i in range(7):
             ret[i] = acc[i]
             
-        return ret
+        totalRet['current'] = ret
+
+        result = self.getWeeklyParseData(deviceId_, targetDate_).get('results')
+        
+        acc = [0]*7
+        for s in result:
+            tmp_date = s.get('date')
+            
+            tmp_date_d = self.getDateFromInt(tmp_date)
+            day_idx = tmp_date_d.weekday()
+            acc[day_idx] = s.get('today_spent_energy_mv')
+
+        ret = dict()
+        for i in range(7):
+            ret[i] = acc[i]
+
+        totalRet['target'] = ret
+        
+        return totalRet

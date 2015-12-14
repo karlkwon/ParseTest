@@ -5,6 +5,8 @@ from django.views import generic
 
 import json, http.client, urllib
 
+from restAPI.parseIntf import PARSE_APPLICATION_ID, PARSE_REST_KEY_ID
+
 # Create your views here.
 def index(request):
     # return render(request, 'parse/index.html')
@@ -12,35 +14,35 @@ def index(request):
     
     
     
-def updateData(request):
+# def updateData(request):
 
-    connection = http.client.HTTPSConnection('api.parse.com', 443)
-    connection.connect()
-    connection.request('POST', '/1/classes/GameScore', json.dumps({
-           "score": 1337,
-           "playerName": "Sean Plott",
-           "cheatMode": False
-         }), {
-           "X-Parse-Application-Id": "",
-           "X-Parse-REST-API-Key": "",
-           "Content-Type": "application/json"
-         })
+#     connection = http.client.HTTPSConnection('api.parse.com', 443)
+#     connection.connect()
+#     connection.request('POST', '/1/classes/GameScore', json.dumps({
+#           "score": 1337,
+#           "playerName": "Sean Plott",
+#           "cheatMode": False
+#          }), {
+#           "X-Parse-Application-Id": "",
+#           "X-Parse-REST-API-Key": "",
+#           "Content-Type": "application/json"
+#          })
     
-    results = json.loads(connection.getresponse().read().decode('utf-8'))
+#     results = json.loads(connection.getresponse().read().decode('utf-8'))
 
-    return HttpResponse(str(results))
+#     return HttpResponse(str(results))
     
-def getData(request):
-    connection = http.client.HTTPSConnection('api.parse.com', 443)
-    connection.connect()
-    connection.request('GET', '/1/classes/GameScore/S1Wh1aOR2q', '', {
-           "X-Parse-Application-Id": "",
-           "X-Parse-REST-API-Key": ""
-         })
+# def getData(request):
+#     connection = http.client.HTTPSConnection('api.parse.com', 443)
+#     connection.connect()
+#     connection.request('GET', '/1/classes/GameScore/S1Wh1aOR2q', '', {
+#           "X-Parse-Application-Id": "",
+#           "X-Parse-REST-API-Key": ""
+#          })
          
-    result = json.loads(connection.getresponse().read().decode('utf-8'))
+#     result = json.loads(connection.getresponse().read().decode('utf-8'))
 
-    return HttpResponse(str(result))
+#     return HttpResponse(str(result))
 
 class ChartView(generic.ListView):
     template_name = 'parse/index.html'
@@ -62,8 +64,8 @@ class ChartView(generic.ListView):
         connection.connect()
 
         connection.request('GET', '/1/classes/WeMoInsight?%s' % params, '', {
-              "X-Parse-Application-Id": "",
-              "X-Parse-REST-API-Key": ""
+              "X-Parse-Application-Id": PARSE_APPLICATION_ID,
+              "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
              })
         result = json.loads(connection.getresponse().read().decode('utf-8'))
 
