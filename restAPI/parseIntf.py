@@ -35,7 +35,7 @@ class ParseIntf():
         
         connection = http.client.HTTPSConnection('api.parse.com', 443)
         params = urllib.parse.urlencode({"where":json.dumps({
-               "deviceId":"wemo:insight:221443K12004E2",
+               "deviceId":deviceId_,
                "date":{
                     "$gte": start_date_i,
                     "$lte": date_current
