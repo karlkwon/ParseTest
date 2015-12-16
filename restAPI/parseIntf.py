@@ -91,6 +91,7 @@ class ParseIntf():
                   "$lt": ((nth+1)*1200)
                 }
              }),
+             "keys":"time,current_spent_power_mw",
              "limit":720
             })
         
