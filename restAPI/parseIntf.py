@@ -1,8 +1,8 @@
 import json, http.client, urllib
 import datetime, time
  
-PARSE_APPLICATION_ID    = ""
-PARSE_REST_KEY_ID       = ""
+PARSE_APPLICATION_ID    = "6599V3t4EzZy6D1UtfjDrFE8rc71TiYvAXowS1fM"
+PARSE_REST_KEY_ID       = "SqF6YfaQTEGHVBGKFI7aQ3wACkqaSUv5IOWdwS1z"
 
 class ParseIntf():
     def __init__(self):
@@ -20,6 +20,31 @@ class ParseIntf():
     def getStartDayOfWeek(self, date_):
         weekday = date_.weekday()
         return date_ - datetime.timedelta(days=(weekday))
+
+
+    def getLastData(self, deviceId_, date_):
+        print("PARAMS: ", deviceId_, date_)
+        
+        connection = http.client.HTTPSConnection('api.parse.com', 443)
+        params = urllib.parse.urlencode({"where":json.dumps({
+               "deviceId":deviceId_,
+               "date":date_
+             }),
+             "order":"-time",
+             "limit":1
+            })
+        
+        connection.connect()
+        connection.request('GET', '/1/classes/WeMoInsight?%s' % params, '', {
+               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
+               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
+             })
+        result = json.loads(connection.getresponse().read().decode('utf-8'))
+
+        print("getLastData: ", result)
+
+        return result
+
 
     def getWeeklyParseData(self, deviceId_, date_current):
         print("PARAMS: ", deviceId_, date_current)
@@ -53,6 +78,7 @@ class ParseIntf():
 
         return result
 
+
     def getParseData(self, deviceId_, date_, nth):
         print("PARAMS: ", deviceId_, date_)
         
@@ -78,6 +104,7 @@ class ParseIntf():
 
         return result
 
+
     def getDailyData(self, deviceId_, date_):
         result = self.getParseData(deviceId_, date_, 0).get('results') \
         + self.getParseData(deviceId_, date_, 1).get('results')
@@ -97,7 +124,8 @@ class ParseIntf():
     def getWeeklyData(self, deviceId_, date_, targetDate_):
         totalRet = dict()
         
-        result = self.getWeeklyParseData(deviceId_, date_).get('results')
+        result = self.getWeeklyParseData(deviceId_, date_).get('results') \
+        + self.getLastData(deviceId_, date_).get('results')
         
         acc = [0]*7
         for s in result:
