@@ -22,12 +22,7 @@ def getData(request):
         deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
         data = dataIntf.getDailyData(deviceId_, date_)
 
-        print(data)
-
-        if data is None:
-            return Response({'url':'a', 'username':'b', 'email':'c', 'groups':'d', 'date':tmp})
-        else:
-            return Response(data)
+        return Response(data)
 
 @api_view(['GET'])
 def getDailyData(request):
@@ -43,22 +38,20 @@ def getWeeklyData(request):
         deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
         data = dataIntf.getWeeklyData(deviceId_, date_, targetDate_)
 
-        print(data)
-
         return Response(data)
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+# class UserViewSet(viewsets.ModelViewSet):
+#     """
+#     API endpoint that allows users to be viewed or edited.
+#     """
+#     queryset = User.objects.all().order_by('-date_joined')
+#     serializer_class = UserSerializer
 
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+# class GroupViewSet(viewsets.ModelViewSet):
+#     """
+#     API endpoint that allows groups to be viewed or edited.
+#     """
+#     queryset = Group.objects.all()
+#     serializer_class = GroupSerializer
     
