@@ -20,14 +20,14 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from restAPI import views
 
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+# router = routers.DefaultRouter()
+# router.register(r'users', views.UserViewSet)
+# router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
     url(r'^parse/', include('parse.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include(router.urls)),
+    # url(r'^', include(router.urls)),
     url(r'^get', views.getData),
     url(r'^dailyUsage', views.getDailyData),
     url(r'^weeklyUsage', views.getWeeklyData),
