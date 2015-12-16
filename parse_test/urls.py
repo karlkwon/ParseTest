@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     # url(r'^', include(router.urls)),
     url(r'^get', views.getData),
-    url(r'^dailyUsage', views.getDailyData),
-    url(r'^weeklyUsage', views.getWeeklyData),
+    url(r'^dailyUsage', views.getDailyData, name='restDailyUsage'),
+    url(r'^weeklyUsage', views.getWeeklyData, name='restWeeklyUsage'),
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

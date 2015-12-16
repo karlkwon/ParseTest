@@ -394,13 +394,15 @@
         function getUrl() {
             selectedDate = $("input:text").val();  
             console.log("endPoint : " + endPoint + ", selectedDate : " + selectedDate + ", deviceName :" + deviceName);
-            
+
             var url;
             
             if(endPoint== "dailyUsage") {
-                url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
+                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
+                url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
             } else {
-                url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
+                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
+                url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
             }
             
             return url;
