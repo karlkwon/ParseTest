@@ -191,3 +191,26 @@ class ParseIntf():
         totalRet['target'] = ret
         
         return totalRet
+
+    def getDeviceListData(self):
+        connection = http.client.HTTPSConnection('api.parse.com', 443)
+        params = urllib.parse.urlencode({'where':None})
+        
+        connection.connect()
+        connection.request('GET', '/1/classes/AllDeviceList', '', {
+               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
+               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
+             })
+        result = json.loads(connection.getresponse().read().decode('utf-8'))
+        result = result.get('results')
+        
+        if len(result) == 0:
+            return  None
+        
+        print("data: ", result)
+        
+        ret = set()
+        for s in result:
+            ret.add(s['deviceId'])
+        
+        return ret

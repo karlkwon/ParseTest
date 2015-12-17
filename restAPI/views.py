@@ -54,6 +54,15 @@ def getCurrentData(request):
 
         return Response(data)
 
+@api_view(['GET'])
+def getDeviceListData(request):
+    if request.method == 'GET':
+        data = dataIntf.getDeviceListData()
+
+        print(data)
+
+        return Response(data)
+    
 
 # class UserViewSet(viewsets.ModelViewSet):
 #     """

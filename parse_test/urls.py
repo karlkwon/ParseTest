@@ -32,5 +32,6 @@ urlpatterns = [
     url(r'^dailyUsage', views.getDailyData, name='restDailyUsage'),
     url(r'^weeklyUsage', views.getWeeklyData, name='restWeeklyUsage'),
     url(r'^currentUsage', views.getCurrentData, name='restCurrentUsage'),
+    url(r'^deviceList', views.getDeviceListData, name='restDeviceList'),
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
