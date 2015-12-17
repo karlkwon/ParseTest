@@ -22,6 +22,8 @@ def getData(request):
         deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
         data = dataIntf.getDailyData(deviceId_, date_)
 
+        print(data)
+
         return Response(data)
 
 @api_view(['GET'])
@@ -37,6 +39,18 @@ def getWeeklyData(request):
         targetDate_ = int(targetDate_)
         deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
         data = dataIntf.getWeeklyData(deviceId_, date_, targetDate_)
+
+        print(data)
+
+        return Response(data)
+
+@api_view(['GET'])
+def getCurrentData(request):
+    if request.method == 'GET':
+        deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
+        data = dataIntf.getCurrentData(deviceId_)
+
+        print(data)
 
         return Response(data)
 
