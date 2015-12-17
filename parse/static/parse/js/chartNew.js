@@ -520,7 +520,6 @@ function updateChart(ctx,data,config,animation,runanimationcompletefunction) {
 };
 
 function subUpdateChart(ctx,data,config) {
-	console.log(config);
 	// ctx.firstPass==undefined => chart never drawn
 	// ctx.firstPass==0 => chart is drawn but need to be redrawn with animation
 	// ctx.firstPass==1 => chart is drawn with animation 
