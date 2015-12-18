@@ -51,7 +51,7 @@ function tab_disp_canvas(canvas,tpgraph,data,options,firstDisplay){
 			var chart = new Chart(document.getElementById(canvas).getContext("2d")).Pie(data,options);
 			break;
 		case "Doughnut":
-			var chart = new Chart(document.getElementById(canvas).getContext("2d")).Doughtnut(data,options);
+			var chart = new Chart(document.getElementById(canvas).getContext("2d")).Doughnut(data,options);
 			break;
 		case "Radar":
 			var chart = new Chart(document.getElementById(canvas).getContext("2d")).Radar(data,options);
