@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,14 +6,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Bootstrap 3, from LayoutIt!</title>
+    <title>Dashboard Admin Page</title>
 
     <meta name="description" content="Source code generated using layoutit.com">
     <meta name="author" content="LayoutIt!">
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'parse/css/bootstrap.min.css' %}"        rel="stylesheet">
+    
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'parse/js/bootstrap.min.js' %}"></script>
+    
+    <!-- jQuery -->
+    <script src="{% static 'parse/js/jquery.js' %}"></script>
 
+    <script asyn src="{% static 'parse/js/webfont.js' %}"></script>
+	<script src="{% static 'parse/js/Chart.min.js' %}"></script>
     <script>
 		WebFontConfig = {
 			google: 
@@ -20,8 +29,7 @@
 				DrawTheChart(ChartData,ChartOptions,"chart-01","Doughnut")}
 		};
 	</script>
-	<script asyn src="http://charts.livegap.com/js/webfont.js"></script>
-	<script src="http://charts.livegap.com/js/Chart.min.js"></script>
+	
 	<script>
 		function DrawTheChart(ChartData,ChartOptions,ChartId,ChartType){
 			eval('var myLine = new Chart(document.getElementById(ChartId).getContext("2d")).'+ChartType+'(ChartData,ChartOptions);document.getElementById(ChartId).getContext("2d").stroke();')
@@ -319,8 +327,5 @@
 		</div>
 	</div>
 </div>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/scripts.js"></script>
   </body>
 </html>
