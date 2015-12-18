@@ -1,0 +1,331 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dashboard Admin Page</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'parse/css/bootstrap.min.css' %}"        rel="stylesheet">
+    
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'parse/js/bootstrap.min.js' %}"></script>
+    
+    <!-- jQuery -->
+    <script src="{% static 'parse/js/jquery.js' %}"></script>
+
+    <script asyn src="{% static 'parse/js/webfont.js' %}"></script>
+	<script src="{% static 'parse/js/Chart.min.js' %}"></script>
+    <script>
+		WebFontConfig = {
+			google: 
+			{families: ["Open Sans",]},active: function() { 
+				DrawTheChart(ChartData,ChartOptions,"chart-01","Doughnut")}
+		};
+	</script>
+	
+	<script>
+		function DrawTheChart(ChartData,ChartOptions,ChartId,ChartType){
+			eval('var myLine = new Chart(document.getElementById(ChartId).getContext("2d")).'+ChartType+'(ChartData,ChartOptions);document.getElementById(ChartId).getContext("2d").stroke();')
+		}
+	</script>
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<h1>
+					Energy Dashboard<small> - admin page</small>
+				</h1>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Summary
+					</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>
+									#
+								</th>
+								<th>
+									Product
+								</th>
+								<th>
+									Payment Taken
+								</th>
+								<th>
+									Status
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									1
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									01/04/2012
+								</td>
+								<td>
+									Default
+								</td>
+							</tr>
+							<tr class="active">
+								<td>
+									1
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									01/04/2012
+								</td>
+								<td>
+									Approved
+								</td>
+							</tr>
+							<tr class="success">
+								<td>
+									2
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									02/04/2012
+								</td>
+								<td>
+									Declined
+								</td>
+							</tr>
+							<tr class="warning">
+								<td>
+									3
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									03/04/2012
+								</td>
+								<td>
+									Pending
+								</td>
+							</tr>
+							<tr class="danger">
+								<td>
+									4
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									04/04/2012
+								</td>
+								<td>
+									Call in to confirm
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">			
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Statistic Chart
+					</h3>
+				</div>
+				<div class="panel-body">
+					<canvas  id="chart-01" width="700" height="400"></canvas>
+					<script> function MoreChartOptions(){} 
+					var ChartData = [
+					{value :65,color:parent.gradientColor,gradientColors :["rgba(34,127,190,1) 1%","rgba(52,152,219,1) 20%","rgba(52,152,219,1) 80%","rgba(93,173,226,1) 99%",],title:'0 - 5'},
+					{value :8,color:parent.gradientColor,gradientColors :["rgba(36,162,89,1) 1%","rgba(46,204,113,1) 20%","rgba(46,204,113,1) 80%","rgba(85,217,141,1) 99%",],title:'6 - 10'},
+					{value :90,color:parent.gradientColor,gradientColors :["rgba(130,68,155,1) 1%","rgba(155,89,182,1) 20%","rgba(155,89,182,1) 80%","rgba(175,122,197,1) 99%",],title:'11 - 15'},
+					{value :81,color:parent.gradientColor,gradientColors :["rgba(194,158,11,1) 1%","rgba(241,196,15,1) 20%","rgba(241,196,15,1) 80%","rgba(244,208,63,1) 99%",],title:'16 - 20'},
+					{value :56,color:parent.gradientColor,gradientColors :["rgba(176,183,188,1) 1%","rgba(189,195,199,1) 20%","rgba(189,195,199,1) 80%","rgba(202,207,210,1) 99%",],title:'16 - '},];
+
+					ChartOptions= {canvasBackgroundColor:'rgba(255,255,255,1.00)',spaceLeft:12,spaceRight:12,spaceTop:12,spaceBottom:12,canvasBorders:false,canvasBordersWidth:1,canvasBordersStyle:"solid",canvasBordersColor:"rgba(0,0,0,1)",scaleLabel:"<%=value+''%>",yAxisMinimumInterval:1,scaleShowLabels:true,scaleShowLine:true,scaleLineStyle:"solid",scaleLineWidth:1,scaleLineColor:"rgba(0,0,0,0.6)",scaleOverlay :false,scaleOverride :false,scaleSteps:10,scaleStepWidth:10,scaleStartValue:0,inGraphDataShow:true,inGraphDataTmpl:'<%=v2%>',inGraphDataFontFamily:"'Open Sans'",inGraphDataFontStyle:"normal bold",inGraphDataFontColor:"rgba(255,255,255,1.00)",inGraphDataFontSize:12,inGraphDataPaddingX:0,inGraphDataPaddingY:-5,inGraphDataAlign:"center",inGraphDataVAlign:"top",inGraphDataXPosition:2,inGraphDataYPosition:3,inGraphDataAnglePosition:2,inGraphDataRadiusPosition:2,inGraphDataRotate:0,inGraphDataPaddingAngle:0,inGraphDataPaddingRadius:0, inGraphDataBorders:false,inGraphDataBordersXSpace:1,inGraphDataBordersYSpace:1,inGraphDataBordersWidth:1,inGraphDataBordersStyle:"solid",inGraphDataBordersColor:"rgba(0,0,0,1)",legend:true,maxLegendCols:5,legendBlockSize:15,legendFillColor:'rgba(255,255,255,0.00)',legendColorIndicatorStrokeWidth:1,legendPosX:-2,legendPosY:4,legendXPadding:0,legendYPadding:0,legendBorders:false,legendBordersWidth:1,legendBordersStyle:"solid",legendBordersColors:"rgba(102,102,102,1)",legendBordersSpaceBefore:5,legendBordersSpaceLeft:5,legendBordersSpaceRight:5,legendBordersSpaceAfter:5,legendSpaceBeforeText:5,legendSpaceLeftText:5,legendSpaceRightText:5,legendSpaceAfterText:5,legendSpaceBetweenBoxAndText:5,legendSpaceBetweenTextHorizontal:5,legendSpaceBetweenTextVertical:5,legendFontFamily:"'Open Sans'",legendFontStyle:"normal normal",legendFontColor:"rgba(0,0,0,1)",legendFontSize:15,showYAxisMin:false,rotateLabels:"smart",xAxisBottom:true,yAxisLeft:true,yAxisRight:false,graphTitleSpaceBefore:5,graphTitleSpaceAfter:5, graphTitleBorders:false,graphTitleBordersXSpace:1,graphTitleBordersYSpace:1,graphTitleBordersWidth:1,graphTitleBordersStyle:"solid",graphTitleBordersColor:"rgba(0,0,0,1)",graphTitle : "Chart Title",graphTitleFontFamily:"'Open Sans'",graphTitleFontStyle:"normal normal",graphTitleFontColor:"rgba(52,152,219,1)",graphTitleFontSize:26,graphSubTitleSpaceBefore:5,graphSubTitleSpaceAfter:5, graphSubTitleBorders:false,graphSubTitleBordersXSpace:1,graphSubTitleBordersYSpace:1,graphSubTitleBordersWidth:1,graphSubTitleBordersStyle:"solid",graphSubTitleBordersColor:"rgba(0,0,0,1)",graphSubTitle : "Add SubTitle Here",graphSubTitleFontFamily:"'Open Sans'",graphSubTitleFontStyle:"normal normal",graphSubTitleFontColor:"rgba(102,102,102,1)",graphSubTitleFontSize:16,crossText :["Data"],crossTextAlign :["center"],crossTextBaseline :["middle"],crossTextAngle :[0],crossTextFontFamily:["'Open Sans'"],crossTextFontStyle:["normal normal"],crossTextFontColor:["rgba(52,152,219,1)"],crossTextFontSize:[26],crossTextOverlay:[true],crossTextRelativePosX :["2"],crossTextRelativePosY :["2"],crossTextPosX:["0"],crossTextPosY :["0"],scaleFontFamily:"'Open Sans'",scaleFontStyle:"normal normal",scaleFontColor:"rgba(0,0,0,1)",scaleFontSize:12,pointLabelFontFamily:"'Open Sans'",pointLabelFontStyle:"normal normal",pointLabelFontColor:"rgba(102,102,102,1)",pointLabelFontSize:12,angleShowLineOut:true,angleLineStyle:"solid",angleLineWidth:1,angleLineColor:"rgba(0,0,0,0.1)",percentageInnerCutout:50,scaleShowGridLines:true,scaleGridLineStyle:"solid",scaleGridLineWidth:1,scaleGridLineColor:"rgba(0,0,0,0.1)",scaleXGridLinesStep:1,scaleYGridLinesStep:3,segmentShowStroke:true,segmentStrokeStyle:"solid",segmentStrokeWidth:2,segmentStrokeColor:"rgba(255,255,255,1.00)",datasetStroke:true,datasetFill : true,datasetStrokeStyle:"solid",datasetStrokeWidth:2,bezierCurve:true,bezierCurveTension :0.4,pointDotStrokeStyle:"solid",pointDotStrokeWidth : 1,pointDotRadius : 3,pointDot : true,scaleTickSizeBottom:5,scaleTickSizeTop:5,scaleTickSizeLeft:5,scaleTickSizeRight:5,graphMin:0,barShowStroke : false,barBorderRadius:0,barStrokeStyle:"solid",barStrokeWidth:1,barValueSpacing:15,barDatasetSpacing:0,scaleShowLabelBackdrop :true,scaleBackdropColor:'rgba(255,255,255,0.75)',scaleBackdropPaddingX :2,scaleBackdropPaddingY :2,animationEasing:'easeInOutExpo',animateRotate:true,animateScale:false,animationByDataset:false,animationLeftToRight:false,animationSteps:80,animation : true,onAnimationComplete : function(){MoreChartOptions()}};
+
+						DrawTheChart(ChartData,ChartOptions,"chart-01","Doughnut");
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">			
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Clients List
+					</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-4">
+							<form role="form" class="form-inline">
+								<div class="form-group">
+									 
+									<label for="searchClientId">
+										검색 ID : 
+									</label>
+									<input type="email" class="form-control" id="searchClientId">
+									<button type="찾기" class="btn btn-default">
+										Submit
+									</button>
+								</div>
+								
+								
+							</form>						
+						</div>
+						<div class="col-md-4">
+						</div>
+						<div class="col-md-4">							
+						</div>
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>
+									#
+								</th>
+								<th>
+									Product
+								</th>
+								<th>
+									Payment Taken
+								</th>
+								<th>
+									Status
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									1
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									01/04/2012
+								</td>
+								<td>
+									Default
+								</td>
+							</tr>
+							<tr class="active">
+								<td>
+									1
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									01/04/2012
+								</td>
+								<td>
+									Approved
+								</td>
+							</tr>
+							<tr class="success">
+								<td>
+									2
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									02/04/2012
+								</td>
+								<td>
+									Declined
+								</td>
+							</tr>
+							<tr class="warning">
+								<td>
+									3
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									03/04/2012
+								</td>
+								<td>
+									Pending
+								</td>
+							</tr>
+							<tr class="danger">
+								<td>
+									4
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									04/04/2012
+								</td>
+								<td>
+									Call in to confirm
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-footer">
+					<ul class="pagination pagination-sm">
+						<li>
+							<a href="#">Prev</a>
+						</li>
+						<li>
+							<a href="#">1</a>
+						</li>
+						<li>
+							<a href="#">2</a>
+						</li>
+						<li>
+							<a href="#">3</a>
+						</li>
+						<li>
+							<a href="#">4</a>
+						</li>
+						<li>
+							<a href="#">5</a>
+						</li>
+						<li>
+							<a href="#">Next</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+  </body>
+</html>

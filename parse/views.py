@@ -8,9 +8,12 @@ import json, http.client, urllib
 from restAPI.parseIntf import PARSE_APPLICATION_ID, PARSE_REST_KEY_ID
 
 # Create your views here.
-def index(request):
-    # return render(request, 'parse/index.html')
-    return HttpResponse("Hello world !!!")
+class index(generic.ListView):
+    template_name = 'parse/admin_summary.html'
+    context_object_name = 'Data'
+
+    def get_queryset(self):
+        return {'acc': None}
     
 class ChartView(generic.ListView):
     template_name = 'parse/index.html'
