@@ -55,11 +55,11 @@
 </head>
 
 <body> 
-    <div class="spinner-loader" style="position:fixed;top:50%; left:50%; z-index:999;">Loading…</div>
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">WebSiteName</a>
+            <!--font color-->
+          <a class="navbar-brand" href="#">Statistics Overview</a>
         </div>
         <div>
           <ul class="nav navbar-nav">
@@ -73,11 +73,11 @@
     </nav>
     
     <div class="container-fluid">
-        <!-- Page Heading -->
+        <!-- Page Heading 
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
-                    Dashboard <small>Statistics Overview</small>
+                     <small>Statistics Overview</small>
                 </h1>
                 <ol class="breadcrumb">
                     <li class="active">
@@ -100,60 +100,66 @@
         <!-- /.row -->
     
         <div class="row">
-            <div class="col-lg-4 col-md-6">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-comments fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge">26 w</div>
-                                <div>Current Electric Power</div>
+            <div class="col-lg-4 col-md-4">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-10 text-right">
+                                    <div class="huge">26 w</div>
+                                    <div>현재 총사용 전력</div>
+                                </div>
                             </div>
                         </div>
+                        <!-- remove -->
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
                     </div>
-                    <a href="#">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="panel panel-green">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-tasks fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge">12 kWh</div>
-                                <div>Expected monthly electric energy</div>
+            <div class="col-lg-4 col-md-4">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <i class="fa fa-tasks fa-5x"></i>
+                                </div>
+                                <div class="col-xs-10 text-right">
+                                    <div class="huge">12 kWh</div>
+                                    <div>당월 예상 전력량</div>
+                                </div>
                             </div>
                         </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
                     </div>
-                    <a href="#">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-4">
+                <div class="col-lg-8 col-lg-offset-2">
                 <div class="panel panel-yellow">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-xs-3">
+                            <div class="col-xs-2">
                                 <i class="fa fa-shopping-cart fa-5x"></i>
                             </div>
-                            <div class="col-xs-9 text-right">
+                            <div class="col-xs-10 text-right">
                                 <div class="huge">124 won</div>
-                                <div>Expected monthly electric bill</div>
+                                <div>당월 예상 전기세</div>
                             </div>
                         </div>
                     </div>
@@ -165,85 +171,138 @@
                         </div>
                     </a>
                 </div>
+            </div>
             </div>
         </div>
         <!-- /.row -->
         
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Electric Power (per hour)</h3>
-            </div>
-            <div class="panel-body">
-               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#day">Day</a></li>
-                        <li><a data-toggle="tab" href="#menu1">Week</a></li>
-                        <!--<li><button type="button" class="btn btn-success navbar-btn pull-right" onclick="requestData()">request</button></li>-->
-                        <li class="dropdown pull-right">
-                            <a class="dropdown-toggle" href="#" data-toggle="dropdown">Choose Device<strong class="caret"></strong></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#all">All Devices</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#dev1">Device #1</a></li>
-                                <li><a href="#dev2">Device #2</a></li>
-                                <li><a href="#dev3">Device #3</a></li>
-                            </ul>
-                        </li>
-<!--                    <div class="col-sm-3 col-md-3 pull-right" id="myform">
-	                    	<form class="navbar-form" role="search">-->
-	                    	
-		                    <div class="col-lg-2 col-md-2 pull-right input-group input-append date" id="datePicker">
-			                    <input type="text" class="form-control" placeholder="picker test..." id="dateInput" disabled>
-			                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-		                    </div>
-		                    
-		                    <!--		                    </form>
-		                </div>-->
-		                <style> 
-		                    .form-control {
-		                    }
-		                </style>
-                        <!-- dropdown pull-right -->
-                    </ul>
+    <div class="row">
+        <div class="col-lg-6"> <!-- 12 -> 6-->
+            <div class="panel panel-default">
+                <div class="spinner-loader" style="position:fixed; top:50%; left:50%; z-index:999;">Loading…</div>
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> 기간별 전력 사용량</h3>
                 </div>
-                <!-- nav nav-tabs -->
-                        
-                        <div class="tab-content">
-                            <div id="home" class="tab-pane fade in active">
-                            </div>
-                            <div id="menu1" class="tab-pane fade">
-                            </div>
-                        </div>
+                <div class="panel-body ">
                     
-                       <div id = "chart-container">
-                           <canvas id="canvas"></canvas>
-                           <script> 
-                                // var myChart = setCanvas("Line",dataForDay,dayChartOptions);
-                                // setCanvas("Line",dataForDay,dayChartOptions);
-                                // new Chart(document.getElementById("_Tag_Canvas_0").getContext("2d")).Line(dataForWeek,weekChartOptions);
-                                console.log("canvas is drawn");
-                                var myChart =  new Chart(document.getElementById("canvas").getContext("2d")).Line(dataForDay,dayChartOptions);
-                           </script>
-                           
-                       </div>
+                   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#day">Day</a></li>
+                            <li><a data-toggle="tab" href="#menu1">Week</a></li>
+                            <li class="dropdown pull-right">
+                                <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="periodDropdown-toggle">Choose Device<strong class="caret"></strong></a>
+                                <ul class="dropdown-menu" id="periodDropdown-menu">
+                                    <li><a href="#all">All Devices</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#dev1" id="dev1">Device #1</a></li>
+                                    <li><a href="#dev2" id="dev2">Device #2</a></li>
+                                    <li><a href="#dev3" id="dev3">Device #3</a></li>
+                                </ul>
+                            </li>
+    <!--                    <div class="col-sm-3 col-md-3 pull-right" id="myform">
+    	                    	<form class="navbar-form" role="search">-->
+    	                    	
+    		                    <div class="col-lg-2 col-md-2 pull-right input-group input-append date" id="periodDatePicker">
+    			                    <input type="text" class="form-control" placeholder="picker test..." id="dateInput" disabled>
+    			                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    		                    </div>
+    		                    
+    		                    <!--		                    </form>
+    		                </div>-->
+                            <!-- dropdown pull-right -->
+                        </ul>
+                    </div>
+                    <!-- nav nav-tabs -->
+                            
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                </div>
+                                <div id="menu1" class="tab-pane fade">
+                                </div>
+                            </div>
+                        
+                           <div id = "chart-container" >
+                               <canvas id="periodCanvas"></canvas>
+                               <script> 
+                                    // var myChart = setCanvas("Line",dataForDay,dayChartOptions);
+                                    // setCanvas("Line",dataForDay,dayChartOptions);
+                                    // new Chart(document.getElementById("_Tag_Canvas_0").getContext("2d")).Line(dataForWeek,weekChartOptions);
+                                    console.log("canvas is drawn");
+                                    var periodChart =  new Chart(document.getElementById("periodCanvas").getContext("2d")).Line(dayChartData,dayChartOptions);
+                               </script>
+                               
+                           </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+        <!--update chart-->
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> 분당 전력 사용량</h3>
+                </div>
+                <div class="panel-body">
+                   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+                        <ul class="nav nav-tabs">
+                            <li class="dropdown pull-right">
+                                <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="currentDropdown-toggle">Choose Device<strong class="caret"></strong></a>
+                                <ul class="dropdown-menu" id="currentDropdown-menu">
+                                    <li><a href="#all">All Devices</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#dev1" id="dev1">Device #1</a></li>
+                                    <li><a href="#dev2" id="dev2">Device #2</a></li>
+                                    <li><a href="#dev3" id="dev3">Device #3</a></li>
+                                </ul>
+                            </li>
+    <!--                    <div class="col-sm-3 col-md-3 pull-right" id="myform">
+    	                    	<form class="navbar-form" role="search">-->
+    	                    	
+    		                    <div class="col-lg-2 col-md-2 pull-right input-group input-append date" id="updateDatePicker">
+    			                    <input type="text" class="form-control" placeholder="picker test..." id="dateInput" disabled>
+    			                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    		                    </div>
+    		                    
+    		                    <!--		                    </form>
+    		                </div>-->
+                            <!-- dropdown pull-right -->
+                        </ul>
+                    </div>
+                    <!-- nav nav-tabs -->
+                    <div id = "chart-container" >
+                        <canvas id="currentCanvas"></canvas>
+                        <script> 
+                            // var myChart = setCanvas("Line",dataForDay,dayChartOptions);
+                            // setCanvas("Line",dataForDay,dayChartOptions);
+                            // new Chart(document.getElementById("_Tag_Canvas_0").getContext("2d")).Line(dataForWeek,weekChartOptions);
+                            
+                            console.log("currentChart - canvas is drawn");
+                            var currentChart =  new Chart(document.getElementById("currentCanvas").getContext("2d")).Line(updateChartData,updateChartOptions);
+                        </script>
                     </div>
                 </div>
             </div>
         </div>
+        <!--update chart-->
+    </div>
         <!-- /.row -->
     
         <div class="row">
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Donut Chart</h3>
+                        <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Doughnut Chart</h3>
                     </div>
                     <div class="panel-body">
-                        <div id="morris-donut-chart"></div>
-                        <div class="text-right">
-                            <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
+                        <!-- div id="morris-donut-chart"></div>-->
+                        <div id="chart-container">
+                            <div>
+                                <canvas id = "doughnut-canvas"></canvas>
+                                <script>
+                                    var doughnutChart = new Chart(document.getElementById("doughnut-canvas").getContext("2d")).Doughnut(doughnutChartData,doughnutChartOptions);
+                                </script>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -251,7 +310,7 @@
             <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Switch Info.</h3>
+                        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>스위치 정보</h3>
                     </div>
                     <div class="panel-body">
                         <div class="table-responsive">
@@ -259,32 +318,44 @@
                                 <thead>
                                     <tr>
                                         <th>Switch Name</th>
-                                        <th>Current electric power (w)</th>
-                                        <th>Avg. electric power (w)</th>
-                                        <th>Daily Avg. use time</th>
-                                        <th>Expected monthly bill (won)</th>
+                                        <th>Today use time</th>
+                                        <th>Daily avg. <br> use time</th>
+                                        <th>Current electric <br> power (w)</th>
+                                        <th>Avg. electric <br> power (w)</th>
+                                        <th>Daily Avg. <br>use time</th>
+                                        <th>Expected monthly <br> electric energy</th>
+                                        <th>Expected monthly <br> bill (won)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>Bed Room</td>
+                                        <td></td>
+                                        <td></td>
                                         <td>50</td>
                                         <td>150</td>
                                         <td>3h 3m</td>
                                         <td>321.33</td>
+                                        <td>321.33</td>
                                     </tr>
                                     <tr>
                                         <td>Kitchen</td>
+                                        <td></td>
+                                        <td></td>
                                         <td>60</td>
                                         <td>160</td>
                                         <td>1h 1m</td>
                                         <td>234.34</td>
+                                        <td>234.34</td>
                                     </tr>
                                     <tr>
                                         <td>Living Room</td>
+                                        <td></td>
+                                        <td></td>
                                         <td>70</td>
                                         <td>170</td>
                                         <td>1h 1m</td>
+                                        <td>724.17</td>
                                         <td>724.17</td>
                                     </tr>
                                     
@@ -298,172 +369,255 @@
         <!-- /.row -->    
     </div>
     <!-- /.container-fluid -->
+    <!--<script src="{% static 'parse/js/periodChart.js' %}"></script>-->
+    
     <script>
-        var selectedDate = "20151104";
-        var deviceName   = "wemo:insight:221443K1200046";
-        var endPoint     = "dailyUsage";
-        
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            var tabName = $(e.target).attr("href"); // activated tab
-            
-            /*
-            if(myChart == null) {
-                console.log("chart is null");
-            } else {
-               // $('#canvas').remove();
-               // $('#chart-container').append('<canvas id = canvas></canvas>');
-            }
-            */
-            
-            var canvas = document.getElementById("canvas");
-            // canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
-            // canvas.getContext("2d").beginPath();
-            
-            if(tabName == '#day') {
-                console.log("Ddddd");
-                updateChart(canvas.getContext("2d"),dataForDay,dayChartOptions);
-                // new Chart(canvas.getContext("2d")).Line(dataForDay,dayChartOptions);   
-                endPoint = "dailyUsage";
-            } else {
-                console.log("qqqq");
-                updateChart(canvas.getContext("2d"),dataForWeek,weekChartOptions);
-                //new Chart(canvas.getContext("2d")).Line(dataForWeek,weekChartOptions);
-                endPoint = "weeklyUsage";
-            }
-            
-            console.log("tabName : " + tabName + ", endPoint : " + endPoint);
-        });
-        
-        function getDeviceId(e) {
-            var target = $(e.target).attr("href");
-            $(".dropdown-toggle").text(target);
-            
-            if(target == "#all") {
-                //todo
-            } else if(target == "#dev1") {
-                deviceName = "wemo:insight:221443K1200046";
-            } else if(target == "#dev2") {
-                deviceName = "wemo:insight:221443K12004E2";
-            } else if(target == "#dev3") {
-                deviceName = "wemo:insight:221443K1200252";
-            }
-            
-            requestData();
-        }
-        
-        // YYYYMMDD
-        function getToday() {
-            var today = new Date();
-            today =  today.toISOString().slice(0,10).replace(/-/g,"");
-            
-            return today;
-        }
-        
-         function getLastDayOfWeek(date) {
-            console.log("getLastDayOfWeek() date -  "+ date);
-            var cur = new Date();
-            
-            // console.log(Number(date.toString().substring(0,4)));
-            // console.log(Number(date.toString().substring(4,6)) - 1);
-            // console.log(Number(date.toString().substring(6,8)));
-            
-            cur.setYear(Number(date.toString().substring(0,4)) + 1900);
-            cur.setMonth(Number(date.toString().substring(4,6)) - 1);
-            cur.setDate(Number(date.toString().substring(6,8)));
-            
-            // console.log("cur.getDate() - " + cur.getDate());
-            // console.log("cur.getDay() - " + cur.getDay());
-            
-            var firstDay = cur.getDate() - cur.getDay();
-            var lastDay = firstDay + 8;
-            console.log("lastDay : " + lastDay);
-            
-            var result = cur.getYear();
-            if(cur.getMonth() < 10) {
-                result = result + '0'+ (cur.getMonth() + 1);
-            } else {
-                result = result + '' + (cur.getMonth() + 1);
-            }
-            
-            if(lastDay < 10) {
-                result = result + '0'+ lastDay;
-            } else {
-                result = result + '' + lastDay;
-            }
-            
-            return result;
-        }
-        
-        function getUrl() {
-            selectedDate = $("input:text").val();  
-            console.log("endPoint : " + endPoint + ", selectedDate : " + selectedDate + ", deviceName :" + deviceName);
+var selectedDate = "20151104";
+var endPoint     = "dailyUsage";
+var deviceName   ="";
 
-            var url;
-            
-            if(endPoint== "dailyUsage") {
-                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
-                url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
-            } else {
-                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
-                url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var tabName = $(e.target).attr("href"); // activated tab
+    
+    /*
+    if(myChart == null) {
+        console.log("chart is null");
+    } else {
+       // $('#canvas').remove();
+       // $('#chart-container').append('<canvas id = canvas></canvas>');
+    }
+    */
+    
+    var canvas = document.getElementById("periodCanvas");
+    // canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
+    // canvas.getContext("2d").beginPath();
+    console.log("cv : " + canvas ); 
+    
+    if(tabName == '#day') {
+        updateChart(canvas.getContext("2d"),dayChartData,dayChartOptions);
+        // new Chart(canvas.getContext("2d")).Line(dataForDay,dayChartOptions);   
+        endPoint = "dailyUsage";
+    } else {
+        updateChart(canvas.getContext("2d"),weekChartData,weekChartOptions);
+        //new Chart(canvas.getContext("2d")).Line(dataForWeek,weekChartOptions);
+        endPoint = "weeklyUsage";
+    }
+    
+    console.log("tabName : " + tabName + ", endPoint : " + endPoint);
+    requestData();
+});
+
+function getDeviceId(e) {
+    var target = $(e.target).attr("href");
+    //$(".dropdown-toggle").text($(e.target).text());
+    $("#periodDropdown-toggle").text($(e.target).text());
+    
+    deviceName =  $(e.target).text();
+    
+    requestData();
+}
+
+function getToday() {
+    var today = new Date();
+    today =  today.toISOString().slice(0,10).replace(/-/g,"");
+    
+    return today;
+}
+
+ function getLastDayOfWeek(date) {
+    console.log("getLastDayOfWeek() date -  "+ date);
+    var cur = new Date();
+    
+    cur.setYear(Number(date.toString().substring(0,4)) + 1900);
+    cur.setMonth(Number(date.toString().substring(4,6)) - 1);
+    cur.setDate(Number(date.toString().substring(6,8)));
+    
+    var firstDay = cur.getDate() - cur.getDay();
+    var lastDay = firstDay + 8;
+    
+    var result = cur.getYear();
+    if(cur.getMonth() < 10) {
+        result = result + '0'+ (cur.getMonth() + 1);
+    } else {
+        result = result + '' + (cur.getMonth() + 1);
+    }
+    
+    if(lastDay < 10) {
+        result = result + '0'+ lastDay;
+    } else {
+        result = result + '' + lastDay;
+    }
+    
+    return result;
+}
+
+function getUrl() {
+    selectedDate = $("input:text").val();  
+    console.log("endPoint : " + endPoint + ", selectedDate : " + selectedDate + ", deviceName :" + deviceName);
+
+    var url;
+    
+    if(endPoint== "dailyUsage") {
+        // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
+        url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
+    } else {
+        // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
+        url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
+    }
+    
+    return url;
+}
+
+var diff = 10000;
+function intCeil(num) {
+    return Math.ceil((num/diff)) * diff;
+}
+
+function getDeviceList() {
+    var url = "{% url 'restDeviceList' %}";
+    
+    jQuery.ajax({
+        url : url,
+        method: 'GET'
+    }).then(function(data) {
+        var list="";
+        for(var i = 0; i< data.length; i++) {
+            list = list+ " <li><a href='#dev"+(i+1)+"' id='dev"+ (i+1)+"'>"+data[i]+"</a></li>";
+        }
+        
+        document.getElementById('periodDropdown-menu').innerHTML =list;
+        document.getElementById('currentDropdown-menu').innerHTML =list;
+        
+        deviceName = data[0];
+        
+        $(".dropdown-toggle").text(deviceName);
+        //$("#periodDropdown-toggle").text(deviceName);
+        //$("#currentDropdown-toggle").text(deviceName);
+        
+        requestData();
+        requestIntervalData();
+        setInterval(function() {requestIntervalData();},60000);
+    });
+}
+
+function requestIntervalData() {
+    var url = "{% url 'restCurrentUsage' %}" + '?format=json&deviceId='+deviceName;
+    // var url = "https://parse-test-jisungkim.c9users.io/currentUsage?";
+    console.log("requestIntervalData() url : "+ url);
+    
+    jQuery.ajax({
+        url :  url,
+        method: 'GET'
+    }).then(function(data) {
+        console.log("data.time : " + data.time);
+        console.log("data.value : " + data.value);
+        var idx = updateChartData.labels.length;
+        
+        updateChartData.labels[idx] = data.time;
+        updateChartData.datasets[0].data[idx] = data.value;
+        updateChartData.labels.splice(0,1);
+        updateChartData.datasets[0].data.splice(0,1);
+        
+        /*
+        for(var i = 0; i<Object.keys(data).length;i++) {
+            dayChartData.datasets[0].data[i] = data[i];
+        }
+        
+        
+        var minCeil =  intCeil(Math.min.apply(null,dayChartData.datasets[0].data));
+        var maxCeil =  intCeil(Math.max.apply(null,dayChartData.datasets[0].data));
+        
+        dayChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10) + diff;
+        
+        
+        if(minCeil <= 0) {
+            dayChartOptions.scaleStartValue = minCeil;
+        } else {
+            dayChartOptions.scaleStartValue = minCeil-diff;
+        }
+        */
+        
+        updateChart(document.getElementById("currentCanvas").getContext("2d"), updateChartData, updateChartOptions, true, true);
+        
+        // $('.spinner-loader').hide();
+    });
+}
+
+function requestData() {
+    var url = getUrl();
+    console.log("requestData() url : " + url);
+    
+      $('.spinner-loader').show();
+    jQuery.ajax({
+        url : url,
+        method: 'GET'
+    }).then(function(data) {
+        if(endPoint == "dailyUsage") {
+            for(var i = 0; i<Object.keys(data).length;i++) {
+                dayChartData.datasets[0].data[i] = data[i];
             }
             
-            return url;
-        }
-        
-        function requestData() {
-            var url = getUrl();
-            console.log("requestData() url : " + url);
-              $('.spinner-loader').show();
-              
-            jQuery.ajax({
-                url : url,
-                method: 'GET'
-            }).then(function(data) {
-                if(endPoint == "dailyUsage") {
-                    for(var i = 0; i<Object.keys(data).length;i++) {
-                        dataForDay.datasets[0].data[i] = data[i];
-                    }
-                
-                   // dayChartOptions.scaleStepWidth = Math.round((Math.max.apply(null,dataForDay.datasets[0].data) - Math.min.apply(null,dataForDay.datasets[0].data)) / 35);
-                   // dayChartOptions.scaleStartValue = Math.min.apply(null,dataForDay.datasets[0].data);
-                    
-                    updateChart(document.getElementById("canvas").getContext("2d"), dataForDay, dayChartOptions, true, true);
-                } else {
-                    //console.log(Object.keys(Object.keys(data)[0]).length);
-                    //console.log(data.target[6]);
-                    for(var i = 0; i <= Object.keys(Object.keys(data)[0]).length;i++) {
-                        dataForWeek.datasets[0].data[i] = data.current[i];
-                        dataForWeek.datasets[1].data[i] = data.target[i];
-                    }
-                
-                    //weekChartOptions.scaleStepWidth = Math.round((Math.max.apply(null,dataForWeek.datasets[0].data) - Math.min.apply(null,dataForWeek.datasets[0].data)) / 35);
-                    //weekChartOptions.scaleStartValue = Math.min.apply(null,dataForWeek.datasets[0].data);
-                    
-                    updateChart(document.getElementById("canvas").getContext("2d"), dataForWeek, weekChartOptions, true, true);
-                }
-                 $('.spinner-loader').hide();
-            });
-        }
-        
-        $(".dropdown-menu").on("click","li",getDeviceId);
-        
-        $(document).ready(function () {
-            var today = getToday();
+            //console.log("min : " + Math.max.apply(null,dayChartData.datasets[0].data));
+            //console.log("ceil : " + Math.pow(Math.max.apply(null,dataForDay.datasets[0].data),100));
+            //console.log("ceil : " + intCeil(Math.max.apply(null,dayChartData.datasets[0].data)));
+            var minCeil =  intCeil(Math.min.apply(null,dayChartData.datasets[0].data));
+            var maxCeil =  intCeil(Math.max.apply(null,dayChartData.datasets[0].data));
             
-            $('#datePicker').datepicker({
-                format: "yyyymmdd",
-                todayHighlight:true,
-                autoclose:true
-            });  
+            dayChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10) + diff;
+            //dayChartOptions.scaleStartValue = Math.min.apply(null,dataForDay.datasets[0].data);
+            //console.log("minCeil : " + minCeil);
             
-            $('#datePicker').datepicker("setDate", today);
-            $('.form-control').change(function() {
-               requestData();
-            });
-            requestData();
-        });
-      //setRefreshCanvas();
+            if(minCeil <= 0) {
+                dayChartOptions.scaleStartValue = minCeil;
+            } else {
+                dayChartOptions.scaleStartValue = minCeil-diff;
+            }
+            
+            updateChart(document.getElementById("periodCanvas").getContext("2d"), dayChartData, dayChartOptions, true, true);
+        } else {
+            for(var i = 0; i <= Object.keys(Object.keys(data)[0]).length;i++) {
+                weekChartData.datasets[0].data[i] = data.current[i];
+                weekChartData.datasets[1].data[i] = data.target[i];
+            }
+            
+            updateChart(document.getElementById("periodCanvas").getContext("2d"), weekChartData, weekChartOptions, true, true);
+        }
+         $('.spinner-loader').hide();
+    });
+}
+
+$("#periodDropdown-menu").on("click","li",getDeviceId);
+
+$(document).ready(function () {
+    getDeviceList();
+    
+    var today = getToday();
+    
+    $('#periodDatePicker').datepicker({
+        format: "yyyymmdd",
+        todayHighlight:true,
+        autoclose:true
+    });  
+    
+    $('#periodDatePicker').datepicker("setDate", today);
+    
+    $('#updateDatePicker').datepicker({
+        format: "yyyymmdd",
+        todayHighlight:true,
+        autoclose:true
+    });  
+    
+    $('#updateDatePicker').datepicker("setDate", today);
+    
+    $('.form-control').change(function() {
+       requestData();
+    });
+    
+});
+//setRefreshCanvas();
+
+        
+        
     </script>
 </body>
 </html>
