@@ -1,8 +1,8 @@
 import json, http.client, urllib
 import datetime, time
  
-PARSE_APPLICATION_ID    = ""
-PARSE_REST_KEY_ID       = ""
+PARSE_APPLICATION_ID    = "6599V3t4EzZy6D1UtfjDrFE8rc71TiYvAXowS1fM"
+PARSE_REST_KEY_ID       = "SqF6YfaQTEGHVBGKFI7aQ3wACkqaSUv5IOWdwS1z"
 
 class ParseIntf():
     def __init__(self):
@@ -21,6 +21,10 @@ class ParseIntf():
         weekday = date_.weekday()
         return date_ - datetime.timedelta(days=(weekday))
 
+###############################################################################
+##  parse access
+###############################################################################
+
     def getCurrentParseData(self, deviceId_):
         print("PARAMS: ", deviceId_)
         
@@ -28,7 +32,7 @@ class ParseIntf():
         params = urllib.parse.urlencode({"where":json.dumps({
                "deviceId":deviceId_
              }),
-             "order":"-time",
+             "order":"-date,-time",
              "limit":1
             })
         
@@ -127,8 +131,22 @@ class ParseIntf():
 
         return result
 
+    def getParseDeviceList(self):
+        connection = http.client.HTTPSConnection('api.parse.com', 443)
+        params = urllib.parse.urlencode({'where':None})
+        
+        connection.connect()
+        connection.request('GET', '/1/classes/AllDeviceList', '', {
+               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
+               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
+             })
+        result = json.loads(connection.getresponse().read().decode('utf-8'))
 
+        return result
 
+###############################################################################
+##  api...
+###############################################################################
 
     def getCurrentData(self, deviceId_):
         result = self.getCurrentParseData(deviceId_).get('results')
@@ -136,7 +154,10 @@ class ParseIntf():
         if len(result) == 0:
             return None
         
-        return {"date":result[0]['date'], "time":result[0]['time'], "value":result[0]['current_spent_power_mw']}
+        ## need weight function...
+        avg_wh = (result[0]['total_spent_energy_mwmin'] / result[0]['total_accumulated_use_time_sec']) * 3600 / 1000;
+        
+        return {"date":result[0]['date'], "time":result[0]['time'], "value":result[0]['current_spent_power_mw'], "avgWh":avg_wh}
 
     def getDailyData(self, deviceId_, date_):
         result = self.getParseData(deviceId_, date_, 0).get('results') \
@@ -193,15 +214,7 @@ class ParseIntf():
         return totalRet
 
     def getDeviceListData(self):
-        connection = http.client.HTTPSConnection('api.parse.com', 443)
-        params = urllib.parse.urlencode({'where':None})
-        
-        connection.connect()
-        connection.request('GET', '/1/classes/AllDeviceList', '', {
-               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
-               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
-             })
-        result = json.loads(connection.getresponse().read().decode('utf-8'))
+        result = self.getParseDeviceList()
         result = result.get('results')
         
         if len(result) == 0:
