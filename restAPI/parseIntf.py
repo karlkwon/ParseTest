@@ -32,7 +32,7 @@ class ParseIntf():
         params = urllib.parse.urlencode({"where":json.dumps({
                "deviceId":deviceId_
              }),
-             "order":"-time",
+             "order":"-date,-time",
              "limit":1
             })
         
