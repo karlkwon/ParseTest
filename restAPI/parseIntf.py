@@ -1,8 +1,8 @@
 import json, http.client, urllib
 import datetime, time
  
-PARSE_APPLICATION_ID    = "6599V3t4EzZy6D1UtfjDrFE8rc71TiYvAXowS1fM"
-PARSE_REST_KEY_ID       = "SqF6YfaQTEGHVBGKFI7aQ3wACkqaSUv5IOWdwS1z"
+PARSE_APPLICATION_ID    = ""
+PARSE_REST_KEY_ID       = ""
 
 class ParseIntf():
     def __init__(self):
