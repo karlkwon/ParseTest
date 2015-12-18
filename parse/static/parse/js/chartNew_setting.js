@@ -87,7 +87,7 @@ var doughnutChartOptions = {
 };
 
 var updateChartData = {
-    labels : ["-","-","-","-"],
+    labels : ["-","-","-","-","-"],
 	datasets : [
 		{
 		    type:"Line",
@@ -96,7 +96,7 @@ var updateChartData = {
 	        strokeColor : "rgba(151,187,151,1)",
 	        pointColor : "rgba(151,187,151,1)",
 	        pointStrokeColor : "#fff",
-			data: [0,0,0,0]
+			data: [0,0,0,0,0]
 		}
 	]
 };
@@ -195,7 +195,12 @@ var weekChartOptions = {
 
 var updateChartOptions = {
    	responsive : true,
-	bezierCurve : false
+	bezierCurve : false,
+	animation : true,
+	 animationStartWithDataset : 1,
+      animationStartWithData : 1,
+      animationLeftToRight : true,
+      animationByDataset : true
 	/*
       animationStartWithDataset : startWithDataset,
       animationStartWithData : startWithData,

@@ -114,7 +114,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- remove -->
+                        <!-- remove 
                         <a href="#">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
@@ -122,6 +122,7 @@
                                 <div class="clearfix"></div>
                             </div>
                         </a>
+                        -->
                     </div>
                 </div>
             </div>
@@ -139,6 +140,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- remove
                         <a href="#">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
@@ -146,6 +148,7 @@
                                 <div class="clearfix"></div>
                             </div>
                         </a>
+                        -->
                     </div>
                 </div>
             </div>
@@ -163,6 +166,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- remove
                     <a href="#">
                         <div class="panel-footer">
                             <span class="pull-left">View Details</span>
@@ -170,12 +174,15 @@
                             <div class="clearfix"></div>
                         </div>
                     </a>
+                    -->
                 </div>
             </div>
             </div>
         </div>
         <!-- /.row -->
         
+        
+        <!-- test-->
     <div class="row">
         <div class="col-lg-6"> <!-- 12 -> 6-->
             <div class="panel panel-default">
@@ -184,6 +191,68 @@
                     <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> 기간별 전력 사용량</h3>
                 </div>
                 <div class="panel-body ">
+                    
+                    
+                    <div class="row">
+		<div class="col-md-12">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="active">
+							<a data-toggle="tab" href="#day">Day</a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#week">Week</a>
+						</li>
+					</ul>
+				
+				 <!--
+				  <div class="col-lg-2 col-md-2 pull-right input-group input-append date" id="periodDatePicker">
+    			      <input type="text" class="form-control" placeholder="picker test..." id="dateInput" disabled>
+    			      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                  </div>
+				 -->
+    		                    
+					<ul class="nav navbar-nav navbar-right">
+					    <li>
+					       <form class="navbar-form" role="search">
+    		                    <div class="pull-right input-group input-append date" id="periodDatePicker">
+    			                    <input type="text" class="form-control" placeholder="picker test..." id="dateInput" disabled>
+    			                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+    		                    </div>
+    		              </form>
+    		            </li>
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#">Action</a>
+								</li>
+								<li>
+									<a href="#">Another action</a>
+								</li>
+								<li>
+									<a href="#">Something else here</a>
+								</li>
+								<li class="divider">
+								</li>
+								<li>
+									<a href="#">Separated link</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				
+			</nav>
+			
+		</div>
+	</div>	
+	
+	
+	
+	<!-- -->
+                    
                     
                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
                         <ul class="nav nav-tabs">
@@ -258,12 +327,12 @@
                             </li>
     <!--                    <div class="col-sm-3 col-md-3 pull-right" id="myform">
     	                    	<form class="navbar-form" role="search">-->
-    	                    	
+    	                    	<!--
     		                    <div class="col-lg-2 col-md-2 pull-right input-group input-append date" id="updateDatePicker">
     			                    <input type="text" class="form-control" placeholder="picker test..." id="dateInput" disabled>
     			                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
     		                    </div>
-    		                    
+    		                    -->
     		                    <!--		                    </form>
     		                </div>-->
                             <!-- dropdown pull-right -->
@@ -322,7 +391,6 @@
                                         <th>Daily avg. <br> use time</th>
                                         <th>Current electric <br> power (w)</th>
                                         <th>Avg. electric <br> power (w)</th>
-                                        <th>Daily Avg. <br>use time</th>
                                         <th>Expected monthly <br> electric energy</th>
                                         <th>Expected monthly <br> bill (won)</th>
                                     </tr>
@@ -336,7 +404,6 @@
                                         <td>150</td>
                                         <td>3h 3m</td>
                                         <td>321.33</td>
-                                        <td>321.33</td>
                                     </tr>
                                     <tr>
                                         <td>Kitchen</td>
@@ -346,7 +413,6 @@
                                         <td>160</td>
                                         <td>1h 1m</td>
                                         <td>234.34</td>
-                                        <td>234.34</td>
                                     </tr>
                                     <tr>
                                         <td>Living Room</td>
@@ -355,7 +421,6 @@
                                         <td>70</td>
                                         <td>170</td>
                                         <td>1h 1m</td>
-                                        <td>724.17</td>
                                         <td>724.17</td>
                                     </tr>
                                     
@@ -370,7 +435,6 @@
     </div>
     <!-- /.container-fluid -->
     <!--<script src="{% static 'parse/js/periodChart.js' %}"></script>-->
-    
     <script>
 var selectedDate = "20151104";
 var endPoint     = "dailyUsage";
@@ -502,6 +566,8 @@ function getDeviceList() {
 
 function requestIntervalData() {
     var url = "{% url 'restCurrentUsage' %}" + '?format=json&deviceId='+deviceName;
+    // var url = "{% url 'restCurrentUsage' %}" + '?format=json&deviceId=wemo:insight:221443K1200046';
+    
     // var url = "https://parse-test-jisungkim.c9users.io/currentUsage?";
     console.log("requestIntervalData() url : "+ url);
     
@@ -509,11 +575,13 @@ function requestIntervalData() {
         url :  url,
         method: 'GET'
     }).then(function(data) {
-        console.log("data.time : " + data.time);
-        console.log("data.value : " + data.value);
+        console.log(data);
+        
         var idx = updateChartData.labels.length;
         
-        updateChartData.labels[idx] = data.time;
+        var label = data.time.toString().substring(0,2) +":"+data.time.toString().substring(2,4);
+        // console.log("label : " + label);
+        updateChartData.labels[idx] = label;
         updateChartData.datasets[0].data[idx] = data.value;
         updateChartData.labels.splice(0,1);
         updateChartData.datasets[0].data.splice(0,1);
@@ -522,7 +590,6 @@ function requestIntervalData() {
         for(var i = 0; i<Object.keys(data).length;i++) {
             dayChartData.datasets[0].data[i] = data[i];
         }
-        
         
         var minCeil =  intCeil(Math.min.apply(null,dayChartData.datasets[0].data));
         var maxCeil =  intCeil(Math.max.apply(null,dayChartData.datasets[0].data));
