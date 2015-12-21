@@ -263,5 +263,20 @@ class ParseIntf():
     def getGroupInfo(self, groupId):
         ## make device list
         ## make info per group
-        return {"groupId":"A", "numOfDevice":2, "todayPowerConsumption":100, "thisMonthPowerConsumption":100, "Location":"seoul"}
+        return {"groupId":"A", 
+                "numOfDevice":2, 
+                "todayPowerConsumption":100, 
+                "thisMonthPowerConsumption":100, 
+                "Location":"seoul"}
+
+    def getDetailInfoForDevice(self, groupId):
+        return {"GroupId":"A", 
+                "DeviceId":"wemo:insight:221443K1200252", 
+                "TotalUseTime":100, 
+                "DailyAvgUseTime":100, 
+                "CurrentElectricPower":200,
+                "AverageElectricPower":300,
+                "ExpectedMonthlyElectricPower":9000,
+                "ExpectedMonthlyElectricBill":75000,
+                }
 
