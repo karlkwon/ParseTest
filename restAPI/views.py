@@ -74,6 +74,18 @@ def getDetailInfoPerGroup(request):
 
         return Response(data)
     
+@api_view(['GET'])
+def getDetailInfoForDevice(request):
+    if request.method == 'GET':
+        groupId = request.GET.get('groupId', 'A')
+        
+        data = dataIntf.getDetailInfoForDevice(groupId)
+
+        print(data)
+
+        return Response(data)
+
+
 
 # class UserViewSet(viewsets.ModelViewSet):
 #     """
