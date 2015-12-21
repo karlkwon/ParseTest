@@ -29,5 +29,9 @@ class ChartView(generic.ListView):
         # "deviceId":"wemo:insight:221443K1200252",
         # "deviceId":"wemo:insight:221443K12004E2",
         # "deviceId":"wemo:insight:221443K1200046",
+        
+        groupId = self.request.GET.get('groupId', 'A')
 
-        return {'acc': None}
+        print("groupId: ", groupId)
+
+        return {'groupId': groupId}
