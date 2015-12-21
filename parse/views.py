@@ -5,7 +5,9 @@ from django.views import generic
 
 import json, http.client, urllib
 
-from restAPI.parseIntf import PARSE_APPLICATION_ID, PARSE_REST_KEY_ID
+from restAPI.parseIntf import ParseIntf
+
+parseIntf = ParseIntf()
 
 # Create your views here.
 class index(generic.ListView):
@@ -13,7 +15,11 @@ class index(generic.ListView):
     context_object_name = 'Data'
 
     def get_queryset(self):
-        return {'acc': None}
+        devices, groups = parseIntf.getDeviceListData()
+
+        print("ChartView", {'totalNumOfGroup': len(groups), 'totalNumOfDevice': len(devices)})
+
+        return {'totalNumOfGroup': len(groups), 'totalNumOfDevice': len(devices)}
     
 class ChartView(generic.ListView):
     template_name = 'parse/index.html'

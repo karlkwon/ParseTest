@@ -22,7 +22,6 @@ class ParseIntf():
 ###############################################################################
 ##  parse access
 ###############################################################################
-
     def getCurrentParseData(self, deviceId_):
         print("PARAMS: ", deviceId_)
         
@@ -131,7 +130,9 @@ class ParseIntf():
 
     def getParseDeviceList(self):
         connection = http.client.HTTPSConnection('api.parse.com', 443)
-        params = urllib.parse.urlencode({'where':None})
+        params = urllib.parse.urlencode({'where':None,
+            "keys":"deviceId,groupId"
+            })
         
         connection.connect()
         connection.request('GET', '/1/classes/AllDeviceList', '', {
@@ -140,7 +141,17 @@ class ParseIntf():
              })
         result = json.loads(connection.getresponse().read().decode('utf-8'))
 
-        return result
+        tmp_data = result.get('results')
+        groups = set()
+        
+        for d in tmp_data:
+            if d.get('groupId') is None:
+                continue
+            
+            if d['groupId'] not in groups:
+                groups.add(d['groupId'])
+
+        return result, groups
 
 ###############################################################################
 ##  api...
@@ -212,16 +223,14 @@ class ParseIntf():
         return totalRet
 
     def getDeviceListData(self):
-        result = self.getParseDeviceList()
+        result, groups = self.getParseDeviceList()
         result = result.get('results')
         
         if len(result) == 0:
             return  None
         
-        print("data: ", result)
-        
         ret = set()
         for s in result:
             ret.add(s['deviceId'])
         
-        return ret
+        return ret, groups
