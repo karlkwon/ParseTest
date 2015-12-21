@@ -22,7 +22,6 @@ class ParseIntf():
 ###############################################################################
 ##  parse access
 ###############################################################################
-
     def getCurrentParseData(self, deviceId_):
         print("PARAMS: ", deviceId_)
         
@@ -129,9 +128,12 @@ class ParseIntf():
 
         return result
 
+
     def getParseDeviceList(self):
         connection = http.client.HTTPSConnection('api.parse.com', 443)
-        params = urllib.parse.urlencode({'where':None})
+        params = urllib.parse.urlencode({'where':None,
+            "keys":"deviceId,groupId"
+            })
         
         connection.connect()
         connection.request('GET', '/1/classes/AllDeviceList', '', {
@@ -140,7 +142,41 @@ class ParseIntf():
              })
         result = json.loads(connection.getresponse().read().decode('utf-8'))
 
+        tmp_data = result.get('results')
+        groups = set()
+        
+        for d in tmp_data:
+            if d.get('groupId') is None:
+                continue
+            
+            if d['groupId'] not in groups:
+                groups.add(d['groupId'])
+
+        return result, groups
+
+
+    def getDeviceList(self, deviceId_):
+        print("PARAMS: ", deviceId_)
+        
+        connection = http.client.HTTPSConnection('api.parse.com', 443)
+        params = urllib.parse.urlencode({"where":json.dumps({
+               "deviceId":deviceId_
+             }),
+             "order":"-date,-time",
+             "limit":1
+            })
+        
+        connection.connect()
+        connection.request('GET', '/1/classes/WeMoInsight?%s' % params, '', {
+               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
+               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
+             })
+        result = json.loads(connection.getresponse().read().decode('utf-8'))
+
+        print("getLastData: ", result)
+
         return result
+
 
 ###############################################################################
 ##  api...
@@ -212,16 +248,20 @@ class ParseIntf():
         return totalRet
 
     def getDeviceListData(self):
-        result = self.getParseDeviceList()
+        result, groups = self.getParseDeviceList()
         result = result.get('results')
         
         if len(result) == 0:
             return  None
         
-        print("data: ", result)
-        
         ret = set()
         for s in result:
             ret.add(s['deviceId'])
         
-        return ret
+        return ret, groups
+
+    def getGroupInfo(self, groupId):
+        ## make device list
+        ## make info per group
+        return {"groupId":"A", "numOfDevice":2, "todayPowerConsumption":100, "thisMonthPowerConsumption":100, "Location":"seoul"}
+
