@@ -129,14 +129,20 @@ class ParseIntf():
         return result
 
 
-    def getParseDeviceList(self):
+    def getParseDeviceList(self, groupId_):
         connection = http.client.HTTPSConnection('api.parse.com', 443)
-        params = urllib.parse.urlencode({'where':None,
-            "keys":"deviceId,groupId"
-            })
-        
+        if groupId_ == 'All':
+            params = urllib.parse.urlencode({
+                "keys":"deviceId,groupId"
+                })
+        else:
+            params = urllib.parse.urlencode({"where":json.dumps({
+               "groupId":groupId_
+             }), "keys":"deviceId,groupId"
+             })
+
         connection.connect()
-        connection.request('GET', '/1/classes/AllDeviceList', '', {
+        connection.request('GET', '/1/classes/AllDeviceList?%s' % params, '', {
                "X-Parse-Application-Id": PARSE_APPLICATION_ID,
                "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
              })
@@ -153,29 +159,6 @@ class ParseIntf():
                 groups.add(d['groupId'])
 
         return result, groups
-
-
-    def getDeviceList(self, deviceId_):
-        print("PARAMS: ", deviceId_)
-        
-        connection = http.client.HTTPSConnection('api.parse.com', 443)
-        params = urllib.parse.urlencode({"where":json.dumps({
-               "deviceId":deviceId_
-             }),
-             "order":"-date,-time",
-             "limit":1
-            })
-        
-        connection.connect()
-        connection.request('GET', '/1/classes/WeMoInsight?%s' % params, '', {
-               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
-               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
-             })
-        result = json.loads(connection.getresponse().read().decode('utf-8'))
-
-        print("getLastData: ", result)
-
-        return result
 
 
 ###############################################################################
@@ -247,8 +230,9 @@ class ParseIntf():
         
         return totalRet
 
-    def getDeviceListData(self):
-        result, groups = self.getParseDeviceList()
+    def getDeviceListData(self, groupId):
+        
+        result, groups = self.getParseDeviceList(groupId)
         result = result.get('results')
         
         if len(result) == 0:
