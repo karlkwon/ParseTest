@@ -103,6 +103,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
+                               
                                 <div class="col-xs-2">
                                     <i class="fa fa-comments fa-5x"></i>
                                 </div>
@@ -488,6 +489,7 @@
         }).then(function(data) {
             var list="";
             for(var i = 0; i< data.length; i++) {
+                console.log("dev : " + data[i]);
                 list = list+ " <li><a href='#dev"+(i+1)+"' id='dev"+ (i+1)+"'>"+data[i]+"</a></li>";
             }
             
