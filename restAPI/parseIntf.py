@@ -29,7 +29,7 @@ class ParseIntf():
 ###############################################################################
 ##  parse access
 ###############################################################################
-    def getCurrentParseData(self, deviceId_):
+    def getCurrentParseData(self, deviceId_, numOfData = 1):
         print("PARAMS: ", deviceId_)
         
         connection = http.client.HTTPSConnection('api.parse.com', 443)
@@ -37,7 +37,7 @@ class ParseIntf():
                "deviceId":deviceId_
              }),
              "order":"-date,-time",
-             "limit":1
+             "limit":numOfData
             })
         
         connection.connect()
@@ -50,7 +50,6 @@ class ParseIntf():
         # print("getLastData: ", result)
 
         return result
-
 
     def getLastParseData(self, deviceId_, date_):
         print("PARAMS: ", deviceId_, date_)
@@ -199,15 +198,25 @@ class ParseIntf():
 ###############################################################################
 
     def getCurrentData(self, deviceId_):
-        result = self.getCurrentParseData(deviceId_).get('results')
+        result = self.getCurrentParseData(deviceId_, 20).get('results')
         
         if len(result) == 0:
             return None
         
         ## need weight function...
-        avg_wh = (result[0]['total_spent_energy_mwmin'] / result[0]['total_accumulated_use_time_sec']) * 3600 / 1000;
+        ret = list()
         
-        return {"date":result[0]['date'], "time":result[0]['time'], "value":result[0]['current_spent_power_mw'], "avgWh":avg_wh}
+        for s in result:
+            avg_wh = (s['total_spent_energy_mwmin'] / s['total_accumulated_use_time_sec']) * 3600 / 1000;
+        
+            ret.append({
+                "date":s['date'], 
+                "time":s['time'], 
+                "value":s['current_spent_power_mw'], 
+                "avgWh":avg_wh}
+                )
+        
+        return ret
 
     def getDailyData(self, deviceId_, date_):
         result = self.getParseData(deviceId_, date_, 0).get('results') \
@@ -358,6 +367,7 @@ class ParseIntf():
         ret = list()
         
         # get device info
+        dailyAverageUsage = 0
         accumulatedPower = 0
         deviceIds = set()
         for s in result:
@@ -379,6 +389,7 @@ class ParseIntf():
             thisMonthPower = (avgPower * 24 * 30) / 1000   ##  kWh
             
             accumulatedPower = accumulatedPower + thisMonthPower
+            dailyAverageUsage = dailyAverageUsage + avgPower*24
 
             print("ageInDay: ", ageInDay)
             print("avgPower: ", avgPower)
@@ -397,6 +408,7 @@ class ParseIntf():
             "DeviceId":"TOTAL",
             "ExpectedMonthlyElectricPower_kWh":accumulatedPower,
             "ExpectedMonthlyElectricBill":thisMonthBill,
+            "DailyAverageElectricPower_W":dailyAverageUsage,
         })
         
         return ret
