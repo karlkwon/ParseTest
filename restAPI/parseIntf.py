@@ -374,7 +374,8 @@ class ParseIntf():
             ageInDay = currentData['accumulated_time_from_registered_sec']/60/60/24 + 1
             todayUseTime = currentData['today_accumulated_use_time_sec']
             totalUseTime = currentData['total_accumulated_use_time_sec']
-            avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['accumulated_time_from_registered_sec']*3600
+            # avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['accumulated_time_from_registered_sec']*3600
+            avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['total_accumulated_use_time_sec']*3600
             thisMonthPower = (avgPower * 24 * 30) / 1000   ##  kWh
             
             accumulatedPower = accumulatedPower + thisMonthPower
