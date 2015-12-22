@@ -5,7 +5,7 @@ function annotateForWeekly(area,ctx,data,statData,posi,posj,othervars) {
         	
     for(var i=0;i<data.datasets.length;i++){
         if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
-    	    retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
+    	    retstring=retstring+statData[i][posj].v1+" = "+statData[i][posj].datavalue+"<BR>";
         }
     }
     	
@@ -20,7 +20,7 @@ function annotateForDaily(area,ctx,data,statData,posi,posj,othervars) {
     for(var i=0;i<data.datasets.length;i++){
         if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
     	   // retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
-    	      retstring=statData[posi][posj].v2+"="+statData[i][posj].datavalue+"<BR>";
+    	      retstring=statData[posi][posj].v2+" = "+statData[i][posj].datavalue+"<BR>";
         }
     }
     	
@@ -97,9 +97,9 @@ var updateChartData = {
 		{
 		    type:"Line",
 		    title:"",
-			fillColor : "rgba(151,187,151,0.5)",
-	        strokeColor : "rgba(151,187,151,1)",
-	        pointColor : "rgba(151,187,151,1)",
+			fillColor : "#db343a",
+	        strokeColor : "#db3434",
+	        pointColor : "#db3434",
 	        pointStrokeColor : "#fff",
 			data: [,,,,,
 			       ,,,,,
@@ -182,7 +182,9 @@ var weekChartOptions = {
 };
 
 var updateChartOptions = {
-      annotateDisplay : true,
+    datasetFill : false,
+    annotateLabel: annotateForDaily,
+    annotateDisplay : true,
    	responsive : true,
 	bezierCurve : false,
 	animation : true,
