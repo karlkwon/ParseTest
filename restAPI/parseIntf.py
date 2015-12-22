@@ -383,6 +383,7 @@ class ParseIntf():
             # print("== ", currentData)
             
             ageInDay = currentData['accumulated_time_from_registered_sec']/60/60/24 + 1
+            # ageInDay = currentData['total_accumulated_use_time_sec']/60/60/24 + 1
             todayUseTime = currentData['today_accumulated_use_time_sec']
             totalUseTime = currentData['total_accumulated_use_time_sec']
             # avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['accumulated_time_from_registered_sec']*3600
@@ -410,8 +411,8 @@ class ParseIntf():
             "DeviceId":"TOTAL",
             "ExpectedMonthlyElectricPower_kWh":accumulatedPower,
             "ExpectedMonthlyElectricBill":thisMonthBill,
-            "DailyAverageElectricPower_W":dailyAverageUsage,
-            "TodaySpendEnergy_W":round(accumulateTodayPower/1000),
+            "DailyAverageElectricPower_Wh":dailyAverageUsage,
+            "TodaySpendEnergy_Wh":round(accumulateTodayPower/1000/60, 2),
         })
         
         return ret
