@@ -349,6 +349,7 @@ class ParseIntf():
         #         "thisMonthPowerConsumption":100,
         #         "Location":"seoul"}
 
+
     def getDetailInfoForDevice(self, groupId):
         # get device list
         result, groups = self.getParseDeviceList(groupId)
@@ -357,6 +358,7 @@ class ParseIntf():
         ret = list()
         
         # get device info
+        accumulatedPower = 0
         deviceIds = set()
         for s in result:
             deviceId = s['deviceId']
@@ -367,23 +369,34 @@ class ParseIntf():
             currentDatas = self.getCurrentParseData(deviceId).get('results')
             currentData = currentDatas[0]
 
-            print("== ", currentData)
+            # print("== ", currentData)
             
             ageInDay = currentData['accumulated_time_from_registered_sec']/60/60/24 + 1
+            todayUseTime = currentData['today_accumulated_use_time_sec']
             totalUseTime = currentData['total_accumulated_use_time_sec']
-            avgPower = currentData['total_spent_energy_mwmin']/ageInDay/60/1000
-            thisMonthPower = avgPower * 30 /1000    ##  kWh
-            thisMonthBill = getBill(thisMonthPower)
+            avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['accumulated_time_from_registered_sec']*3600
+            thisMonthPower = (avgPower * 24 * 30) / 1000   ##  kWh
+            
+            accumulatedPower = accumulatedPower + thisMonthPower
+
+            print("ageInDay: ", ageInDay)
+            print("avgPower: ", avgPower)
             
             ret.append({"GroupId":groupId,
                         "DeviceId":deviceId,
-                        "TotalUseTime":totalUseTime,
-                        "DailyAvgUseTime":totalUseTime/ageInDay/60,
-                        "CurrentElectricPower":currentData['current_spent_power_mw'],
-                        "AverageElectricPower":avgPower,
-                        "ExpectedMonthlyElectricPower":thisMonthPower,
-                        "ExpectedMonthlyElectricBill":thisMonthBill,
+                        "TodayUseTime_sec":todayUseTime,
+                        "DailyAvgUseTime_min":round(totalUseTime/60/ageInDay, 2),
+                        "CurrentElectricPower_mW":currentData['current_spent_power_mw'],
+                        "AverageElectricPower_Wh":round(avgPower, 2),
+                        "ExpectedMonthlyElectricPower_kWh":round(thisMonthPower, 2),
             })
+
+        thisMonthBill = getBill(accumulatedPower)
+        ret.append({"GroupId":"TOTAL",
+            "DeviceId":"TOTAL",
+            "ExpectedMonthlyElectricPower_kWh":accumulatedPower,
+            "ExpectedMonthlyElectricBill":thisMonthBill,
+        })
         
         return ret
         
