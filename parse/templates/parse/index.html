@@ -239,7 +239,7 @@
             					    <li>
             					       <form class="navbar-form" role="search">
                 		                    <div class="pull-right input-group input-append date" id="periodDatePicker">
-                			                    <input type="text" class="form-control" placeholder="" id="dateInput" disabled>
+                			                    <input type="text" class="form-control" placeholder="" id="dateInput" style="width:100px"disabled>
                 			                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 		                    </div>
                 		              </form>
@@ -274,7 +274,6 @@
                             // var myChart = setCanvas("Line",dataForDay,dayChartOptions);
                             // setCanvas("Line",dataForDay,dayChartOptions);
                             // new Chart(document.getElementById("_Tag_Canvas_0").getContext("2d")).Line(dataForWeek,weekChartOptions);
-                            console.log("canvas is drawn");
                             var periodChart =  new Chart(document.getElementById("periodCanvas").getContext("2d")).Line(dayChartData,dayChartOptions);
                        </script>
                    </div>
@@ -317,7 +316,6 @@
                             // setCanvas("Line",dataForDay,dayChartOptions);
                             // new Chart(document.getElementById("_Tag_Canvas_0").getContext("2d")).Line(dataForWeek,weekChartOptions);
                             
-                            console.log("currentChart - canvas is drawn");
                             var currentChart =  new Chart(document.getElementById("currentCanvas").getContext("2d")).Line(updateChartData,updateChartOptions);
                         </script>
                     </div>
@@ -332,7 +330,7 @@
             <div class="col-lg-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> 일 평균 사용량 대비 오늘의 사용량</h3>
+                        <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> 평균 사용량 대비 오늘의 사용량</h3>
                     </div>
                     <div class="panel-body" id="test">
                         <!-- div id="morris-donut-chart"></div>-->
@@ -340,7 +338,7 @@
                             <div>
                                 <canvas id = "doughnut-canvas"></canvas>
                                 <script>
-                                    var doughnutChart = new Chart(document.getElementById("doughnut-canvas").getContext("2d")).Doughnut(doughnutChartData,doughnutChartOptions);
+                                    
                                 </script>
                             </div>
                         </div>
@@ -420,7 +418,6 @@
                 endPoint = "weeklyUsage";
             }
             
-            console.log("tabName : " + tabName + ", endPoint : " + endPoint);
             requestData();
         });
         
@@ -503,7 +500,7 @@
         }
         
         function requestDetailInfo() {
-            var url = "{% url 'restDetailInfoForDevice' %}" + '?format=json';
+            var url = "{% url 'restDetailInfoForDevice' %}" + '?format=json&groupId='+groupId;
             var currentTotalPower = 0;
             var expectedPower = 0;
             var expectedBill = 0;
@@ -518,9 +515,17 @@
                 
                 var list = "";
                 for(var i = 0; i< data.length - 1 ; i++) {
+                    var hour = Math.round(data[i].DailyAvgUseTime_min);
+                    var min  = (hour/60)-(hour / 60).toFixed(0);
+                    
+                    hour = (hour / 60).toFixed(0);
+                    min = (min * 60).toFixed(0);
+                    // console.log("hour : " + hour);
+                    // console.log("rem : " + min);
+                    
                     list = list + "<tr><td>"+data[i].DeviceId +"</td><td>"
                     + ((data[i].TodayUseTime_sec / 60) / 60).toFixed(0) +" 시간 "+ ((data[i].TodayUseTime_sec / 60) % 60).toFixed(0) + " 분</td><td>"
-                    + data[i].DailyAvgUseTime_min + " 분</td><td>"
+                    + hour + " 시간 " + min +" 분</td><td>"
                     + (data[i].CurrentElectricPower_mW/1000).toFixed(2) + " W</td><td>"
                     + data[i].AverageElectricPower_Wh + " W</td><td>"
                     + data[i].ExpectedMonthlyElectricPower_kWh+ " kWh</td><tr>"
@@ -531,17 +536,23 @@
                 
                 setTable(list);
                 
+                var percentage = ((data[data.length-1].TodaySpendEnergy_Wh * 100) / data[data.length-1].DailyAverageElectricPower_Wh).toFixed(0);
+                
+                doughnutChartOptions.crossText[0] = percentage.toString() + "%";
+                doughnutChartData[0].value = percentage;
+                doughnutChartData[1].value = 100-percentage;
+                
+                var doughnutChart = new Chart(document.getElementById("doughnut-canvas").getContext("2d")).Doughnut(doughnutChartData,doughnutChartOptions);
+                
                 $("#summary_cur_power").text((currentTotalPower / 1000).toFixed(2) + " W");
                 $("#summary_expected_power").text(data[data.length-1].ExpectedMonthlyElectricPower_kWh.toFixed(2) + " kWh");
-                $("#summary_expected_bill").text(data[data.length-1].ExpectedMonthlyElectricBill.toFixed(0) + " 원");
+                $("#summary_expected_bill").text(moneyFormat(data[data.length-1].ExpectedMonthlyElectricBill) + " 원");
             });
         }    
     
         function getUrl() {
-            selectedDate = $("input:text").val();  
-            console.log("endPoint : " + endPoint + ", selectedDate : " + selectedDate + ", deviceName :" + deviceName);
-        
             var url;
+            selectedDate = $("input:text").val();  
             
             if(endPoint== "dailyUsage") {
                 // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
@@ -559,8 +570,15 @@
             return Math.ceil((num/diff)) * diff;
         }
         
+        
+        function moneyFormat(n) {
+            return n.toFixed(0).replace(/./g, function(c, i, a) {
+                return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+            });
+        }
+        
         function getDeviceList() {
-            var url = "{% url 'restDeviceList' %}";
+            var url = "{% url 'restDeviceList' %}" + "?format=json&groupId="+groupId;
             
             jQuery.ajax({
                 url : url,
@@ -587,7 +605,6 @@
             });
         }
         
-        var flag = false;
         function requestIntervalData() {
             var url = "{% url 'restCurrentUsage' %}" + '?format=json&deviceId='+deviceName;
             
@@ -597,7 +614,7 @@
                 url :  url,
                 method: 'GET'
             }).then(function(data) {
-                console.log(data);
+                // console.log(data);
                 
                 var idx = updateChartData.labels.length;
                 var label;
@@ -609,7 +626,7 @@
                     label = data.time.toString().substring(0,2) +":"+data.time.toString().substring(2,4);
                 }
                 */
-                  for(var i = data.length -1 ; i >= 0; i--) {
+                for(var i = data.length -1 ; i >= 0; i--) {
                     updateChartData.datasets[0].data[i] = data[data.length -1  - i].value;
                     
                     if(data[data.length -1  - i].time.toString().length == 3) {
@@ -617,12 +634,6 @@
                     } else {
                        updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
                     }
-                 }
-                if(flag == false) {
-               
-                 flag = true;
-                } else {
-                   
                 }
                 /*
                  updateChartData.labels[idx] = label;
