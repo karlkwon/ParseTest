@@ -1,8 +1,9 @@
 import json, http.client, urllib
 import datetime, time
 from .billCalculator import getBill
+import pytz
 
-from datetime import datetime
+# from datetime import datetime
 from .parseKey import PARSE_APPLICATION_ID, PARSE_REST_KEY_ID
  
 class ParseIntf():
@@ -21,6 +22,9 @@ class ParseIntf():
     def getStartDayOfWeek(self, date_):
         weekday = date_.weekday()
         return date_ - datetime.timedelta(days=(weekday))
+
+    def getStartDayOfThisMonth(self, date_):
+        return date_ - datetime.timedelta(days=(date_.day))
 
 ###############################################################################
 ##  parse access
@@ -43,7 +47,7 @@ class ParseIntf():
              })
         result = json.loads(connection.getresponse().read().decode('utf-8'))
 
-        print("getLastData: ", result)
+        # print("getLastData: ", result)
 
         return result
 
@@ -67,7 +71,33 @@ class ParseIntf():
              })
         result = json.loads(connection.getresponse().read().decode('utf-8'))
 
-        print("getLastData: ", result)
+        # print("getLastData: ", result)
+
+        return result
+
+
+    def getLastParseDataBeforeSpecificDate(self, deviceId_, date_):
+        print("PARAMS: ", deviceId_, date_)
+        
+        connection = http.client.HTTPSConnection('api.parse.com', 443)
+        params = urllib.parse.urlencode({"where":json.dumps({
+               "deviceId":deviceId_,
+               "date":{
+                    "$lt": date_
+                },
+             }),
+             "order":"-date,-time",
+             "limit":1
+            })
+        
+        connection.connect()
+        connection.request('GET', '/1/classes/WeMoInsight?%s' % params, '', {
+               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
+               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
+             })
+        result = json.loads(connection.getresponse().read().decode('utf-8'))
+
+        # print("getLastData: ", result)
 
         return result
 
@@ -249,12 +279,76 @@ class ParseIntf():
 
     def getGroupInfo(self, groupId):
         ## make device list
+        result, groups = self.getParseDeviceList(groupId)
+        result = result.get('results')
+        
+        ret = list()
+        
         ## make info per group
-        return {"groupId":"A",
-                "numOfDevice":2,
-                "todayPowerConsumption":100,
-                "thisMonthPowerConsumption":100,
+        deviceIds = set()
+        todayPowerConsumption = 0
+        thisMonthPowerConsumption = 0
+        today = datetime.date.today()
+        
+        for s in result:
+            deviceId = s['deviceId']
+            if deviceId in deviceIds:
+                continue
+            deviceIds.add(deviceId)
+            
+            ## get current data
+            today_i = self.getIntFromDate(today)
+            currentDatas = self.getLastParseData(deviceId, today_i).get('results')
+            if len(currentDatas) == 0:
+                currentData = None
+            else:
+                ## if time gap of between now and last data is greater than 3 min
+                ## then don't use it.
+                currentData = currentDatas[0]
+
+                logTime_i = currentData.get('time')
+                logTime_im = int(logTime_i/100)*60 + logTime_i%100
+                today_im = datetime.datetime.now(pytz.timezone('Asia/Seoul'))
+                today_im = (today_im.hour)*60 + today_im.minute
+                
+                if abs(today_im - logTime_im) >= 3:
+                    currentData = None
+                
+            ## get start day of this month's data
+            ## last data of before this month's
+            lastMonth = self.getStartDayOfThisMonth(today)
+            lastMonth_i = self.getIntFromDate(lastMonth)
+            lastMonthDatas = self.getLastParseDataBeforeSpecificDate(deviceId, lastMonth_i).get('results')
+            if len(lastMonthDatas) == 0:
+                lastMonthData = 0
+            else:
+                lastMonthData = lastMonthDatas[0].get('total_spent_energy_mwmin')
+
+            ## this month's last data.
+            thisMonthDatas = self.getLastParseDataBeforeSpecificDate(deviceId, today_i).get('results')
+            if len(thisMonthDatas) == 0:
+                thisMonthUsage = 0
+            else:
+                thisMonthUsage = thisMonthDatas[0].get('total_spent_energy_mwmin') - lastMonthData
+                thisMonthPowerConsumption = thisMonthPowerConsumption + thisMonthUsage/1000*60/1000
+
+            if currentData is not None:
+                tmpTodayPowerConsumption = currentData.get('current_spent_power_mw')
+                if tmpTodayPowerConsumption is not None:
+                    todayPowerConsumption = todayPowerConsumption + tmpTodayPowerConsumption
+        
+        return {"groupId":groupId,
+                "numOfDevice":len(deviceIds),
+                "todayPowerConsumption":todayPowerConsumption,
+                "thisMonthPowerConsumption":round(thisMonthPowerConsumption,2),
                 "Location":"seoul"}
+
+        # return {"groupId":"A",
+        #         "numOfDevice":2,
+        #         "todayPowerConsumption":100,
+        #         "thisMonthPowerConsumption":100,
+        #         "Location":"seoul"}
+
 
     def getDetailInfoForDevice(self, groupId):
         # get device list
@@ -263,34 +357,46 @@ class ParseIntf():
         
         ret = list()
         
-        deviceIds = set()
         # get device info
+        accumulatedPower = 0
+        deviceIds = set()
         for s in result:
             deviceId = s['deviceId']
             if deviceId in deviceIds:
                 continue
             deviceIds.add(deviceId)
 
-            result = self.getCurrentParseData(deviceId).get('results')
-            result = result[0]
+            currentDatas = self.getCurrentParseData(deviceId).get('results')
+            currentData = currentDatas[0]
 
-            print("== ", result)
+            # print("== ", currentData)
             
-            ageInDay = result['accumulated_time_from_registered_sec']/60/60/24 + 1
-            totalUseTime = result['total_accumulated_use_time_sec']
-            avgPower = result['total_spent_energy_mwmin']/ageInDay/60/1000
-            thisMonthPower = avgPower * 30 /1000    ##  kWh
-            thisMonthBill = getBill(thisMonthPower)
+            ageInDay = currentData['accumulated_time_from_registered_sec']/60/60/24 + 1
+            todayUseTime = currentData['today_accumulated_use_time_sec']
+            totalUseTime = currentData['total_accumulated_use_time_sec']
+            avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['accumulated_time_from_registered_sec']*3600
+            thisMonthPower = (avgPower * 24 * 30) / 1000   ##  kWh
+            
+            accumulatedPower = accumulatedPower + thisMonthPower
+
+            print("ageInDay: ", ageInDay)
+            print("avgPower: ", avgPower)
             
             ret.append({"GroupId":groupId,
                         "DeviceId":deviceId,
-                        "TotalUseTime":totalUseTime,
-                        "DailyAvgUseTime":totalUseTime/ageInDay/60,
-                        "CurrentElectricPower":result['current_spent_power_mw'],
-                        "AverageElectricPower":avgPower,
-                        "ExpectedMonthlyElectricPower":thisMonthPower,
-                        "ExpectedMonthlyElectricBill":thisMonthBill,
+                        "TodayUseTime_sec":todayUseTime,
+                        "DailyAvgUseTime_min":round(totalUseTime/60/ageInDay, 2),
+                        "CurrentElectricPower_mW":currentData['current_spent_power_mw'],
+                        "AverageElectricPower_Wh":round(avgPower, 2),
+                        "ExpectedMonthlyElectricPower_kWh":round(thisMonthPower, 2),
             })
+
+        thisMonthBill = getBill(accumulatedPower)
+        ret.append({"GroupId":"TOTAL",
+            "DeviceId":"TOTAL",
+            "ExpectedMonthlyElectricPower_kWh":accumulatedPower,
+            "ExpectedMonthlyElectricBill":thisMonthBill,
+        })
         
         return ret
         
