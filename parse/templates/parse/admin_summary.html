@@ -40,6 +40,58 @@
 	<script>
 		var totalNumOfGroup = {{ Data.totalNumOfGroup }};
 		var totalNumOfDevice = {{ Data.totalNumOfDevice }};
+		
+		var groupList = [];
+		var groupInfoListForAPage = [];
+		
+		var currentClientListPage = 1;
+		var GROUP_COUNT_IN_A_PAGE = 20;
+		
+		function getDetailInfoPerGroup(index, start, end) {
+			return jQuery.ajax({
+	            url : "{% url 'restDetailInfoPerGroup' %}?groupId="+groupList[index-1],
+	            method: 'GET'
+	        }).then(function(data) {
+	        	groupInfoListForAPage.push(data);
+	        	if(groupInfoListForAPage.length == (end-start+1)) {
+	        		drawClientListTable(start, end);
+	        	}
+	        });
+		}
+		
+		function createClientList() {
+			var start = (currentClientListPage-1)*GROUP_COUNT_IN_A_PAGE + 1;
+			var possible_end = currentClientListPage * GROUP_COUNT_IN_A_PAGE;
+			var end = (totalNumOfGroup > possible_end) ? possible_end : totalNumOfGroup;
+			
+			groupInfoListForAPage = [];
+			
+        	for(var idx = start; idx<=end; idx++) {
+        		getDetailInfoPerGroup(idx, start, end);
+        	}
+		}
+		
+		function drawClientListTable(start, end) {
+			var html_text = '';
+			for(var idx = start; idx<=end; idx++) {
+				html_text += '<tr>';
+				
+				
+				var data = groupInfoListForAPage[idx-1];
+				var url = "{% url 'chart' %}?groupId="+data.groupId;
+				html_text += '<td>'+idx+'</td>';
+				html_text += '<td><a href="'+url+'">'+data.groupId+'</a></td>';
+				html_text += '<td>'+data.numOfDevice+'</td>';
+				html_text += '<td>'+"N/A"+'</td>';
+				html_text += '<td>'+data.todayPowerConsumption+'</td>';
+				html_text += '<td>'+data.thisMonthPowerConsumption+'</td>';
+				html_text += '<td>'+"N/A"+'</td>';
+				html_text += '<td>'+data.Location+'</td>';
+				
+				html_text += '</tr>';
+			}
+			$("#client_list").html(html_text);
+		}
 	</script>
   </head>
   <body>
@@ -207,33 +259,7 @@
 								</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>
-									1
-								</td>
-								<td>
-									A
-								</td>
-								<td>
-									2
-								</td>
-								<td>
-									100 W
-								</td>
-								<td>
-									100 W
-								</td>
-								<td>
-									100 W
-								</td>
-								<td>
-									100 W
-								</td>
-								<td>
-									Seoul
-								</td>
-							</tr>
+						<tbody id="client_list">
 						</tbody>
 					</table>
 				</div>
@@ -271,6 +297,24 @@
 	<script>
 		$('#totalNumOfGroup').html(totalNumOfGroup);
 		$('#totalNumOfDevice').html(totalNumOfDevice);
+		
+		jQuery.ajax({
+            url : 'https://api.parse.com:443/1/functions/getGroupList',
+            dataType:'json',
+            method: 'POST',
+            headers: {'X-Parse-Application-Id':'6599V3t4EzZy6D1UtfjDrFE8rc71TiYvAXowS1fM',
+            	'X-Parse-REST-API-Key':'SqF6YfaQTEGHVBGKFI7aQ3wACkqaSUv5IOWdwS1z'
+            }
+        }).then(
+        	function(data) {
+            	groupList = data.result;
+            	createClientList();
+        	},
+        	function(error) {
+        		alert("error");
+        	}
+        );
+		
 	</script>
   </body>
 </html>
