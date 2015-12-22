@@ -100,14 +100,17 @@
         <div class="row">
             <div class="col-lg-4 col-md-4">
                 <div class="col-lg-8 col-lg-offset-2">
+                    <a href="#" data-target="#myModal" data-toggle="modal">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
+                               <!--
                                 <div class="col-xs-2">
                                     <i class="fa fa-comments fa-5x"></i>
                                 </div>
-                                <div class="col-xs-10 text-right">
-                                    <div class="huge">26 w</div>
+                                -->
+                                <div class="col-xs-12 text-right">
+                                    <div class="huge" id="summary_cur_power"></div>
                                     <div>현재 총사용 전력</div>
                                 </div>
                             </div>
@@ -122,18 +125,22 @@
                         </a>
                         -->
                     </div>
+                     </a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4">
                 <div class="col-lg-8 col-lg-offset-2">
+                     <a href="#">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
+                                <!--
                                 <div class="col-xs-2">
                                     <i class="fa fa-tasks fa-5x"></i>
                                 </div>
-                                <div class="col-xs-10 text-right">
-                                    <div class="huge">12 kWh</div>
+                                -->
+                                <div class="col-xs-12 text-right">
+                                    <div class="huge" id="summary_expected_power"></div>
                                     <div>당월 예상 전력량</div>
                                 </div>
                             </div>
@@ -148,34 +155,61 @@
                         </a>
                         -->
                     </div>
+                     </a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4">
                 <div class="col-lg-8 col-lg-offset-2">
-                <div class="panel panel-yellow">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-2">
-                                <i class="fa fa-shopping-cart fa-5x"></i>
-                            </div>
-                            <div class="col-xs-10 text-right">
-                                <div class="huge">124 won</div>
-                                <div>당월 예상 전기세</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- remove
                     <a href="#">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                            <div class="clearfix"></div>
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <!--
+                                <div class="col-xs-2">
+                                    <i class="fa fa-shopping-cart fa-5x"></i>
+                                </div>
+                                -->
+                                <div class="col-xs-12 text-right">
+                                    <div class="huge" id="summary_expected_bill"></div>
+                                    <div>당월 예상 요금</div>
+                                </div>
+                            </div>
                         </div>
-                    </a>
-                    -->
+                        
+                        <!-- remove
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                        -->
+                    </div>
+                </a>
+            </div>
+            </div>
+            
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">제.목</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>현재 총사용 전력의 세부 정보는 어떤게 있을까</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                
                 </div>
             </div>
-            </div>
+                      
         </div>
         <!-- /.row -->
         
@@ -205,7 +239,7 @@
             					    <li>
             					       <form class="navbar-form" role="search">
                 		                    <div class="pull-right input-group input-append date" id="periodDatePicker">
-                			                    <input type="text" class="form-control" placeholder="picker test..." id="dateInput" disabled>
+                			                    <input type="text" class="form-control" placeholder="" id="dateInput" disabled>
                 			                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 		                    </div>
                 		              </form>
@@ -295,12 +329,12 @@
         <!-- /.row -->
     
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Doughnut Chart</h3>
+                        <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> 일 평균 사용량 대비 오늘의 사용량</h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="test">
                         <!-- div id="morris-donut-chart"></div>-->
                         <div id="chart-container">
                             <div>
@@ -313,16 +347,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-9">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>스위치 정보</h3>
+                        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> 스위치 정보</h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="tablePanel">
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover table-striped">
                                 <thead>
-                                    <tr>
+                                        <!--
                                         <th>Switch Name</th>
                                         <th>Today use time</th>
                                         <th>Daily avg. <br> use time</th>
@@ -330,19 +364,17 @@
                                         <th>Avg. electric <br> power (w)</th>
                                         <th>Expected monthly <br> electric energy</th>
                                         <th>Expected monthly <br> bill (won)</th>
-                                    </tr>
+                                        -->
+                                        
+                                        <th>스위치</th>
+                                        <th>오늘 사용 시간</th>
+                                        <th>일 평균 사용 시간</th>
+                                        <th>현재 사용 전력</th>
+                                        <th>시간당 평균 사용 전력</th>
+                                        <th>당월 예상 전력량</th>
+                                        <!--<th>당월 예상 전기세</th>-->
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Bed Room</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>50</td>
-                                        <td>150</td>
-                                        <td>3h 3m</td>
-                                        <td>321.33</td>
-                                    </tr>
-                                </tbody>
+                                <tbody id = "tableBody"></tbody>
                             </table>
                         </div>
                     </div>
@@ -352,267 +384,346 @@
         <!-- /.row -->    
     </div>
     <!-- /.container-fluid -->
+    
     <!--<script src="{% static 'parse/js/periodChart.js' %}"></script>-->
     <script>
-    //group id
-    var groupId = '{{ Data.groupId }}';
-    
-    var selectedDate = "20151104";
-    var endPoint     = "dailyUsage";
-    var deviceName   = "";
-    
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var tabName = $(e.target).attr("href"); // activated tab
+        var groupId = '{{ Data.groupId }}';
         
-        /*
-        if(myChart == null) {
-            console.log("chart is null");
-        } else {
-           // $('#canvas').remove();
-           // $('#chart-container').append('<canvas id = canvas></canvas>');
+        var selectedDate = "20151104";
+        var endPoint     = "dailyUsage";
+        var deviceName   = "";
+        
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var tabName = $(e.target).attr("href"); // activated tab
+            
+            /*
+            if(myChart == null) {
+                console.log("chart is null");
+            } else {
+               // $('#canvas').remove();
+               // $('#chart-container').append('<canvas id = canvas></canvas>');
+            }
+            */
+            
+            var canvas = document.getElementById("periodCanvas");
+            // canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
+            // canvas.getContext("2d").beginPath();
+            console.log("cv : " + canvas ); 
+            
+            if(tabName == '#day') {
+                updateChart(canvas.getContext("2d"),dayChartData,dayChartOptions);
+                // new Chart(canvas.getContext("2d")).Line(dataForDay,dayChartOptions);   
+                endPoint = "dailyUsage";
+            } else {
+                updateChart(canvas.getContext("2d"),weekChartData,weekChartOptions);
+                //new Chart(canvas.getContext("2d")).Line(dataForWeek,weekChartOptions);
+                endPoint = "weeklyUsage";
+            }
+            
+            console.log("tabName : " + tabName + ", endPoint : " + endPoint);
+            requestData();
+        });
+        
+        function getPeriodDeviceId(e) {
+            var target = $(e.target).attr("href");
+            
+            $("#periodDropdown-toggle").text($(e.target).text());
+            
+            deviceName =  $(e.target).text();
+            
+            requestData();
         }
-        */
         
-        var canvas = document.getElementById("periodCanvas");
-        // canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
-        // canvas.getContext("2d").beginPath();
-        console.log("cv : " + canvas ); 
-        
-        if(tabName == '#day') {
-            updateChart(canvas.getContext("2d"),dayChartData,dayChartOptions);
-            // new Chart(canvas.getContext("2d")).Line(dataForDay,dayChartOptions);   
-            endPoint = "dailyUsage";
-        } else {
-            updateChart(canvas.getContext("2d"),weekChartData,weekChartOptions);
-            //new Chart(canvas.getContext("2d")).Line(dataForWeek,weekChartOptions);
-            endPoint = "weeklyUsage";
-        }
-        
-        console.log("tabName : " + tabName + ", endPoint : " + endPoint);
-        requestData();
-    });
-    
-    function getPeriodDeviceId(e) {
-        var target = $(e.target).attr("href");
-        //$(".dropdown-toggle").text($(e.target).text());
-        $("#periodDropdown-toggle").text($(e.target).text());
-        
-        deviceName =  $(e.target).text();
-        
-        requestData();
-    }
-    
-    function getCurrentDeviceId(e) {
-        var target = $(e.target).attr("href");
-        // $("#periodDropdown-toggle").text($(e.target).text());
-        $("#currentDropdown-toggle").text($(e.target).text());
-        
-        deviceName =  $(e.target).text();
-        
-         //arr 초기화
+        function getCurrentDeviceId(e) {
+            var target = $(e.target).attr("href");
+            
+            $("#currentDropdown-toggle").text($(e.target).text());
+            
+            deviceName =  $(e.target).text();
+            /*
             for(var i = 0; i < updateChartData.labels.length; i++) {
                 console.log("i : "+ updateChartData.labels[i]);
                 updateChartData.labels[i] = "-";
                 updateChartData.datasets[0].data[i] = 0;                    
             }
-            
-        requestIntervalData();
-    }
-    
-    function getToday() {
-        var today = new Date();
-        today =  today.toISOString().slice(0,10).replace(/-/g,"");
-        
-        return today;
-    }
-    
-     function getLastDayOfWeek(date) {
-        console.log("getLastDayOfWeek() date -  "+ date);
-        var cur = new Date();
-        
-        cur.setYear(Number(date.toString().substring(0,4)) + 1900);
-        cur.setMonth(Number(date.toString().substring(4,6)) - 1);
-        cur.setDate(Number(date.toString().substring(6,8)));
-        
-        var firstDay = cur.getDate() - cur.getDay();
-        var lastDay = firstDay + 8;
-        
-        var result = cur.getYear();
-        if(cur.getMonth() < 10) {
-            result = result + '0'+ (cur.getMonth() + 1);
-        } else {
-            result = result + '' + (cur.getMonth() + 1);
-        }
-        
-        if(lastDay < 10) {
-            result = result + '0'+ lastDay;
-        } else {
-            result = result + '' + lastDay;
-        }
-        
-        return result;
-    }
-    
-    function setTable() {
-        
-    }
-    
-    function getUrl() {
-        selectedDate = $("input:text").val();  
-        console.log("endPoint : " + endPoint + ", selectedDate : " + selectedDate + ", deviceName :" + deviceName);
-    
-        var url;
-        
-        if(endPoint== "dailyUsage") {
-            // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
-            url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
-        } else {
-            // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
-            url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
-        }
-        
-        return url;
-    }
-    
-    var diff = 10000;
-    function intCeil(num) {
-        return Math.ceil((num/diff)) * diff;
-    }
-    
-    function getDeviceList() {
-        var url = "{% url 'restDeviceList' %}";
-        
-        jQuery.ajax({
-            url : url,
-            method: 'GET'
-        }).then(function(data) {
-            var list="";
-            for(var i = 0; i< data.length; i++) {
-                list = list+ " <li><a href='#dev"+(i+1)+"' id='dev"+ (i+1)+"'>"+data[i]+"</a></li>";
-            }
-            
-            document.getElementById('periodDropdown-menu').innerHTML =list;
-            document.getElementById('currentDropdown-menu').innerHTML =list;
-            
-            deviceName = data[0];
-            
-            $(".dropdown-toggle").text(deviceName);
-            //$("#periodDropdown-toggle").text(deviceName);
-            //$("#currentDropdown-toggle").text(deviceName);
-            
-            requestData();
+              */
+              
             requestIntervalData();
-            
-            setInterval(function() {requestIntervalData();},60000);
-        });
-    }
-    
-    function requestIntervalData() {
-        var url = "{% url 'restCurrentUsage' %}" + '?format=json&deviceId='+deviceName;
+        }
         
-        console.log("requestIntervalData() url : "+ url);
-        
-        jQuery.ajax({
-            url :  url,
-            method: 'GET'
-        }).then(function(data) {
-            console.log(data);
-            
-            var idx = updateChartData.labels.length;
-            var label;
-            
-            if(data.time.toString().length == 3) {
-                label = data.time.toString().substring(0,1) +":"+data.time.toString().substring(1,3);
-            } else {
-                label = data.time.toString().substring(0,2) +":"+data.time.toString().substring(2,4);
-            }
-            
-            updateChartData.labels[idx] = label;
-            updateChartData.datasets[0].data[idx] = data.value;
-            updateChartData.labels.splice(0,1);
-            updateChartData.datasets[0].data.splice(0,1);
-            
-            updateChart(document.getElementById("currentCanvas").getContext("2d"), updateChartData, updateChartOptions, true, true);
-        });
-    }
-    
-    function requestData() {
-        var url = getUrl();
-        console.log("requestData() url : " + url);
-        
-        $('.spinner-loader').show();
-        jQuery.ajax({
-            url : url,
-            method: 'GET'
-        }).then(function(data) {
-            if(endPoint == "dailyUsage") {
-                for(var i = 0; i<Object.keys(data).length;i++) {
-                    dayChartData.datasets[0].data[i] = data[i];
-                }
+        function initUpdateChart() {
+            console.log("initUpdateChart");
+            for(var i = data.length -1 ; i >= 0; i--) {
+                updateChartData.datasets[0].data[i] = data[data.length -1  - i].value;
                 
-                //console.log("min : " + Math.max.apply(null,dayChartData.datasets[0].data));
-                //console.log("ceil : " + Math.pow(Math.max.apply(null,dataForDay.datasets[0].data),100));
-                //console.log("ceil : " + intCeil(Math.max.apply(null,dayChartData.datasets[0].data)));
-                var minCeil =  intCeil(Math.min.apply(null,dayChartData.datasets[0].data));
-                var maxCeil =  intCeil(Math.max.apply(null,dayChartData.datasets[0].data));
-                
-                dayChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10) + diff;
-                //dayChartOptions.scaleStartValue = Math.min.apply(null,dataForDay.datasets[0].data);
-                //console.log("minCeil : " + minCeil);
-                
-                if(minCeil <= 0) {
-                    dayChartOptions.scaleStartValue = minCeil;
+                if(data[data.length -1  - i].time.toString().length == 3) {
+                   updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,1) +":"+data[data.length -1  - i].time.toString().substring(1,3);
                 } else {
-                    dayChartOptions.scaleStartValue = minCeil-diff;
+                   updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
                 }
-                
-                updateChart(document.getElementById("periodCanvas").getContext("2d"), dayChartData, dayChartOptions, true, true);
-            } else {
-                for(var i = 0; i <= Object.keys(Object.keys(data)[0]).length;i++) {
-                    weekChartData.datasets[0].data[i] = data.current[i];
-                    weekChartData.datasets[1].data[i] = data.target[i];
-                }
-                
-                updateChart(document.getElementById("periodCanvas").getContext("2d"), weekChartData, weekChartOptions, true, true);
             }
-             $('.spinner-loader').hide();
-        });
-    }
+        }
+        
+        function getToday() {
+            var today = new Date();
+            today =  today.toISOString().slice(0,10).replace(/-/g,"");
+            
+            return today;
+        }
+        
+         function getLastDayOfWeek(date) {
+            console.log("getLastDayOfWeek() date -  "+ date);
+            var cur = new Date();
+            
+            cur.setYear(Number(date.toString().substring(0,4)) + 1900);
+            cur.setMonth(Number(date.toString().substring(4,6)) - 1);
+            cur.setDate(Number(date.toString().substring(6,8)));
+            
+            var firstDay = cur.getDate() - cur.getDay();
+            var lastDay = firstDay + 8;
+            
+            var result = cur.getYear();
+            if(cur.getMonth() < 10) {
+                result = result + '0'+ (cur.getMonth() + 1);
+            } else {
+                result = result + '' + (cur.getMonth() + 1);
+            }
+            
+            if(lastDay < 10) {
+                result = result + '0'+ lastDay;
+            } else {
+                result = result + '' + lastDay;
+            }
+            
+            return result;
+        }
+        
+        function setTable(list) {
+            document.getElementById('tableBody').innerHTML =list;
+        }
+        
+        function requestDetailInfo() {
+            var url = "{% url 'restDetailInfoForDevice' %}" + '?format=json';
+            var currentTotalPower = 0;
+            var expectedPower = 0;
+            var expectedBill = 0;
+            
+            console.log("requestDetailInfo() url : "+ url);
+             
+            jQuery.ajax({
+                url :  url,
+                method: 'GET'
+            }).then(function(data) {
+                console.log(data);
+                
+                var list = "";
+                for(var i = 0; i< data.length - 1 ; i++) {
+                    list = list + "<tr><td>"+data[i].DeviceId +"</td><td>"
+                    + ((data[i].TodayUseTime_sec / 60) / 60).toFixed(0) +" 시간 "+ ((data[i].TodayUseTime_sec / 60) % 60).toFixed(0) + " 분</td><td>"
+                    + data[i].DailyAvgUseTime_min + " 분</td><td>"
+                    + (data[i].CurrentElectricPower_mW/1000).toFixed(2) + " W</td><td>"
+                    + data[i].AverageElectricPower_Wh + " W</td><td>"
+                    + data[i].ExpectedMonthlyElectricPower_kWh+ " kWh</td><tr>"
+                    
+                    currentTotalPower = currentTotalPower + data[i].CurrentElectricPower_mW;
+                    expectedPower = expectedPower + data[i].ExpectedMonthlyElectricPower_kWh;
+                }
+                
+                setTable(list);
+                
+                $("#summary_cur_power").text((currentTotalPower / 1000).toFixed(2) + " W");
+                $("#summary_expected_power").text(data[data.length-1].ExpectedMonthlyElectricPower_kWh.toFixed(2) + " kWh");
+                $("#summary_expected_bill").text(data[data.length-1].ExpectedMonthlyElectricBill.toFixed(0) + " 원");
+            });
+        }    
     
-    $("#periodDropdown-menu").on("click","li",getPeriodDeviceId);
-    $("#currentDropdown-menu").on("click","li",getCurrentDeviceId);
-    
-    $(document).ready(function () {
-        getDeviceList();
+        function getUrl() {
+            selectedDate = $("input:text").val();  
+            console.log("endPoint : " + endPoint + ", selectedDate : " + selectedDate + ", deviceName :" + deviceName);
         
-        var today = getToday();
+            var url;
+            
+            if(endPoint== "dailyUsage") {
+                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
+                url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
+            } else {
+                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
+                url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
+            }
+            
+            return url;
+        }
         
-        $('#periodDatePicker').datepicker({
-            format: "yyyymmdd",
-            todayHighlight:true,
-            autoclose:true
-        });  
+        var diff = 10000;
+        function intCeil(num) {
+            return Math.ceil((num/diff)) * diff;
+        }
         
-        $('#periodDatePicker').datepicker("setDate", today);
+        function getDeviceList() {
+            var url = "{% url 'restDeviceList' %}";
+            
+            jQuery.ajax({
+                url : url,
+                method: 'GET'
+            }).then(function(data) {
+                var list="";
+                for(var i = 0; i< data.length; i++) {
+                    list = list+ " <li><a href='#dev"+(i+1)+"' id='dev"+ (i+1)+"'>"+data[i]+"</a></li>";
+                }
+                
+                document.getElementById('periodDropdown-menu').innerHTML =list;
+                document.getElementById('currentDropdown-menu').innerHTML =list;
+                
+                deviceName = data[0];
+                
+                $(".dropdown-toggle").text(deviceName);
+                //$("#periodDropdown-toggle").text(deviceName);
+                //$("#currentDropdown-toggle").text(deviceName);
+                
+                requestData();
+                requestIntervalData();
+                
+                setInterval(function() {requestIntervalData();},60000);
+            });
+        }
         
-        $('#updateDatePicker').datepicker({
-            format: "yyyymmdd",
-            todayHighlight:true,
-            autoclose:true
-        });  
+        var flag = false;
+        function requestIntervalData() {
+            var url = "{% url 'restCurrentUsage' %}" + '?format=json&deviceId='+deviceName;
+            
+            console.log("requestIntervalData() url : "+ url);
+            
+            jQuery.ajax({
+                url :  url,
+                method: 'GET'
+            }).then(function(data) {
+                console.log(data);
+                
+                var idx = updateChartData.labels.length;
+                var label;
+                
+                /*
+                if(data.time.toString().length == 3) {
+                    label = data.time.toString().substring(0,1) +":"+data.time.toString().substring(1,3);
+                } else {
+                    label = data.time.toString().substring(0,2) +":"+data.time.toString().substring(2,4);
+                }
+                */
+                  for(var i = data.length -1 ; i >= 0; i--) {
+                    updateChartData.datasets[0].data[i] = data[data.length -1  - i].value;
+                    
+                    if(data[data.length -1  - i].time.toString().length == 3) {
+                       updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,1) +":"+data[data.length -1  - i].time.toString().substring(1,3);
+                    } else {
+                       updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
+                    }
+                 }
+                if(flag == false) {
+               
+                 flag = true;
+                } else {
+                   
+                }
+                /*
+                 updateChartData.labels[idx] = label;
+                    updateChartData.datasets[0].data[idx] = data.value;
+                    updateChartData.labels.splice(0,1);
+                    updateChartData.datasets[0].data.splice(0,1);
+                    */
+
+                updateChart(document.getElementById("currentCanvas").getContext("2d"), updateChartData, updateChartOptions, true, true);
+            });
+        }
         
-        $('#updateDatePicker').datepicker("setDate", today);
+        function requestData() {
+            var url = getUrl();
+            console.log("requestData() url : " + url);
+            
+            $('.spinner-loader').show();
+           
+            jQuery.ajax({
+                url : url,
+                method: 'GET'
+            }).then(function(data) {
+                if(endPoint == "dailyUsage") {
+                    for(var i = 0; i<Object.keys(data).length;i++) {
+                        dayChartData.datasets[0].data[i] = data[i];
+                    }
+                    
+                    //console.log("min : " + Math.max.apply(null,dayChartData.datasets[0].data));
+                    //console.log("ceil : " + Math.pow(Math.max.apply(null,dataForDay.datasets[0].data),100));
+                    //console.log("ceil : " + intCeil(Math.max.apply(null,dayChartData.datasets[0].data)));
+                    var minCeil =  intCeil(Math.min.apply(null,dayChartData.datasets[0].data));
+                    var maxCeil =  intCeil(Math.max.apply(null,dayChartData.datasets[0].data));
+                    
+                    dayChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10) + diff;
+                    //dayChartOptions.scaleStartValue = Math.min.apply(null,dataForDay.datasets[0].data);
+                    //console.log("minCeil : " + minCeil);
+                    
+                    if(minCeil <= 0) {
+                        dayChartOptions.scaleStartValue = minCeil;
+                    } else {
+                        dayChartOptions.scaleStartValue = minCeil-diff;
+                    }
+                    
+                    updateChart(document.getElementById("periodCanvas").getContext("2d"), dayChartData, dayChartOptions, true, true);
+                } else {
+                    for(var i = 0; i <= Object.keys(Object.keys(data)[0]).length;i++) {
+                        weekChartData.datasets[0].data[i] = data.current[i];
+                        weekChartData.datasets[1].data[i] = data.target[i];
+                    }
+                    
+                    updateChart(document.getElementById("periodCanvas").getContext("2d"), weekChartData, weekChartOptions, true, true);
+                }
+                 $('.spinner-loader').hide();
+            });
+        }
         
-        $('#periodDatePicker').change(function() {
-           requestData();
+        $("#periodDropdown-menu").on("click","li",getPeriodDeviceId);
+        $("#currentDropdown-menu").on("click","li",getCurrentDeviceId);
+        
+        $(document).ready(function () {
+            getDeviceList();
+            
+            var today = getToday();
+            
+            $('#periodDatePicker').datepicker({
+                format: "yyyymmdd",
+                todayHighlight:true,
+                autoclose:true
+            });  
+            
+            $('#periodDatePicker').datepicker("setDate", today);
+            
+            $('#updateDatePicker').datepicker({
+                format: "yyyymmdd",
+                todayHighlight:true,
+                autoclose:true
+            });  
+            
+            $('#updateDatePicker').datepicker("setDate", today);
+            
+            $('#periodDatePicker').change(function() {
+               requestData();
+            });
+            
+            $('#updateDatePicker').change(function() {
+               requestIntervalData();
+            });
+            
+            requestDetailInfo();
+            
+            setTablePanelSize();
         });
         
-        $('#updateDatePicker').change(function() {
-           requestIntervalData();
-        });
-        
-    });
-    //setRefreshCanvas();
+        function setTablePanelSize() {
+            var height= document.getElementById('test').offsetHeight;
+            document.getElementById('tablePanel').style["height"] = height+"px";
+        }
+        window.onresize = function(e) {
+            setTablePanelSize();
+        }
+        //setRefreshCanvas();
     </script>
 </body>
 
