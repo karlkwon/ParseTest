@@ -5,7 +5,7 @@ function annotateForWeekly(area,ctx,data,statData,posi,posj,othervars) {
         	
     for(var i=0;i<data.datasets.length;i++){
         if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
-    	    retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
+    	    retstring=retstring+statData[i][posj].v1+" = "+statData[i][posj].datavalue+"<BR>";
         }
     }
     	
@@ -20,7 +20,7 @@ function annotateForDaily(area,ctx,data,statData,posi,posj,othervars) {
     for(var i=0;i<data.datasets.length;i++){
         if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
     	   // retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
-    	      retstring=statData[posi][posj].v2+"="+statData[i][posj].datavalue+"<BR>";
+    	      retstring=statData[posi][posj].v2+" = "+statData[i][posj].datavalue+"<BR>";
         }
     }
     	
@@ -73,30 +73,38 @@ var doughnutChartOptions = {
       animateRotate : true,
       animateScale : true,
       animationByData : true,
-      animationSteps : 50,
-      animationEasing: "linear",
+      animationSteps : 100,
+      animationEasing: "easeOutQuad",
+      percentageInnerCutout:76,
       //canvasBorders : true,
       //canvasBordersWidth : 3,
       //canvasBordersColor : "black",
-      graphTitle : "No title",
-      //legend : true,
-      inGraphDataShow : true,
+      //graphTitle : "No title",
+      legend : true,
+      inGraphDataShow : false,
       annotateDisplay : true,
       spaceBetweenBar : 5,
-      graphTitleFontSize: 18
+      graphTitleFontSize: 18,
+      crossText :["60%"],
+      crossTextAlign :["center"],
+      crossTextBaseline :["middle"],
+      crossTextFontColor:["rgba(52,152,219,1)"],crossTextFontSize:[30]
 };
 
 var updateChartData = {
-    labels : ["-","-","-","-","-"],
+    labels : ["","","","","","","","","","","","","","","","","","","",""],
 	datasets : [
 		{
 		    type:"Line",
 		    title:"",
-			fillColor : "rgba(151,187,151,0.5)",
-	        strokeColor : "rgba(151,187,151,1)",
-	        pointColor : "rgba(151,187,151,1)",
+			fillColor : "#db343a",
+	        strokeColor : "#db3434",
+	        pointColor : "#db3434",
 	        pointStrokeColor : "#fff",
-			data: [0,0,0,0,0]
+			data: [,,,,,
+			       ,,,,,
+			       ,,,,,
+			       ,,,,]
 		}
 	]
 };
@@ -104,33 +112,13 @@ var updateChartData = {
 var doughnutChartData = [
     {
         value : 30,
-        color: "#D97041",
-        title : "data1"
+        color: "rgba(105,52,219,1)",
+        title : "Today"
     },
     {
-        value : 90,
-        color: "#C7604C",
-        title : "data2"
-    },
-    {
-        value : 24,
-        color: "#21323D",
-        title : "data3"
-    },
-    {
-        value : 58,
-        color: "#9D9B7F",
-        title : "data4"
-    },
-    {
-        value : 82,
-        color: "#7D4F6D",
-        title : "data5"
-    },
-    {
-        value : 8,
-        color: "#584A5E",
-        title : "data6"
+        value : 100,
+        color: "#C0C0C0",
+        title : "Total"
     }
 ];
     
@@ -151,7 +139,7 @@ var dayChartOptions = {
     datasetFill: false,
     showXLabels : 1,
     firstLabelToShow : -3,
-    graphTitle : "Electric power",
+    //graphTitle : "Electric power",
     xAxisLabel: "hour",
     yAxisLabel: "mW",
     yAxisMinimumInterval: 1,          
@@ -182,7 +170,7 @@ var weekChartOptions = {
     datasetFill: false,
     showXLabels : 1,
     firstLabelToShow : -3,
-    graphTitle : "Electric power",
+    //graphTitle : "Electric power",
     xAxisLabel: "week",
     yAxisLabel: "mW",
     yAxisMinimumInterval: 1,          
@@ -194,13 +182,18 @@ var weekChartOptions = {
 };
 
 var updateChartOptions = {
+    datasetFill : false,
+    annotateLabel: annotateForDaily,
+    annotateDisplay : true,
    	responsive : true,
 	bezierCurve : false,
 	animation : true,
-	 animationStartWithDataset : 1,
-      animationStartWithData : 1,
-      animationLeftToRight : true,
-      animationByDataset : true
+	animationStartWithDataset : 1,
+    animationStartWithData : 1,
+    animationLeftToRight : true,
+    animationByDataset : true,
+    xAxisLabel: "min",
+    yAxisLabel: "mW"
 	/*
       animationStartWithDataset : startWithDataset,
       animationStartWithData : startWithData,
@@ -211,7 +204,7 @@ var updateChartOptions = {
       canvasBorders : true,
       canvasBordersWidth : 3,
       canvasBordersColor : "black",
-      graphTitle : "animation With Update",
+    graphTitle : "animation With Update",  
       legend : true,
 //      inGraphDataShow : true,
       annotateDisplay : true,
