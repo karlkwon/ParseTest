@@ -1,5 +1,8 @@
 import json, http.client, urllib
 import datetime, time
+from .billCalculator import getBill
+
+from datetime import datetime
 from .parseKey import PARSE_APPLICATION_ID, PARSE_REST_KEY_ID
  
 class ParseIntf():
@@ -247,20 +250,57 @@ class ParseIntf():
     def getGroupInfo(self, groupId):
         ## make device list
         ## make info per group
-        return {"groupId":"A", 
-                "numOfDevice":2, 
-                "todayPowerConsumption":100, 
-                "thisMonthPowerConsumption":100, 
+        return {"groupId":"A",
+                "numOfDevice":2,
+                "todayPowerConsumption":100,
+                "thisMonthPowerConsumption":100,
                 "Location":"seoul"}
 
     def getDetailInfoForDevice(self, groupId):
-        return {"GroupId":"A", 
-                "DeviceId":"wemo:insight:221443K1200252", 
-                "TotalUseTime":100, 
-                "DailyAvgUseTime":100, 
-                "CurrentElectricPower":200,
-                "AverageElectricPower":300,
-                "ExpectedMonthlyElectricPower":9000,
-                "ExpectedMonthlyElectricBill":75000,
-                }
+        # get device list
+        result, groups = self.getParseDeviceList(groupId)
+        result = result.get('results')
+        
+        ret = list()
+        
+        deviceIds = set()
+        # get device info
+        for s in result:
+            deviceId = s['deviceId']
+            if deviceId in deviceIds:
+                continue
+            deviceIds.add(deviceId)
+
+            result = self.getCurrentParseData(deviceId).get('results')
+            result = result[0]
+
+            print("== ", result)
+            
+            ageInDay = result['accumulated_time_from_registered_sec']/60/60/24 + 1
+            totalUseTime = result['total_accumulated_use_time_sec']
+            avgPower = result['total_spent_energy_mwmin']/ageInDay/60/1000
+            thisMonthPower = avgPower * 30 /1000    ##  kWh
+            thisMonthBill = getBill(thisMonthPower)
+            
+            ret.append({"GroupId":groupId,
+                        "DeviceId":deviceId,
+                        "TotalUseTime":totalUseTime,
+                        "DailyAvgUseTime":totalUseTime/ageInDay/60,
+                        "CurrentElectricPower":result['current_spent_power_mw'],
+                        "AverageElectricPower":avgPower,
+                        "ExpectedMonthlyElectricPower":thisMonthPower,
+                        "ExpectedMonthlyElectricBill":thisMonthBill,
+            })
+        
+        return ret
+        
+        # return {"GroupId":"A", 
+        #         "DeviceId":"wemo:insight:221443K1200252", 
+        #         "TotalUseTime":100, 
+        #         "DailyAvgUseTime":100, 
+        #         "CurrentElectricPower":200,
+        #         "AverageElectricPower":300,
+        #         "ExpectedMonthlyElectricPower":9000,
+        #         "ExpectedMonthlyElectricBill":75000,
+        #         }
 
