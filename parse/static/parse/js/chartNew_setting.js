@@ -1,32 +1,6 @@
-function annotateForWeekly(area,ctx,data,statData,posi,posj,othervars) {
-    retstring=statData[posi][posj].v2+'<BR>';
-    	    
-    /*	retstring=retstring+'<BR><U>Line Data:</U><BR>'; */
-        	
-    for(var i=0;i<data.datasets.length;i++){
-        if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
-    	    retstring=retstring+statData[i][posj].v1+" = "+statData[i][posj].datavalue+"<BR>";
-        }
-    }
-    	
-    return "<%='"+retstring+"'%>";
-}
-
-function annotateForDaily(area,ctx,data,statData,posi,posj,othervars) {
-    retstring=statData[posi][posj].v2+'<BR>';
-    	    
-    /*	retstring=retstring+'<BR><U>Line Data:</U><BR>'; */
-        	
-    for(var i=0;i<data.datasets.length;i++){
-        if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
-    	   // retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
-    	      retstring=statData[posi][posj].v2+" = "+statData[i][posj].datavalue+"<BR>";
-        }
-    }
-    	
-    return "<%='"+retstring+"'%>";
-}
-
+//
+// Data
+//
 var dayChartData = {
 	labels : ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],
     // labels : getLabelForHour(),
@@ -66,33 +40,9 @@ var weekChartData = {
 	]
 } 
     
-var doughnutChartOptions = {
-      responsive: true,
-      animationStartWithDataset : 1,
-      animationStartWithData : 1,
-      animateRotate : true,
-      animateScale : true,
-      animationByData : true,
-      animationSteps : 100,
-      animationEasing: "easeOutQuad",
-      percentageInnerCutout:76,
-      //canvasBorders : true,
-      //canvasBordersWidth : 3,
-      //canvasBordersColor : "black",
-      //graphTitle : "No title",
-      legend : true,
-      inGraphDataShow : false,
-      annotateDisplay : true,
-      spaceBetweenBar : 5,
-      graphTitleFontSize: 18,
-      crossText :["60%"],
-      crossTextAlign :["center"],
-      crossTextBaseline :["middle"],
-      crossTextFontColor:["rgba(52,152,219,1)"],crossTextFontSize:[30]
-};
-
 var updateChartData = {
-    labels : ["","","","","","","","","","","","","","","","","","","",""],
+    labels : ["-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"],
+    // labels : ["-"],
 	datasets : [
 		{
 		    type:"Line",
@@ -101,10 +51,7 @@ var updateChartData = {
 	        strokeColor : "#db3434",
 	        pointColor : "#db3434",
 	        pointStrokeColor : "#fff",
-			data: [,,,,,
-			       ,,,,,
-			       ,,,,,
-			       ,,,,]
+			data:[]
 		}
 	]
 };
@@ -121,7 +68,36 @@ var doughnutChartData = [
         title : "Total"
     }
 ];
-    
+
+
+//
+// Options
+//
+var doughnutChartOptions = {
+      responsive: true,
+      animationStartWithDataset : 1,
+      animationStartWithData : 1,
+      animateRotate : true,
+      animateScale : true,
+      animationByData : true,
+      animationSteps : 100,
+      animationEasing: "easeOutQuad",
+      percentageInnerCutout:76,
+      //canvasBorders : true,
+      //canvasBordersWidth : 3,
+      //canvasBordersColor : "black",
+      //graphTitle : "No title",
+      legend : true,
+      inGraphDataShow : false,
+      annotateDisplay : false,
+      spaceBetweenBar : 5,
+      graphTitleFontSize: 18,
+      crossText :["70%"],
+      crossTextAlign :["center"],
+      crossTextBaseline :["middle"],
+      crossTextFontColor:["rgba(52,152,219,1)"],crossTextFontSize:[15]
+};
+
 var dayChartOptions = {
     annotateDisplay : true,
     detectAnnotateOnFullLine : true,
@@ -155,7 +131,7 @@ var weekChartOptions = {
  
     annotateDisplay : true,
     //detectAnnotateOnFullLine : true,
-   // annotateLabel: annotateForWeekly,
+    //annotateLabel: annotateForWeekly,
     
     // yAxis
     //scaleOverride : true,
@@ -221,3 +197,33 @@ var updateChartOptions = {
 	animationBackward: true
 	*/
 };
+
+
+function annotateForWeekly(area,ctx,data,statData,posi,posj,othervars) {
+    retstring=statData[posi][posj].v2+'<BR>';
+    	    
+    /*	retstring=retstring+'<BR><U>Line Data:</U><BR>'; */
+        	
+    for(var i=0;i<data.datasets.length;i++){
+        if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
+    	    retstring=retstring+statData[i][posj].v1+" = "+statData[i][posj].datavalue+"<BR>";
+        }
+    }
+    	
+    return "<%='"+retstring+"'%>";
+}
+
+function annotateForDaily(area,ctx,data,statData,posi,posj,othervars) {
+    retstring=statData[posi][posj].v2+'<BR>';
+    	    
+    /*	retstring=retstring+'<BR><U>Line Data:</U><BR>'; */
+        	
+    for(var i=0;i<data.datasets.length;i++){
+        if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
+    	   // retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
+    	      retstring=statData[posi][posj].v2+" = "+statData[i][posj].datavalue+"<BR>";
+        }
+    }
+    	
+    return "<%='"+retstring+"'%>";
+}
