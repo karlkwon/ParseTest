@@ -35,7 +35,12 @@
 			eval('var myLine = new Chart(document.getElementById(ChartId).getContext("2d")).'+ChartType+'(ChartData,ChartOptions);document.getElementById(ChartId).getContext("2d").stroke();')
 		}
 	</script>
-
+	
+	<!-- params for page -->
+	<script>
+		var totalNumOfGroup = {{ Data.totalNumOfGroup }};
+		var totalNumOfDevice = {{ Data.totalNumOfDevice }};
+	</script>
   </head>
   <body>
 
@@ -54,7 +59,7 @@
 			<div class="panel panel-info">
 				<div class="panel-heading">
 					<h3 class="panel-title">
-						Summary
+						종합 정보
 					</h3>
 				</div>
 				<div class="panel-body">
@@ -62,33 +67,31 @@
 						<thead>
 							<tr>
 								<th>
-									Category
+									항목
 								</th>
 								<th>
-									Data
+									값
 								</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<td>
-									Total Number of Groups
+									등록된 전체 고객 수
 								</td>
-								<td>
-									{{ Data.totalNumOfGroup }}
-								</td>
-							</tr>
-							<tr>
-								<td>
-									Total Number of Devices
-								</td>
-								<td>
-									{{ Data.totalNumOfDevice }}
+								<td id="totalNumOfGroup">
 								</td>
 							</tr>
 							<tr>
 								<td>
-									Current Energy Consumption
+									등록된 전체 장비 수
+								</td>
+								<td id="totalNumOfDevice">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									현재 총 에너지 사용량
 								</td>
 								<td>
 									150000 W
@@ -96,7 +99,7 @@
 							</tr>
 							<tr>
 								<td>
-									Total Energy Consumption
+									총 누적 에너지 사용량
 								</td>
 								<td>
 									1000000 Wh
@@ -104,7 +107,7 @@
 							</tr>
 							<tr>
 								<td>
-									Average Energy Consumption per Groups
+									고객 별 평균 에너지 사용량
 								</td>
 								<td>
 									1000 W
@@ -112,7 +115,7 @@
 							</tr>
 							<tr>
 								<td>
-									Average Energy Consumption per Devices
+									장비 별 평균 에너지 사용량
 								</td>
 								<td>
 									100 W
@@ -125,20 +128,22 @@
 			<div class="panel panel-info">
 				<div class="panel-heading">
 					<h3 class="panel-title">
-						Statistic Chart
+						통계 차트
 					</h3>
 				</div>
 				<div class="panel-body">
 					<canvas  id="chart-01" width="500" height="380"></canvas>
 					<script> function MoreChartOptions(){} 
 					var ChartData = [
-					{value :23,color:parent.gradientColor,gradientColors :["rgba(34,127,190,1) 1%","rgba(52,152,219,1) 20%","rgba(52,152,219,1) 80%","rgba(93,173,226,1) 99%",],title:'0 - 5'},
-					{value :17,color:parent.gradientColor,gradientColors :["rgba(36,162,89,1) 1%","rgba(46,204,113,1) 20%","rgba(46,204,113,1) 80%","rgba(85,217,141,1) 99%",],title:'6 - 10'},
-					{value :42,color:parent.gradientColor,gradientColors :["rgba(130,68,155,1) 1%","rgba(155,89,182,1) 20%","rgba(155,89,182,1) 80%","rgba(175,122,197,1) 99%",],title:'11 - 15'},
-					{value :28,color:parent.gradientColor,gradientColors :["rgba(194,158,11,1) 1%","rgba(241,196,15,1) 20%","rgba(241,196,15,1) 80%","rgba(244,208,63,1) 99%",],title:'16 - '},];
+					{value :23,color:parent.gradientColor,gradientColors :["rgba(34,127,190,1) 1%","rgba(52,152,219,1) 20%","rgba(52,152,219,1) 80%","rgba(93,173,226,1) 99%",],title:'0 - 2'},
+					{value :17,color:parent.gradientColor,gradientColors :["rgba(36,162,89,1) 1%","rgba(46,204,113,1) 20%","rgba(46,204,113,1) 80%","rgba(85,217,141,1) 99%",],title:'3 - 5'},
+					{value :42,color:parent.gradientColor,gradientColors :["rgba(130,68,155,1) 1%","rgba(155,89,182,1) 20%","rgba(155,89,182,1) 80%","rgba(175,122,197,1) 99%",],title:'6 - 9'},
+					{value :28,color:parent.gradientColor,gradientColors :["rgba(194,158,11,1) 1%","rgba(241,196,15,1) 20%","rgba(241,196,15,1) 80%","rgba(244,208,63,1) 99%",],title:'10 - '},];
 
-					ChartOptions= {canvasBackgroundColor:'rgba(255,255,255,1.00)',spaceLeft:12,spaceRight:12,spaceTop:12,spaceBottom:12,canvasBorders:false,canvasBordersWidth:1,canvasBordersStyle:"solid",canvasBordersColor:"rgba(0,0,0,1)",scaleLabel:"<%=value+''%>",yAxisMinimumInterval:1,scaleShowLabels:true,scaleShowLine:true,scaleLineStyle:"solid",scaleLineWidth:1,scaleLineColor:"rgba(0,0,0,0.6)",scaleOverlay :false,scaleOverride :false,scaleSteps:10,scaleStepWidth:10,scaleStartValue:0,inGraphDataShow:true,inGraphDataTmpl:'<%=v2%>',inGraphDataFontFamily:"'Open Sans'",inGraphDataFontStyle:"normal bold",inGraphDataFontColor:"rgba(255,255,255,1.00)",inGraphDataFontSize:12,inGraphDataPaddingX:0,inGraphDataPaddingY:-5,inGraphDataAlign:"center",inGraphDataVAlign:"top",inGraphDataXPosition:2,inGraphDataYPosition:3,inGraphDataAnglePosition:2,inGraphDataRadiusPosition:2,inGraphDataRotate:0,inGraphDataPaddingAngle:0,inGraphDataPaddingRadius:0, inGraphDataBorders:false,inGraphDataBordersXSpace:1,inGraphDataBordersYSpace:1,inGraphDataBordersWidth:1,inGraphDataBordersStyle:"solid",inGraphDataBordersColor:"rgba(0,0,0,1)",legend:true,maxLegendCols:5,legendBlockSize:15,legendFillColor:'rgba(255,255,255,0.00)',legendColorIndicatorStrokeWidth:1,legendPosX:-2,legendPosY:4,legendXPadding:0,legendYPadding:0,legendBorders:false,legendBordersWidth:1,legendBordersStyle:"solid",legendBordersColors:"rgba(102,102,102,1)",legendBordersSpaceBefore:5,legendBordersSpaceLeft:5,legendBordersSpaceRight:5,legendBordersSpaceAfter:5,legendSpaceBeforeText:5,legendSpaceLeftText:5,legendSpaceRightText:5,legendSpaceAfterText:5,legendSpaceBetweenBoxAndText:5,legendSpaceBetweenTextHorizontal:5,legendSpaceBetweenTextVertical:5,legendFontFamily:"'Open Sans'",legendFontStyle:"normal normal",legendFontColor:"rgba(0,0,0,1)",legendFontSize:15,showYAxisMin:false,rotateLabels:"smart",xAxisBottom:true,yAxisLeft:true,yAxisRight:false,graphTitleSpaceBefore:5,graphTitleSpaceAfter:5, graphTitleBorders:false,graphTitleBordersXSpace:1,graphTitleBordersYSpace:1,graphTitleBordersWidth:1,graphTitleBordersStyle:"solid",graphTitleBordersColor:"rgba(0,0,0,1)",graphTitle : "Chart Title",graphTitleFontFamily:"'Open Sans'",graphTitleFontStyle:"normal normal",graphTitleFontColor:"rgba(52,152,219,1)",graphTitleFontSize:26,graphSubTitleSpaceBefore:5,graphSubTitleSpaceAfter:5, graphSubTitleBorders:false,graphSubTitleBordersXSpace:1,graphSubTitleBordersYSpace:1,graphSubTitleBordersWidth:1,graphSubTitleBordersStyle:"solid",graphSubTitleBordersColor:"rgba(0,0,0,1)",graphSubTitle : "Add SubTitle Here",graphSubTitleFontFamily:"'Open Sans'",graphSubTitleFontStyle:"normal normal",graphSubTitleFontColor:"rgba(102,102,102,1)",graphSubTitleFontSize:16,
-					                crossText :["Avg. 2.4"],crossTextAlign :["center"],crossTextBaseline :["middle"],crossTextAngle :[0],crossTextFontFamily:["'Open Sans'"],crossTextFontStyle:["normal normal"],crossTextFontColor:["rgba(52,152,219,1)"],crossTextFontSize:[26],crossTextOverlay:[true],crossTextRelativePosX :["2"],crossTextRelativePosY :["2"],crossTextPosX:["0"],crossTextPosY :["0"],scaleFontFamily:"'Open Sans'",scaleFontStyle:"normal normal",scaleFontColor:"rgba(0,0,0,1)",scaleFontSize:12,pointLabelFontFamily:"'Open Sans'",pointLabelFontStyle:"normal normal",pointLabelFontColor:"rgba(102,102,102,1)",pointLabelFontSize:12,angleShowLineOut:true,angleLineStyle:"solid",angleLineWidth:1,angleLineColor:"rgba(0,0,0,0.1)",percentageInnerCutout:50,scaleShowGridLines:true,scaleGridLineStyle:"solid",scaleGridLineWidth:1,scaleGridLineColor:"rgba(0,0,0,0.1)",scaleXGridLinesStep:1,scaleYGridLinesStep:3,segmentShowStroke:true,segmentStrokeStyle:"solid",segmentStrokeWidth:2,segmentStrokeColor:"rgba(255,255,255,1.00)",datasetStroke:true,datasetFill : true,datasetStrokeStyle:"solid",datasetStrokeWidth:2,bezierCurve:true,bezierCurveTension :0.4,pointDotStrokeStyle:"solid",pointDotStrokeWidth : 1,pointDotRadius : 3,pointDot : true,scaleTickSizeBottom:5,scaleTickSizeTop:5,scaleTickSizeLeft:5,scaleTickSizeRight:5,graphMin:0,barShowStroke : false,barBorderRadius:0,barStrokeStyle:"solid",barStrokeWidth:1,barValueSpacing:15,barDatasetSpacing:0,scaleShowLabelBackdrop :true,scaleBackdropColor:'rgba(255,255,255,0.75)',scaleBackdropPaddingX :2,scaleBackdropPaddingY :2,animationEasing:'easeInOutExpo',animateRotate:true,animateScale:false,animationByDataset:false,animationLeftToRight:false,animationSteps:80,animation : true,onAnimationComplete : function(){MoreChartOptions()}};
+					ChartOptions= {canvasBackgroundColor:'rgba(255,255,255,1.00)',spaceLeft:12,spaceRight:12,spaceTop:12,spaceBottom:12,canvasBorders:false,canvasBordersWidth:1,canvasBordersStyle:"solid",canvasBordersColor:"rgba(0,0,0,1)",scaleLabel:"<%=value+''%>",yAxisMinimumInterval:1,scaleShowLabels:true,scaleShowLine:true,scaleLineStyle:"solid",scaleLineWidth:1,scaleLineColor:"rgba(0,0,0,0.6)",scaleOverlay :false,scaleOverride :false,scaleSteps:10,scaleStepWidth:10,scaleStartValue:0,inGraphDataShow:true,inGraphDataTmpl:'<%=v2%>',inGraphDataFontFamily:"'Open Sans'",inGraphDataFontStyle:"normal bold",inGraphDataFontColor:"rgba(255,255,255,1.00)",inGraphDataFontSize:16,inGraphDataPaddingX:0,inGraphDataPaddingY:-5,inGraphDataAlign:"center",inGraphDataVAlign:"top",inGraphDataXPosition:2,inGraphDataYPosition:3,inGraphDataAnglePosition:2,inGraphDataRadiusPosition:2,inGraphDataRotate:0,inGraphDataPaddingAngle:0,inGraphDataPaddingRadius:0, inGraphDataBorders:false,inGraphDataBordersXSpace:1,inGraphDataBordersYSpace:1,inGraphDataBordersWidth:1,inGraphDataBordersStyle:"solid",inGraphDataBordersColor:"rgba(0,0,0,1)",legend:true,maxLegendCols:5,legendBlockSize:15,legendFillColor:'rgba(255,255,255,0.00)',legendColorIndicatorStrokeWidth:1,legendPosX:-2,legendPosY:4,legendXPadding:0,legendYPadding:0,legendBorders:false,legendBordersWidth:1,legendBordersStyle:"solid",legendBordersColors:"rgba(102,102,102,1)",legendBordersSpaceBefore:5,legendBordersSpaceLeft:5,legendBordersSpaceRight:5,legendBordersSpaceAfter:5,legendSpaceBeforeText:5,legendSpaceLeftText:5,legendSpaceRightText:5,legendSpaceAfterText:5,legendSpaceBetweenBoxAndText:5,legendSpaceBetweenTextHorizontal:5,legendSpaceBetweenTextVertical:5,legendFontFamily:"'Open Sans'",legendFontStyle:"normal normal",legendFontColor:"rgba(0,0,0,1)",legendFontSize:15,showYAxisMin:false,rotateLabels:"smart",xAxisBottom:true,yAxisLeft:true,yAxisRight:false,
+									graphTitle : "장비 소지 갯수 분포 차트",graphTitleFontFamily:"'Open Sans'",graphTitleFontStyle:"normal normal",graphTitleFontColor:"rgba(52,152,219,1)",graphTitleFontSize:26,graphTitleSpaceBefore:5,graphTitleSpaceAfter:5, graphTitleBorders:false,graphTitleBordersXSpace:1,graphTitleBordersYSpace:1,graphTitleBordersWidth:1,graphTitleBordersStyle:"solid",graphTitleBordersColor:"rgba(0,0,0,1)",
+									graphSubTitle : "Group 당 장비 소지 갯수 분포",graphSubTitleFontFamily:"'Open Sans'",graphSubTitleFontStyle:"normal normal",graphSubTitleFontColor:"rgba(102,102,102,1)",graphSubTitleFontSize:16,graphSubTitleSpaceBefore:5,graphSubTitleSpaceAfter:5, graphSubTitleBorders:false,graphSubTitleBordersXSpace:1,graphSubTitleBordersYSpace:1,graphSubTitleBordersWidth:1,graphSubTitleBordersStyle:"solid",graphSubTitleBordersColor:"rgba(0,0,0,1)",
+					                crossText :["평균 "+totalNumOfDevice / totalNumOfGroup+"개"],crossTextAlign :["center"],crossTextBaseline :["middle"],crossTextAngle :[0],crossTextFontFamily:["'Open Sans'"],crossTextFontStyle:["normal normal"],crossTextFontColor:["rgba(52,152,219,1)"],crossTextFontSize:[20],crossTextOverlay:[true],crossTextRelativePosX :["2"],crossTextRelativePosY :["2"],crossTextPosX:["0"],crossTextPosY :["0"],scaleFontFamily:"'Open Sans'",scaleFontStyle:"normal normal",scaleFontColor:"rgba(0,0,0,1)",scaleFontSize:12,pointLabelFontFamily:"'Open Sans'",pointLabelFontStyle:"normal normal",pointLabelFontColor:"rgba(102,102,102,1)",pointLabelFontSize:12,angleShowLineOut:true,angleLineStyle:"solid",angleLineWidth:1,angleLineColor:"rgba(0,0,0,0.1)",percentageInnerCutout:50,scaleShowGridLines:true,scaleGridLineStyle:"solid",scaleGridLineWidth:1,scaleGridLineColor:"rgba(0,0,0,0.1)",scaleXGridLinesStep:1,scaleYGridLinesStep:3,segmentShowStroke:true,segmentStrokeStyle:"solid",segmentStrokeWidth:2,segmentStrokeColor:"rgba(255,255,255,1.00)",datasetStroke:true,datasetFill : true,datasetStrokeStyle:"solid",datasetStrokeWidth:2,bezierCurve:true,bezierCurveTension :0.4,pointDotStrokeStyle:"solid",pointDotStrokeWidth : 1,pointDotRadius : 3,pointDot : true,scaleTickSizeBottom:5,scaleTickSizeTop:5,scaleTickSizeLeft:5,scaleTickSizeRight:5,graphMin:0,barShowStroke : false,barBorderRadius:0,barStrokeStyle:"solid",barStrokeWidth:1,barValueSpacing:15,barDatasetSpacing:0,scaleShowLabelBackdrop :true,scaleBackdropColor:'rgba(255,255,255,0.75)',scaleBackdropPaddingX :2,scaleBackdropPaddingY :2,animationEasing:'easeInOutExpo',animateRotate:true,animateScale:false,animationByDataset:false,animationLeftToRight:false,animationSteps:80,animation : true,onAnimationComplete : function(){MoreChartOptions()}};
 
 						DrawTheChart(ChartData,ChartOptions,"chart-01","Doughnut");
 					</script>
@@ -149,7 +154,7 @@
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">
-						Clients List
+						등록 고객 리스트
 					</h3>
 				</div>
 				<div class="panel-body">
@@ -166,8 +171,6 @@
 										찾기
 									</button>
 								</div>
-								
-								
 							</form>						
 						</div>
 						<div class="col-md-4">
@@ -182,25 +185,25 @@
 									#
 								</th>
 								<th>
-									Group ID
+									고객 ID
 								</th>
 								<th>
-									Number of Devices
+									장비 갯수
 								</th>
 								<th>
-									Current Energy Consumption
+									현재 에너지 사용량(W)
 								</th>
 								<th>
-									Today Energy Consumption
+									당일 에너지 사용량(W)
 								</th>
 								<th>
-									This Month Energy Consumption
+									당월 에너지 사용량(W)
 								</th>
 								<th>
-									Total Energy Consumption
+									누적 에너지 사용량(W)
 								</th>
 								<th>
-									Location
+									지역
 								</th>
 							</tr>
 						</thead>
@@ -263,5 +266,11 @@
 		</div>
 	</div>
 </div>
+
+	<!-- params for page -->
+	<script>
+		$('#totalNumOfGroup').html(totalNumOfGroup);
+		$('#totalNumOfDevice').html(totalNumOfDevice);
+	</script>
   </body>
 </html>

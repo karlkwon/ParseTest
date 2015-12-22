@@ -1,5 +1,8 @@
 import json, http.client, urllib
 import datetime, time
+from .billCalculator import getBill
+
+from datetime import datetime
 from .parseKey import PARSE_APPLICATION_ID, PARSE_REST_KEY_ID
  
 class ParseIntf():
@@ -129,14 +132,20 @@ class ParseIntf():
         return result
 
 
-    def getParseDeviceList(self):
+    def getParseDeviceList(self, groupId_):
         connection = http.client.HTTPSConnection('api.parse.com', 443)
-        params = urllib.parse.urlencode({'where':None,
-            "keys":"deviceId,groupId"
-            })
-        
+        if groupId_ == 'All':
+            params = urllib.parse.urlencode({
+                "keys":"deviceId,groupId"
+                })
+        else:
+            params = urllib.parse.urlencode({"where":json.dumps({
+               "groupId":groupId_
+             }), "keys":"deviceId,groupId"
+             })
+
         connection.connect()
-        connection.request('GET', '/1/classes/AllDeviceList', '', {
+        connection.request('GET', '/1/classes/AllDeviceList?%s' % params, '', {
                "X-Parse-Application-Id": PARSE_APPLICATION_ID,
                "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
              })
@@ -153,29 +162,6 @@ class ParseIntf():
                 groups.add(d['groupId'])
 
         return result, groups
-
-
-    def getDeviceList(self, deviceId_):
-        print("PARAMS: ", deviceId_)
-        
-        connection = http.client.HTTPSConnection('api.parse.com', 443)
-        params = urllib.parse.urlencode({"where":json.dumps({
-               "deviceId":deviceId_
-             }),
-             "order":"-date,-time",
-             "limit":1
-            })
-        
-        connection.connect()
-        connection.request('GET', '/1/classes/WeMoInsight?%s' % params, '', {
-               "X-Parse-Application-Id": PARSE_APPLICATION_ID,
-               "X-Parse-REST-API-Key": PARSE_REST_KEY_ID
-             })
-        result = json.loads(connection.getresponse().read().decode('utf-8'))
-
-        print("getLastData: ", result)
-
-        return result
 
 
 ###############################################################################
@@ -247,8 +233,9 @@ class ParseIntf():
         
         return totalRet
 
-    def getDeviceListData(self):
-        result, groups = self.getParseDeviceList()
+    def getDeviceListData(self, groupId):
+        
+        result, groups = self.getParseDeviceList(groupId)
         result = result.get('results')
         
         if len(result) == 0:
@@ -263,20 +250,57 @@ class ParseIntf():
     def getGroupInfo(self, groupId):
         ## make device list
         ## make info per group
-        return {"groupId":"A", 
-                "numOfDevice":2, 
-                "todayPowerConsumption":100, 
-                "thisMonthPowerConsumption":100, 
+        return {"groupId":"A",
+                "numOfDevice":2,
+                "todayPowerConsumption":100,
+                "thisMonthPowerConsumption":100,
                 "Location":"seoul"}
 
     def getDetailInfoForDevice(self, groupId):
-        return {"GroupId":"A", 
-                "DeviceId":"wemo:insight:221443K1200252", 
-                "TotalUseTime":100, 
-                "DailyAvgUseTime":100, 
-                "CurrentElectricPower":200,
-                "AverageElectricPower":300,
-                "ExpectedMonthlyElectricPower":9000,
-                "ExpectedMonthlyElectricBill":75000,
-                }
+        # get device list
+        result, groups = self.getParseDeviceList(groupId)
+        result = result.get('results')
+        
+        ret = list()
+        
+        deviceIds = set()
+        # get device info
+        for s in result:
+            deviceId = s['deviceId']
+            if deviceId in deviceIds:
+                continue
+            deviceIds.add(deviceId)
+
+            result = self.getCurrentParseData(deviceId).get('results')
+            result = result[0]
+
+            print("== ", result)
+            
+            ageInDay = result['accumulated_time_from_registered_sec']/60/60/24 + 1
+            totalUseTime = result['total_accumulated_use_time_sec']
+            avgPower = result['total_spent_energy_mwmin']/ageInDay/60/1000
+            thisMonthPower = avgPower * 30 /1000    ##  kWh
+            thisMonthBill = getBill(thisMonthPower)
+            
+            ret.append({"GroupId":groupId,
+                        "DeviceId":deviceId,
+                        "TotalUseTime":totalUseTime,
+                        "DailyAvgUseTime":totalUseTime/ageInDay/60,
+                        "CurrentElectricPower":result['current_spent_power_mw'],
+                        "AverageElectricPower":avgPower,
+                        "ExpectedMonthlyElectricPower":thisMonthPower,
+                        "ExpectedMonthlyElectricBill":thisMonthBill,
+            })
+        
+        return ret
+        
+        # return {"GroupId":"A", 
+        #         "DeviceId":"wemo:insight:221443K1200252", 
+        #         "TotalUseTime":100, 
+        #         "DailyAvgUseTime":100, 
+        #         "CurrentElectricPower":200,
+        #         "AverageElectricPower":300,
+        #         "ExpectedMonthlyElectricPower":9000,
+        #         "ExpectedMonthlyElectricBill":75000,
+        #         }
 

@@ -57,7 +57,9 @@ def getCurrentData(request):
 @api_view(['GET'])
 def getDeviceListData(request):
     if request.method == 'GET':
-        data, groups = dataIntf.getDeviceListData()
+        groupId = request.GET.get('groupId','All')
+
+        data, groups = dataIntf.getDeviceListData(groupId)
 
         print(data)
 

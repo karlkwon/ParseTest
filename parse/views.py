@@ -15,7 +15,7 @@ class index(generic.ListView):
     context_object_name = 'Data'
 
     def get_queryset(self):
-        devices, groups = parseIntf.getDeviceListData()
+        devices, groups = parseIntf.getDeviceListData('All')
 
         print("ChartView", {'totalNumOfGroup': len(groups), 'totalNumOfDevice': len(devices)})
 
