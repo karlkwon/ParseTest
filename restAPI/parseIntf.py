@@ -369,6 +369,7 @@ class ParseIntf():
         # get device info
         dailyAverageUsage = 0
         accumulatedPower = 0
+        accumulateTodayPower = 0
         deviceIds = set()
         for s in result:
             deviceId = s['deviceId']
@@ -390,6 +391,7 @@ class ParseIntf():
             
             accumulatedPower = accumulatedPower + thisMonthPower
             dailyAverageUsage = dailyAverageUsage + avgPower*24
+            accumulateTodayPower = accumulateTodayPower + currentData['today_spent_energy_mv']
 
             print("ageInDay: ", ageInDay)
             print("avgPower: ", avgPower)
@@ -409,6 +411,7 @@ class ParseIntf():
             "ExpectedMonthlyElectricPower_kWh":accumulatedPower,
             "ExpectedMonthlyElectricBill":thisMonthBill,
             "DailyAverageElectricPower_W":dailyAverageUsage,
+            "TodaySpendEnergy_W":round(accumulateTodayPower/1000),
         })
         
         return ret
