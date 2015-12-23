@@ -13,11 +13,22 @@ function initialize(parse) {
 var GroupSummaryInfo = new Object;
 
 var totalAccumulatedEnergyConsumption = 0;
-
+var totalCurrentEnergyConsumption = 0;
 var groupInfoListForAPage = [];
 
 var currentClientListPage = 1;
 var GROUP_COUNT_IN_A_PAGE = 20;
+
+function tempCurEnergyConsumption() {
+    // 가짜 data. 보이는 list의 정보만 통합 함
+    for(var i=0; i<groupInfoListForAPage.length; i++) {
+        totalCurrentEnergyConsumption += groupInfoListForAPage[i].currentPowerConsumption;
+    }
+    
+	var temp_value = totalCurrentEnergyConsumption/1000;
+	$('#totalCurEnergy').html(temp_value.toFixed(2)+' W');
+	$('#totalAvgCurEnergy').html((temp_value/GroupSummaryInfo.groupList.length).toFixed(2)+' W');
+}
 
 function getDetailInfoPerGroup(index, start, end) {
 	return jQuery.ajax({
@@ -28,6 +39,7 @@ function getDetailInfoPerGroup(index, start, end) {
     	if(groupInfoListForAPage.length == (end-start+1)) {
     		drawClientListTable(start, end);
     		fillGroupAccEnergy();
+    		tempCurEnergyConsumption();
     	}
     });
 }
@@ -37,13 +49,14 @@ function fillGroupAccEnergy() {
 	
 	for(var i = 0; i<groupInfoListForAPage.length; i++) {
 	    var query = new Parse.Query(AdminSummary);
-	    var processedGroupId = groupInfoListForAPage[i].groupId;
-	    query.equalTo("groupId", processedGroupId);
+	    groupInfoListForAPage[i].groupId;
+	    query.equalTo("groupId", groupInfoListForAPage[i].groupId);
 	    query.find().then(
 	        function(results) {
-	            alert(processedGroupId + results.length)
+	            var processedGroupId = results[0].get("groupId");
 	            if(results.length > 0) {
-	                $('#'+GROUP_ACC_ENERGY_ID_PREFIX+processedGroupId).html(results[0].get("accumulated_energy_consumption"));    
+	                var energy = ((results[0].get("accumulated_energy_consumption"))/(60*1000000)).toFixed(2);
+	                $('#'+GROUP_ACC_ENERGY_ID_PREFIX+processedGroupId).html(energy);    
 	            }
 	        }
 	    );
@@ -80,10 +93,10 @@ function drawClientListTable(start, end) {
 		html_text += '<td>'+idx+'</td>';
 		html_text += '<td><a href="'+url+'">'+data.groupId+'</a></td>';
 		html_text += '<td>'+data.numOfDevice+'</td>';
-		html_text += '<td>'+"N/A"+'</td>';
-		html_text += '<td>'+data.todayPowerConsumption+'</td>';
-		html_text += '<td>'+data.thisMonthPowerConsumption+'</td>';
-		html_text += '<td id="'+GROUP_ACC_ENERGY_ID_PREFIX+'"'+data.groupId+'>'+"N/A"+'</td>';
+		html_text += '<td>'+(data.currentPowerConsumption_mWmin/1000).toFixed(2)+'</td>';
+		html_text += '<td>'+(data.todayPowerConsumption_mWmin/(60*1000)).toFixed(2)+'</td>';
+		html_text += '<td>'+(data.thisMonthPowerConsumption_kWh).toFixed(2)+'</td>';
+		html_text += '<td id="'+GROUP_ACC_ENERGY_ID_PREFIX+data.groupId+'"></td>';
 		html_text += '<td>'+data.Location+'</td>';
 		
 		html_text += '</tr>';
@@ -120,7 +133,7 @@ function initGroupSummaryInfo() {
 			}
 			GroupSummaryInfo.deviceList = deviceList;
 			GroupSummaryInfo.groupList = groupList;
-			console.log(GroupSummaryInfo);
+			
 			return GroupSummaryInfo;
 		},
 		function(error) {			
@@ -140,7 +153,7 @@ function calculateTotalEnergyConsumption() {
     }).then(
     	function(data) {
         	totalAccumulatedEnergyConsumption = data.result;
-        	var temp_value = totalAccumulatedEnergyConsumption/60000000;
+        	var temp_value = totalAccumulatedEnergyConsumption/(60*1000000);
         	$('#totalAccEnergy').html(temp_value.toFixed(2)+' kWh');
         	$('#totalAvgAccEnergy').html((temp_value/GroupSummaryInfo.groupList.length).toFixed(2)+' kWh');
 
