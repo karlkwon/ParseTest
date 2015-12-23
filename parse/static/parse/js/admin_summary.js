@@ -22,7 +22,7 @@ var GROUP_COUNT_IN_A_PAGE = 20;
 function tempCurEnergyConsumption() {
     // 가짜 data. 보이는 list의 정보만 통합 함
     for(var i=0; i<groupInfoListForAPage.length; i++) {
-        totalCurrentEnergyConsumption += groupInfoListForAPage[i].currentPowerConsumption;
+        totalCurrentEnergyConsumption += groupInfoListForAPage[i].currentPowerConsumption_mWmin;
     }
     
 	var temp_value = totalCurrentEnergyConsumption/1000;
@@ -56,7 +56,7 @@ function fillGroupAccEnergy() {
 	            var processedGroupId = results[0].get("groupId");
 	            if(results.length > 0) {
 	                var energy = ((results[0].get("accumulated_energy_consumption"))/(60*1000000)).toFixed(2);
-	                $('#'+GROUP_ACC_ENERGY_ID_PREFIX+processedGroupId).html(energy);    
+	                $('#'+GROUP_ACC_ENERGY_ID_PREFIX+processedGroupId).html(energy);
 	            }
 	        }
 	    );
