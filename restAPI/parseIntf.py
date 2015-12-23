@@ -365,6 +365,7 @@ class ParseIntf():
         ## make info per group
         deviceIds = set()
         todayPowerConsumption = 0
+        currentPowerConsumption = 0
         thisMonthPowerConsumption = 0
         today = datetime.date.today()
         
@@ -407,17 +408,24 @@ class ParseIntf():
             if len(thisMonthDatas) == 0:
                 thisMonthUsage = 0
             else:
-                thisMonthUsage = thisMonthDatas[0].get('total_spent_energy_mwmin') - lastMonthData
+                thisMonthUsage = thisMonthDatas[0].get('total_spent_energy_mwmin')
+                print("++ ", deviceId, " : ", thisMonthUsage, ", ", lastMonthData)
+                thisMonthUsage -= lastMonthData
                 thisMonthPowerConsumption = thisMonthPowerConsumption + thisMonthUsage/1000*60/1000
 
             if currentData is not None:
-                tmpTodayPowerConsumption = currentData.get('current_spent_power_mw')
+                tmpTodayPowerConsumption = currentData.get('today_spent_energy_mv')
                 if tmpTodayPowerConsumption is not None:
-                    todayPowerConsumption = todayPowerConsumption + tmpTodayPowerConsumption
+                    todayPowerConsumption += tmpTodayPowerConsumption
+                    
+                tmpCurrentPowerConsumption = currentData.get('current_spent_power_mw')
+                if tmpCurrentPowerConsumption is not None:
+                    currentPowerConsumption += tmpCurrentPowerConsumption
         
         return {"groupId":groupId,
                 "numOfDevice":len(deviceIds),
                 "todayPowerConsumption":todayPowerConsumption,
+                "currentPowerConsumption":currentPowerConsumption,
                 "thisMonthPowerConsumption":round(thisMonthPowerConsumption,2),
                 "Location":"seoul"}
 
