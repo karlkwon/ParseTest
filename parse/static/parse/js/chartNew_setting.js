@@ -117,7 +117,7 @@ var dayChartOptions = {
     firstLabelToShow : -3,
     //graphTitle : "Electric power",
     xAxisLabel: "hour",
-    yAxisLabel: "mW",
+    yAxisLabel: "W",
     yAxisMinimumInterval: 1,          
     rotateLabels: 0,
     barValueSpacing: 2,
@@ -148,7 +148,7 @@ var weekChartOptions = {
     firstLabelToShow : -3,
     //graphTitle : "Electric power",
     xAxisLabel: "week",
-    yAxisLabel: "mW",
+    yAxisLabel: "W",
     yAxisMinimumInterval: 1,          
     rotateLabels: 0,
     barValueSpacing: 2,
@@ -158,6 +158,11 @@ var weekChartOptions = {
 };
 
 var updateChartOptions = {
+    scaleOverride : true,
+    scaleSteps: 10,
+    scaleStepWidth: 50,
+    scaleStartValue: 0,
+    
     datasetFill : false,
     annotateLabel: annotateForDaily,
     annotateDisplay : true,
@@ -169,7 +174,8 @@ var updateChartOptions = {
     animationLeftToRight : true,
     animationByDataset : true,
     xAxisLabel: "min",
-    yAxisLabel: "mW"
+    yAxisLabel: "W"
+    
 	/*
       animationStartWithDataset : startWithDataset,
       animationStartWithData : startWithData,
@@ -221,7 +227,7 @@ function annotateForDaily(area,ctx,data,statData,posi,posj,othervars) {
     for(var i=0;i<data.datasets.length;i++){
         if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
     	   // retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
-    	      retstring=statData[posi][posj].v2+" = "+statData[i][posj].datavalue+"<BR>";
+    	      retstring="["+statData[posi][posj].v2+"]  "+statData[i][posj].datavalue+" W<BR>";
         }
     }
     	

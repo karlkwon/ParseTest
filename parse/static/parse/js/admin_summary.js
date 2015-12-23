@@ -8,13 +8,10 @@ function initialize(parse) {
    Parse.initialize(X_Parse_Application_Id, X_Parse_JavaScript_API_Key);
 }
 
+var GroupSummaryInfo = new Object;
 
-var totalNumOfGroup;
-var totalNumOfDevice;
 var totalAccumulatedEnergyConsumption = 0;
 
-var deviceList = [];
-var groupList = [];
 var groupInfoListForAPage = [];
 
 var currentClientListPage = 1;
@@ -22,7 +19,7 @@ var GROUP_COUNT_IN_A_PAGE = 20;
 
 function getDetailInfoPerGroup(index, start, end) {
 	return jQuery.ajax({
-        url : "/detailInfoPerGroup?groupId="+groupList[index-1],
+        url : "/detailInfoPerGroup?groupId="+GroupSummaryInfo.groupList[index-1],
         method: 'GET'
     }).then(function(data) {
     	groupInfoListForAPage.push(data);
@@ -32,10 +29,17 @@ function getDetailInfoPerGroup(index, start, end) {
     });
 }
 
+function drawAdminPage() {
+    $('#totalNumOfGroup').html(GroupSummaryInfo.groupList.length);
+	$('#totalNumOfDevice').html(GroupSummaryInfo.deviceList.length);
+	calculateTotalEnergyConsumption();
+    createClientList();
+}
+
 function createClientList() {
 	var start = (currentClientListPage-1)*GROUP_COUNT_IN_A_PAGE + 1;
 	var possible_end = currentClientListPage * GROUP_COUNT_IN_A_PAGE;
-	var end = (totalNumOfGroup > possible_end) ? possible_end : totalNumOfGroup;
+	var end = (GroupSummaryInfo.groupList.length > possible_end) ? possible_end : GroupSummaryInfo.groupList.length;
 	
 	groupInfoListForAPage = [];
 	
@@ -66,23 +70,37 @@ function drawClientListTable(start, end) {
 	$("#client_list").html(html_text);
 }
 
-function getAllDeviceList() {
+function initGroupSummaryInfo() {
 	var AllDeviceList = Parse.Object.extend("AllDeviceList");
 	var query = new Parse.Query(AllDeviceList);
 	query.ascending("groupId");
 	return query.find().then(
 		function(results) {
 			// Do something with the returned Parse.Object values
-			deviceList = [];
+			var deviceList = [];
+            var groupList = [];
 			for (var i = 0; i < results.length; i++) {
-				if(typeof results[i].get('groupId') != "undefined") {
-					if(deviceList.indexOf(results[i].get('deviceId')) < 0) {
+			    var groupId = results[i].get('groupId');
+				if(typeof groupId != "undefined") {
+				    if(groupList.indexOf(groupId) < 0) {
+						groupList.push(groupId);
+					}
+				    
+				    var deviceId = results[i].get('deviceId');
+					if(deviceList.indexOf(deviceId) < 0) {
+					    if(typeof GroupSummaryInfo[groupId] == "undefined") {
+					         GroupSummaryInfo[groupId] = new Object;
+					         GroupSummaryInfo[groupId].devices = [];
+					    }
+					    GroupSummaryInfo[groupId].devices.push(deviceId);
 						deviceList.push(results[i]);
 					}				
 				}
 			}
-			
-			return deviceList;
+			GroupSummaryInfo.deviceList = deviceList;
+			GroupSummaryInfo.groupList = groupList;
+			console.log(GroupSummaryInfo);
+			return GroupSummaryInfo;
 		},
 		function(error) {			
 			return undefined;
@@ -103,7 +121,7 @@ function calculateTotalEnergyConsumption() {
         	totalAccumulatedEnergyConsumption = data.result;
         	var temp_value = totalAccumulatedEnergyConsumption/60000000;
         	$('#totalAccEnergy').html(temp_value.toFixed(2)+' kWh');
-        	$('#totalAvgAccEnergy').html((temp_value/totalNumOfGroup).toFixed(2)+' kWh');
+        	$('#totalAvgAccEnergy').html((temp_value/GroupSummaryInfo.groupList.length).toFixed(2)+' kWh');
 
     	},
     	function(error) {

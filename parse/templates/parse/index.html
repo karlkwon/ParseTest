@@ -100,7 +100,6 @@
         <div class="row">
             <div class="col-lg-4 col-md-4">
                 <div class="col-lg-8 col-lg-offset-2">
-                    <a href="#" data-target="#myModal" data-toggle="modal">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
@@ -125,12 +124,11 @@
                         </a>
                         -->
                     </div>
-                     </a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4">
                 <div class="col-lg-8 col-lg-offset-2">
-                     <a href="#">
+                    <a href="#" data-target="#myModal" data-toggle="modal">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
@@ -160,7 +158,7 @@
             </div>
             <div class="col-lg-4 col-md-4">
                 <div class="col-lg-8 col-lg-offset-2">
-                    <a href="#">
+                    <a href="#" data-target="#expectedBillModal" data-toggle="modal">
                     <div class="panel panel-yellow">
                         <div class="panel-heading">
                             <div class="row">
@@ -192,15 +190,75 @@
             
             <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog">
-                
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">제.목</h4>
+                        <h4 class="modal-title">월별 전력량 비교</h4>
                     </div>
                     <div class="modal-body">
-                        <p>현재 총사용 전력의 세부 정보는 어떤게 있을까</p>
+                        <table class = "table">
+                            <thead>
+                                <tr>
+                                <th></th>
+                                <th>7월</th>
+                                <th>8월</th>
+                                <th>9월</th>
+                                <th>10월</th>
+                                <th>11월</th>
+                                <th>12월</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <td>전력량</td>
+                                <td>60.53kWh</td>
+                                <td>63.21kWh</td>
+                                <td>70.17kWh</td>
+                                <td>62.56kWh</td>
+                                <td>57.71kWh</td>
+                                <td>52.35kWh</td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                
+                </div>
+            </div>
+            
+            <div class="modal fade" id="expectedBillModal" role="dialog">
+                <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">월별 요금 비교</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class = "table">
+                            <thead>
+                                <tr>
+                                <th></th>
+                                <th>7월</th>
+                                <th>8월</th>
+                                <th>9월</th>
+                                <th>10월</th>
+                                <th>11월</th>
+                                <th>12월</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <td>요금</td>
+                                <td>3,801원</td>
+                                <td>4,145원</td>
+                                <td>4,308원</td>
+                                <td>3,875원</td>
+                                <td>3,412원</td>
+                                <td>3,178원 (예상)</td>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -239,13 +297,13 @@
             					    <li>
             					       <form class="navbar-form" role="search">
                 		                    <div class="pull-right input-group input-append date" id="periodDatePicker">
-                			                    <input type="text" class="form-control" placeholder="" id="dateInput" style="width:100px"disabled>
+                			                    <input type="text" class="form-control" placeholder="" id="dateInput" style="width:100px" disabled>
                 			                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 		                    </div>
                 		              </form>
                 		            </li>
             						<li class="dropdown">
-            							<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="periodDropdown-toggle" >Choose Device<strong class="caret"></strong></a>
+            							<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="periodDropdown-toggle">Choose Device<strong class="caret"></strong></a>
             							<ul class="dropdown-menu" id="periodDropdown-menu">
             							    <li><a href="#dev1" id="dev1">Device #1</a></li>
                                             <li><a href="#dev2" id="dev2">Device #2</a></li>
@@ -295,7 +353,7 @@
                 					<ul class="nav navbar-nav navbar-right">
                 					   
                 						<li class="dropdown pull-right">
-                							 <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="currentDropdown-toggle">Choose Device<strong class="caret"></strong></a>
+                							<a class="dropdown-toggle" href="#" data-toggle="dropdown" id="currentDropdown-toggle">Choose Device<strong class="caret"></strong></a>
                                             <ul class="dropdown-menu" id="currentDropdown-menu">
                                                 <li><a href="#all">All Devices</a></li>
                                                 <li class="divider"></li>
@@ -383,7 +441,6 @@
     </div>
     <!-- /.container-fluid -->
     
-    <!--<script src="{% static 'parse/js/periodChart.js' %}"></script>-->
     <script>
         var groupId = '{{ Data.groupId }}';
         
@@ -406,7 +463,7 @@
             var canvas = document.getElementById("periodCanvas");
             // canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
             // canvas.getContext("2d").beginPath();
-            console.log("cv : " + canvas ); 
+            // console.log("cv : " + canvas ); 
             
             if(tabName == '#day') {
                 updateChart(canvas.getContext("2d"),dayChartData,dayChartOptions);
@@ -424,7 +481,7 @@
         function getPeriodDeviceId(e) {
             var target = $(e.target).attr("href");
             
-            $("#periodDropdown-toggle").text($(e.target).text());
+            $("#periodDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
             
             deviceName =  $(e.target).text();
             
@@ -434,20 +491,14 @@
         function getCurrentDeviceId(e) {
             var target = $(e.target).attr("href");
             
-            $("#currentDropdown-toggle").text($(e.target).text());
+            $("#currentDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
             
             deviceName =  $(e.target).text();
-            /*
-            for(var i = 0; i < updateChartData.labels.length; i++) {
-                console.log("i : "+ updateChartData.labels[i]);
-                updateChartData.labels[i] = "-";
-                updateChartData.datasets[0].data[i] = 0;                    
-            }
-              */
-              
+
             requestIntervalData();
         }
         
+        /* 사용하지 않음
         function initUpdateChart() {
             console.log("initUpdateChart");
             for(var i = data.length -1 ; i >= 0; i--) {
@@ -460,6 +511,7 @@
                 }
             }
         }
+        */
         
         function getToday() {
             var today = new Date();
@@ -469,7 +521,7 @@
         }
         
          function getLastDayOfWeek(date) {
-            console.log("getLastDayOfWeek() date -  "+ date);
+            //console.log("getLastDayOfWeek() date -  "+ date);
             var cur = new Date();
             
             cur.setYear(Number(date.toString().substring(0,4)) + 1900);
@@ -511,21 +563,20 @@
                 url :  url,
                 method: 'GET'
             }).then(function(data) {
-                console.log(data);
-                
                 var list = "";
                 for(var i = 0; i< data.length - 1 ; i++) {
-                    var hour = Math.round(data[i].DailyAvgUseTime_min);
-                    var min  = (hour/60)-(hour / 60).toFixed(0);
+                    var daily_hour = Math.floor(data[i].DailyAvgUseTime_min / 60);
+                    var daily_min = (data[i].DailyAvgUseTime_min / 60) - daily_hour;
+                    daily_min = Math.floor(daily_min * 60);
                     
-                    hour = (hour / 60).toFixed(0);
-                    min = (min * 60).toFixed(0);
-                    // console.log("hour : " + hour);
-                    // console.log("rem : " + min);
+                    var today_hour = ((data[i].TodayUseTime_sec / 60) / 60) - (Math.floor((data[i].TodayUseTime_sec / 60) / 60)) ;
+                    
+                    // console.log(today_hour);
+                    // console.log( Math.floor(today_hour * 60));
                     
                     list = list + "<tr><td>"+data[i].DeviceId +"</td><td>"
-                    + ((data[i].TodayUseTime_sec / 60) / 60).toFixed(0) +" 시간 "+ ((data[i].TodayUseTime_sec / 60) % 60).toFixed(0) + " 분</td><td>"
-                    + hour + " 시간 " + min +" 분</td><td>"
+                    + (Math.floor((data[i].TodayUseTime_sec / 60) / 60)) +" 시간 "+ Math.floor(today_hour * 60) + " 분</td><td>"
+                    + daily_hour + " 시간 " + daily_min +" 분</td><td>"
                     + (data[i].CurrentElectricPower_mW/1000).toFixed(2) + " W</td><td>"
                     + data[i].AverageElectricPower_Wh + " W</td><td>"
                     + data[i].ExpectedMonthlyElectricPower_kWh+ " kWh</td><tr>"
@@ -558,18 +609,36 @@
                 // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
                 url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
             } else {
-                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
-                url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;    
+                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;  
+                // console.log(getLastDayOfWeek(getToday()) + ' ' + getLastDayOfWeek(selectedDate));
+                
+                var targetDate;
+                
+                if(getLastDayOfWeek(getToday()) == getLastDayOfWeek(selectedDate)) {
+                    targetDate = getToday() -7;
+                    console.log("same week  : "+ targetDate);
+                    console.log(document.getElementById("dateInput").value);
+                    
+                    document.getElementById("dateInput").value = targetDate;
+                } else {
+                    targetDate = selectedDate;
+                    console.log(getLastDayOfWeek(targetDate));
+                    
+                    if(Number(getLastDayOfWeek(targetDate).substring(6,8)) > new Date(2015, 12, 0).getDate()) {
+                        console.log("ddd");    
+                    }
+                } 
+                
+                url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(targetDate)+'&deviceId='+deviceName;    
             }
             
             return url;
         }
         
-        var diff = 10000;
+        var diff = 1000;
         function intCeil(num) {
             return Math.ceil((num/diff)) * diff;
         }
-        
         
         function moneyFormat(n) {
             return n.toFixed(0).replace(/./g, function(c, i, a) {
@@ -594,9 +663,7 @@
                 
                 deviceName = data[0];
                 
-                $(".dropdown-toggle").text(deviceName);
-                //$("#periodDropdown-toggle").text(deviceName);
-                //$("#currentDropdown-toggle").text(deviceName);
+                $(".dropdown-toggle").html(deviceName +"<strong class='caret'></strong>");
                 
                 requestData();
                 requestIntervalData();
@@ -614,20 +681,19 @@
                 url :  url,
                 method: 'GET'
             }).then(function(data) {
-                // console.log(data);
-                
                 var idx = updateChartData.labels.length;
-                var label;
                 
                 /*
+                var label;
                 if(data.time.toString().length == 3) {
                     label = data.time.toString().substring(0,1) +":"+data.time.toString().substring(1,3);
                 } else {
                     label = data.time.toString().substring(0,2) +":"+data.time.toString().substring(2,4);
                 }
                 */
+                
                 for(var i = data.length -1 ; i >= 0; i--) {
-                    updateChartData.datasets[0].data[i] = data[data.length -1  - i].value;
+                    updateChartData.datasets[0].data[i] = (data[data.length -1  - i].value / 1000).toFixed(2);
                     
                     if(data[data.length -1  - i].time.toString().length == 3) {
                        updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,1) +":"+data[data.length -1  - i].time.toString().substring(1,3);
@@ -635,13 +701,30 @@
                        updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
                     }
                 }
+                
+                var data_w = updateChartData.datasets[0].data;
+                var min = Math.min.apply(null,data_w);
+                var max = Math.max.apply(null,data_w);
+                
+                if(max < 100) {
+                    updateChartOptions.scaleStepWidth = 100 / updateChartOptions.scaleSteps;
+                } else if(max >= 100) {
+                    updateChartOptions.scaleStepWidth = 300 / updateChartOptions.scaleSteps;
+                } else if(max >= 300) {
+                    updateChartOptions.scaleStepWidth = 500 / updateChartOptions.scaleSteps;
+                } else if(max >= 500) {
+                    updateChartOptions.scaleStepWidth = 1000 / updateChartOptions.scaleSteps;
+                } else if(max >= 1000) {
+                    updateChartOptions.scaleStepWidth = 2000 / updateChartOptions.scaleSteps;
+                }
+                
                 /*
                  updateChartData.labels[idx] = label;
                     updateChartData.datasets[0].data[idx] = data.value;
                     updateChartData.labels.splice(0,1);
                     updateChartData.datasets[0].data.splice(0,1);
-                    */
-
+                */
+                
                 updateChart(document.getElementById("currentCanvas").getContext("2d"), updateChartData, updateChartOptions, true, true);
             });
         }
@@ -657,19 +740,16 @@
                 method: 'GET'
             }).then(function(data) {
                 if(endPoint == "dailyUsage") {
-                    for(var i = 0; i<Object.keys(data).length;i++) {
-                        dayChartData.datasets[0].data[i] = data[i];
+                    var data_w = [];
+                    for(var i =0; i< dayChartData.datasets[0].data.length; i++) {
+                        // data_w[i] = dayChartData.datasets[0].data;
+                        data_w[i] = data[i] / 1000;
                     }
+                    //var data_w = dayChartData.datasets[0].data;
                     
-                    //console.log("min : " + Math.max.apply(null,dayChartData.datasets[0].data));
-                    //console.log("ceil : " + Math.pow(Math.max.apply(null,dataForDay.datasets[0].data),100));
-                    //console.log("ceil : " + intCeil(Math.max.apply(null,dayChartData.datasets[0].data)));
-                    var minCeil =  intCeil(Math.min.apply(null,dayChartData.datasets[0].data));
-                    var maxCeil =  intCeil(Math.max.apply(null,dayChartData.datasets[0].data));
-                    
-                    dayChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10) + diff;
-                    //dayChartOptions.scaleStartValue = Math.min.apply(null,dataForDay.datasets[0].data);
-                    //console.log("minCeil : " + minCeil);
+                    var minCeil = intCeil(Math.min.apply(null,data_w));
+                    var maxCeil = intCeil(Math.max.apply(null,data_w));
+                    dayChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10);
                     
                     if(minCeil <= 0) {
                         dayChartOptions.scaleStartValue = minCeil;
@@ -677,11 +757,33 @@
                         dayChartOptions.scaleStartValue = minCeil-diff;
                     }
                     
+                    for(var i = 0; i<Object.keys(data).length;i++) {
+                        if(data[i] != 0) {
+                            dayChartData.datasets[0].data[i] = data[i] / 1000;
+                        }
+                    }
+                    
                     updateChart(document.getElementById("periodCanvas").getContext("2d"), dayChartData, dayChartOptions, true, true);
                 } else {
                     for(var i = 0; i <= Object.keys(Object.keys(data)[0]).length;i++) {
-                        weekChartData.datasets[0].data[i] = data.current[i];
-                        weekChartData.datasets[1].data[i] = data.target[i];
+                        if(data.current[i] != 0) {
+                            weekChartData.datasets[0].data[i] = data.current[i] / 1000;    
+                        } 
+                        
+                        if(data.target[i] != 0) {
+                            weekChartData.datasets[1].data[i] = data.target[i] / 1000;
+                        }
+                    }
+                    
+                    var data_w = weekChartData.datasets[0].data;
+                    var minCeil = intCeil(Math.min.apply(null,data_w));
+                    var maxCeil = intCeil(Math.max.apply(null,data_w));
+                    weekChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10);
+                    
+                    if(minCeil <= 0) {
+                        weekChartOptions.scaleStartValue = minCeil;
+                    } else {
+                        weekChartOptions.scaleStartValue = minCeil-diff;
                     }
                     
                     updateChart(document.getElementById("periodCanvas").getContext("2d"), weekChartData, weekChartOptions, true, true);
@@ -705,25 +807,11 @@
             });  
             
             $('#periodDatePicker').datepicker("setDate", today);
-            
-            $('#updateDatePicker').datepicker({
-                format: "yyyymmdd",
-                todayHighlight:true,
-                autoclose:true
-            });  
-            
-            $('#updateDatePicker').datepicker("setDate", today);
-            
             $('#periodDatePicker').change(function() {
-               requestData();
-            });
-            
-            $('#updateDatePicker').change(function() {
-               requestIntervalData();
+                requestData();
             });
             
             requestDetailInfo();
-            
             setTablePanelSize();
         });
         
@@ -731,9 +819,11 @@
             var height= document.getElementById('test').offsetHeight;
             document.getElementById('tablePanel').style["height"] = height+"px";
         }
+        
         window.onresize = function(e) {
             setTablePanelSize();
         }
+        
         //setRefreshCanvas();
     </script>
 </body>
