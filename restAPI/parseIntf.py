@@ -457,14 +457,14 @@ class ParseIntf():
             currentDatas = self.getCurrentParseData(deviceId).get('results')
             currentData = currentDatas[0]
 
-            ageInDay = currentData['accumulated_time_from_registered_sec']/60/60/24 + 1
+            ageInDay = currentData['accumulated_time_from_registered_sec']/60/60/24 + 1 # day
             todayUseTime = currentData['today_accumulated_use_time_sec']
-            totalUseTime = currentData['total_accumulated_use_time_sec']
-            avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['total_accumulated_use_time_sec']*3600
-            thisMonthPower = (avgPower * 24 * 30) / 1000   ##  kWh
+            totalUseTime = currentData['total_accumulated_use_time_sec']    # sec
+            avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['total_accumulated_use_time_sec']  ## Wh per sec
+            thisMonthPower = (avgPower / 1000 * 24 * 30 * 3600)    ##  kWh
             
             accumulatedPower = accumulatedPower + thisMonthPower
-            dailyAverageUsage = dailyAverageUsage + avgPower*24
+            dailyAverageUsage = dailyAverageUsage + avgPower*3600*24
             accumulateTodayPower = accumulateTodayPower + currentData['today_spent_energy_mv']
 
             print("ageInDay: ", ageInDay)
@@ -474,8 +474,8 @@ class ParseIntf():
                         "DeviceId":deviceId,
                         "TodayUseTime_sec":todayUseTime,
                         "DailyAvgUseTime_min":round(totalUseTime/60/ageInDay, 2),
-                        "CurrentElectricPower_mW":currentData['current_spent_power_mw'],
-                        "AverageElectricPower_Wh":round(avgPower, 2),
+                        "CurrentElectricPower_mWmin":currentData['current_spent_power_mw'],
+                        "AverageElectricPower_Wh":round(avgPower * 3600, 2),
                         "ExpectedMonthlyElectricPower_kWh":round(thisMonthPower, 2),
             })
 
