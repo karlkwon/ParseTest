@@ -409,8 +409,13 @@ class ParseIntf():
                 thisMonthUsage = 0
             else:
                 thisMonthUsage = thisMonthDatas[0].get('total_spent_energy_mwmin')
-                print("++ ", deviceId, " : ", thisMonthUsage, ", ", lastMonthData)
-                thisMonthUsage -= lastMonthData
+                
+                # print("last Month: ", lastMonthDatas[0])
+                # print("this Month: ", thisMonthDatas[0])
+                # print("++ ", deviceId, " : ", thisMonthUsage, ", ", lastMonthData)
+                
+                if thisMonthUsage > lastMonthData:
+                    thisMonthUsage -= lastMonthData
                 thisMonthPowerConsumption = thisMonthPowerConsumption + thisMonthUsage/1000*60/1000
 
             if currentData is not None:
