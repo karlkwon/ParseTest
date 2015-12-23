@@ -26,6 +26,15 @@ class ParseIntf():
     def getStartDayOfThisMonth(self, date_):
         return date_ - datetime.timedelta(days=(date_.day))
 
+    def makeAccumulatedDataInTime(self, data):
+        acc = [0]*24
+        # print("size: ", len(data))
+        for s in data:
+            idx = int(int(s['time'])/100)
+            acc[idx] = acc[idx] + int(s['current_spent_power_mw'])
+
+        return acc
+
 ###############################################################################
 ##  parse access
 ###############################################################################
@@ -218,15 +227,42 @@ class ParseIntf():
         
         return ret
 
+    def getDailyWholeData(self, groupId, date_):
+        ## make device list
+        deviceList, groups = self.getParseDeviceList(groupId)
+        deviceList = deviceList.get('results')
+        
+        ret = dict()
+        
+        ## combine result
+        accTotal = [0]*24
+        for s in deviceList:
+            devId = s['deviceId']
+            result = self.getParseData(devId, date_, 0).get('results') \
+            + self.getParseData(devId, date_, 1).get('results')
+
+            acc = self.makeAccumulatedDataInTime(result)
+
+            tmpRet = dict()
+            for i in range(24):
+                tmpRet[i] = acc[i]
+                accTotal[i] += acc[i]
+            
+            ret[devId] = tmpRet
+
+        tmpRet = dict()
+        for i in range(24):
+            tmpRet[i] = accTotal[i]
+            
+        ret['TOTAL'] = tmpRet
+
+        return ret
+
     def getDailyData(self, deviceId_, date_):
         result = self.getParseData(deviceId_, date_, 0).get('results') \
         + self.getParseData(deviceId_, date_, 1).get('results')
         
-        acc = [0]*24
-        print("size: ", len(result))
-        for s in result:
-            idx = int(int(s['time'])/100)
-            acc[idx] = acc[idx] + int(s['current_spent_power_mw'])
+        acc = self.makeAccumulatedDataInTime(result)
 
         ret = dict()
         for i in range(24):
@@ -234,9 +270,41 @@ class ParseIntf():
             
         return ret
 
+    def getWeeklyWholeData(self, groupId, date_, targetDate_):
+        ## make device list
+        deviceList, groups = self.getParseDeviceList(groupId)
+        deviceList = deviceList.get('results')
+        
+        ## combine result
+        ret = dict()
+        for s in deviceList:
+            devId = s['deviceId']
+            tmpRet = self.getWeeklyData(devId, date_, targetDate_)
+            ret[devId] = tmpRet
+
+            tmpTotal = ret.get('Total')
+            if tmpTotal is None:
+                tmpTotal = dict()
+                ret['Total'] = tmpTotal
+            
+            for cat in tmpRet.keys():
+                subObj = tmpRet[cat]
+                
+                tmpObj = tmpTotal.get(cat)
+                if tmpObj is None:
+                    tmpObj = dict()
+                    tmpTotal[cat] = tmpObj
+                    
+                for day in subObj.keys():
+                    tmpObj[day] = tmpObj.get(day, 0) + subObj[day]
+        
+        return ret
+
     def getWeeklyData(self, deviceId_, date_, targetDate_):
         totalRet = dict()
         
+        ##  get parse data of this week's last data for each day
+        ##  and get today's data
         result = self.getWeeklyParseData(deviceId_, date_).get('results') \
         + self.getLastParseData(deviceId_, date_).get('results')
         
@@ -254,6 +322,7 @@ class ParseIntf():
             
         totalRet['current'] = ret
 
+        ##  get parse data of past week which inclede 'targetDate_'
         result = self.getWeeklyParseData(deviceId_, targetDate_).get('results')
         
         acc = [0]*7
@@ -352,12 +421,6 @@ class ParseIntf():
                 "thisMonthPowerConsumption":round(thisMonthPowerConsumption,2),
                 "Location":"seoul"}
 
-        # return {"groupId":"A",
-        #         "numOfDevice":2,
-        #         "todayPowerConsumption":100,
-        #         "thisMonthPowerConsumption":100,
-        #         "Location":"seoul"}
-
 
     def getDetailInfoForDevice(self, groupId):
         # get device list
@@ -380,13 +443,9 @@ class ParseIntf():
             currentDatas = self.getCurrentParseData(deviceId).get('results')
             currentData = currentDatas[0]
 
-            # print("== ", currentData)
-            
             ageInDay = currentData['accumulated_time_from_registered_sec']/60/60/24 + 1
-            # ageInDay = currentData['total_accumulated_use_time_sec']/60/60/24 + 1
             todayUseTime = currentData['today_accumulated_use_time_sec']
             totalUseTime = currentData['total_accumulated_use_time_sec']
-            # avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['accumulated_time_from_registered_sec']*3600
             avgPower = (currentData['total_spent_energy_mwmin']/60/1000)/currentData['total_accumulated_use_time_sec']*3600
             thisMonthPower = (avgPower * 24 * 30) / 1000   ##  kWh
             
@@ -417,13 +476,3 @@ class ParseIntf():
         
         return ret
         
-        # return {"GroupId":"A", 
-        #         "DeviceId":"wemo:insight:221443K1200252", 
-        #         "TotalUseTime":100, 
-        #         "DailyAvgUseTime":100, 
-        #         "CurrentElectricPower":200,
-        #         "AverageElectricPower":300,
-        #         "ExpectedMonthlyElectricPower":9000,
-        #         "ExpectedMonthlyElectricBill":75000,
-        #         }
-
