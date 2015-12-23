@@ -385,12 +385,13 @@ class ParseIntf():
                 ## then don't use it.
                 currentData = currentDatas[0]
 
+                logDate_i = currentData.get('date') * 24 * 60
                 logTime_i = currentData.get('time')
-                logTime_im = int(logTime_i/100)*60 + logTime_i%100
+                logTime_im = logDate_i + int(logTime_i/100)*60 + logTime_i%100
                 today_im = datetime.datetime.now(pytz.timezone('Asia/Seoul'))
-                today_im = (today_im.hour)*60 + today_im.minute
+                today_im = logDate_i + (today_im.hour)*60 + today_im.minute
                 
-                if abs(today_im - logTime_im) >= 3:
+                if abs(today_im - logTime_im) >= 5:
                     currentData = None
                 
             ## get start day of this month's data
@@ -410,9 +411,9 @@ class ParseIntf():
             else:
                 thisMonthUsage = thisMonthDatas[0].get('total_spent_energy_mwmin')
                 
-                # print("last Month: ", lastMonthDatas[0])
-                # print("this Month: ", thisMonthDatas[0])
-                # print("++ ", deviceId, " : ", thisMonthUsage, ", ", lastMonthData)
+                print("last Month: ", lastMonthDatas[0])
+                print("this Month: ", thisMonthDatas[0])
+                print("++ ", deviceId, " : ", thisMonthUsage, ", ", lastMonthData)
                 
                 if thisMonthUsage > lastMonthData:
                     thisMonthUsage -= lastMonthData
