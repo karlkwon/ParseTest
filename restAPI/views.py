@@ -31,6 +31,18 @@ def getDailyData(request):
     return getData(request)
 
 @api_view(['GET'])
+def getDailyWholeData(request):
+    if request.method == 'GET':
+        date_ = request.GET.get('date', '20151103')
+        date_ = int(date_)
+        groupId = request.GET.get('groupId', "A")
+        data = dataIntf.getDailyWholeData(groupId, date_)
+
+        print(data)
+
+        return Response(data)
+
+@api_view(['GET'])
 def getWeeklyData(request):
     if request.method == 'GET':
         date_ = request.GET.get('date', '20151110')
@@ -39,6 +51,20 @@ def getWeeklyData(request):
         targetDate_ = int(targetDate_)
         deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
         data = dataIntf.getWeeklyData(deviceId_, date_, targetDate_)
+
+        print(data)
+
+        return Response(data)
+
+@api_view(['GET'])
+def getWeeklyWholeData(request):
+    if request.method == 'GET':
+        date_ = request.GET.get('date', '20151110')
+        date_ = int(date_)
+        targetDate_ = request.GET.get('targetDate', '20151108')
+        targetDate_ = int(targetDate_)
+        groupId = request.GET.get('groupId', "A")
+        data = dataIntf.getWeeklyWholeData(groupId, date_, targetDate_)
 
         print(data)
 
