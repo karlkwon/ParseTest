@@ -417,7 +417,7 @@ class ParseIntf():
                 
                 if thisMonthUsage > lastMonthData:
                     thisMonthUsage -= lastMonthData
-                thisMonthPowerConsumption = thisMonthPowerConsumption + thisMonthUsage/1000*60/1000
+                thisMonthPowerConsumption = thisMonthPowerConsumption + thisMonthUsage/1000/60/1000
 
             if currentData is not None:
                 tmpTodayPowerConsumption = currentData.get('today_spent_energy_mv')
@@ -430,9 +430,9 @@ class ParseIntf():
         
         return {"groupId":groupId,
                 "numOfDevice":len(deviceIds),
-                "todayPowerConsumption":todayPowerConsumption,
-                "currentPowerConsumption":currentPowerConsumption,
-                "thisMonthPowerConsumption":round(thisMonthPowerConsumption,2),
+                "todayPowerConsumption_mWmin":todayPowerConsumption,
+                "currentPowerConsumption_mWmin":currentPowerConsumption,
+                "thisMonthPowerConsumption_kWh":round(thisMonthPowerConsumption,2),
                 "Location":"seoul"}
 
 
