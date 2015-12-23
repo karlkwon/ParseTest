@@ -2,6 +2,8 @@ var X_Parse_Application_Id = "6599V3t4EzZy6D1UtfjDrFE8rc71TiYvAXowS1fM";
 var X_Parse_JavaScript_API_Key = "PEdRsFUwNRj2mZo66UBmt9ZcSCvAHQ8O9PYvg3kI";
 var X_Parse_Rest_API_Key = "SqF6YfaQTEGHVBGKFI7aQ3wACkqaSUv5IOWdwS1z";
 
+var GROUP_ACC_ENERGY_ID_PREFIX = "group_acc_energy_";
+
 var Parse;
 function initialize(parse) {
    Parse = parse;
@@ -25,8 +27,27 @@ function getDetailInfoPerGroup(index, start, end) {
     	groupInfoListForAPage.push(data);
     	if(groupInfoListForAPage.length == (end-start+1)) {
     		drawClientListTable(start, end);
+    		fillGroupAccEnergy();
     	}
     });
+}
+
+function fillGroupAccEnergy() {
+    var AdminSummary = Parse.Object.extend("AdminSummary");
+	
+	for(var i = 0; i<groupInfoListForAPage.length; i++) {
+	    var query = new Parse.Query(AdminSummary);
+	    var processedGroupId = groupInfoListForAPage[i].groupId;
+	    query.equalTo("groupId", processedGroupId);
+	    query.find().then(
+	        function(results) {
+	            alert(processedGroupId + results.length)
+	            if(results.length > 0) {
+	                $('#'+GROUP_ACC_ENERGY_ID_PREFIX+processedGroupId).html(results[0].get("accumulated_energy_consumption"));    
+	            }
+	        }
+	    );
+	}
 }
 
 function drawAdminPage() {
@@ -62,7 +83,7 @@ function drawClientListTable(start, end) {
 		html_text += '<td>'+"N/A"+'</td>';
 		html_text += '<td>'+data.todayPowerConsumption+'</td>';
 		html_text += '<td>'+data.thisMonthPowerConsumption+'</td>';
-		html_text += '<td>'+"N/A"+'</td>';
+		html_text += '<td id="'+GROUP_ACC_ENERGY_ID_PREFIX+'"'+data.groupId+'>'+"N/A"+'</td>';
 		html_text += '<td>'+data.Location+'</td>';
 		
 		html_text += '</tr>';
