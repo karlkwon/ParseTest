@@ -1,5 +1,7 @@
+import collections
 import json, http.client, urllib
 import datetime, time
+from operator import itemgetter, attrgetter, methodcaller
 from .billCalculator import getBill
 import pytz
 
@@ -222,6 +224,8 @@ class ParseIntf():
     def getCurrentData(self, deviceId_):
         result = self.getCurrentParseData(deviceId_, 20).get('results')
         
+        print("// getCurrentData: ", result)
+        
         if len(result) == 0:
             return None
         
@@ -235,10 +239,41 @@ class ParseIntf():
                 "date":s['date'], 
                 "time":s['time'], 
                 "value":s['current_spent_power_mw'], 
-                "avgWh":avg_wh}
+                "avgWh":round(avg_wh, 2)}
                 )
         
         return ret
+
+    def getCurrentWholeData(self, groupId):
+        print("== getCurrentWholeData")
+        
+        ## make device list
+        deviceList, groups = self.getParseDeviceList(groupId)
+        
+        ## combine result
+        tmpRet = []
+        for deviceId in deviceList:
+            tmp = self.getCurrentData(deviceId)
+            print(">> ", deviceId, " :: ", tmp)
+            tmpRet = tmpRet + tmp
+            
+        tmpDict = collections.OrderedDict()
+        for item in tmpRet:
+            idx = item['date']*10000 + item['time']
+            if idx in tmpDict.keys():
+                tmpDict[idx]['value'] += item['value']
+                tmpDict[idx]['avgWh'] += item['avgWh']
+            else:
+                tmpDict[idx] = item
+
+        ret = []
+        i = 0
+        for k, v in tmpDict.items():
+            ret.append(v)
+            
+        ret = list(ret)
+
+        return ret[:20]
 
     def getDailyWholeData(self, groupId, date_):
         ## make device list

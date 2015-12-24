@@ -83,8 +83,13 @@ def getWeeklyWholeData(request):
 @api_view(['GET'])
 def getCurrentData(request):
     if request.method == 'GET':
-        deviceId_ = request.GET.get('deviceId', "wemo:insight:221443K1200046")
-        data = dataIntf.getCurrentData(deviceId_)
+        deviceId_ = request.GET.get('deviceId')
+        groupId = request.GET.get('groupId', "A")
+        
+        if deviceId_ is None:
+            data = dataIntf.getCurrentWholeData(groupId)
+        else:
+            data = dataIntf.getCurrentData(deviceId_)
 
         print(data)
 
