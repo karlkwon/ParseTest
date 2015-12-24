@@ -105,8 +105,8 @@ var dayChartOptions = {
     // yAxis
     scaleOverride : true,
     scaleSteps: 10,
-    scaleStepWidth: Math.round((Math.max.apply(null,dayChartData.datasets[0].data) - Math.min.apply(null,dayChartData.datasets[0].data)) / 10),
-    scaleStartValue: Math.min.apply(null,dayChartData.datasets[0].data),
+    scaleStepWidth: 5,
+    scaleStartValue: 0,
     
     bezierCurve : false,
     responsive: true,
@@ -134,10 +134,10 @@ var weekChartOptions = {
     //annotateLabel: annotateForWeekly,
     
     // yAxis
-    //scaleOverride : true,
-    //scaleSteps: 35,
-    //scaleStepWidth: Math.round((Math.max.apply(null,dataForWeek.datasets[0].data) - Math.min.apply(null,dataForWeek.datasets[0].data)) / 35),
-    //scaleStartValue: Math.min.apply(null,dataForWeek.datasets[0].data),
+    scaleOverride : true,
+    scaleSteps: 10,
+    scaleStepWidth: 10,
+    scaleStartValue: 0,
     
     bezierCurve : false,
     responsive: true,
@@ -174,8 +174,13 @@ var updateChartOptions = {
     animationLeftToRight : true,
     animationByDataset : true,
     xAxisLabel: "min",
-    yAxisLabel: "W"
+    yAxisLabel: "W",
     
+    scaleOverride: true,
+	scaleSteps: 10,
+	scaleStepWidth: 10,
+	scaleStartValue: 0,
+	
 	/*
       animationStartWithDataset : startWithDataset,
       animationStartWithData : startWithData,
@@ -193,10 +198,7 @@ var updateChartOptions = {
       onAnimationComplete : startUpdate,
       graphTitleFontSize: 18, 
 	responsive : true,
-	scaleOverride: true,
-	scaleSteps: 10,
-	scaleStepWidth: 10,
-	scaleStartValue: 0,
+
 	fmtXLabel : "fmttime hh:mm:ss",
 	animationCount: 1,
 	animationPauseTime : 0,
@@ -227,7 +229,7 @@ function annotateForDaily(area,ctx,data,statData,posi,posj,othervars) {
     for(var i=0;i<data.datasets.length;i++){
         if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Line") {
     	   // retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
-    	      retstring="["+statData[posi][posj].v2+"]  "+statData[i][posj].datavalue+" W<BR>";
+    	      retstring="["+statData[posi][posj].v2+"]  "+statData[i][posj].datavalue+" Wh<BR>";
         }
     }
     	

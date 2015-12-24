@@ -602,42 +602,49 @@
             });
         }    
     
-        function getUrl() {
+        function getUrl(type) {
             var url;
             selectedDate = $("input:text").val();  
             
             if(endPoint== "dailyUsage") {
                 // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
-                url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
+                url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate +'&groupId='+groupId;
+                console.log("getUrl : " + type);
+                
+                if(deviceName.substring(0,4) == "wemo") {
+                    url = url + '&deviceId='+deviceName;
+                }
             } else {
                 // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;  
-                // console.log(getLastDayOfWeek(getToday()) + ' ' + getLastDayOfWeek(selectedDate));
                 
                 var targetDate;
-                
                 if(getLastDayOfWeek(getToday()) == getLastDayOfWeek(selectedDate)) {
                     targetDate = getToday() -7;
-                    console.log("same week  : "+ targetDate);
-                    console.log(document.getElementById("dateInput").value);
+                    // console.log("same week  : "+ targetDate);
+                    // console.log(document.getElementById("dateInput").value);
                     
                     document.getElementById("dateInput").value = targetDate;
                 } else {
                     targetDate = selectedDate;
-                    console.log(getLastDayOfWeek(targetDate));
+                    // console.log(getLastDayOfWeek(targetDate));
                     
-                    if(Number(getLastDayOfWeek(targetDate).substring(6,8)) > new Date(2015, 12, 0).getDate()) {
-                        console.log("ddd");    
-                    }
+                    // if(Number(getLastDayOfWeek(targetDate).substring(6,8)) > new Date(2015, 12, 0).getDate()) {
+                    //     console.log("ddd");    
+                    // }
                 } 
                 
-                url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(targetDate)+'&deviceId='+deviceName;    
+                url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(targetDate);
+                
+                if(deviceName.substring(0,4) == "wemo") {
+                    url = url + '&deviceId='+deviceName;
+                }
             }
             
             return url;
         }
         
-        var diff = 100;
         function intCeil(num) {
+            var diff = 100;
             return Math.ceil((num/diff)) * diff;
         }
         
@@ -654,23 +661,20 @@
                 url : url,
                 method: 'GET'
             }).then(function(data) {
-                var list="";
-                list = "<li><a href='#allDev' id='allDev'>All Devices</a></li>";
+                var list = "<li><a href='#allDev' id='allDev'>All Devices</a></li>";
                 for(var i = 0; i< data.length; i++) {
                     list = list+ " <li><a href='#dev"+(i+1)+"' id='dev"+ (i+1)+"'>"+data[i]+"</a></li>";
                 }
                 
-                //console.log("list : " + list);
                 document.getElementById('periodDropdown-menu').innerHTML =list;
                 document.getElementById('currentDropdown-menu').innerHTML =list;
                 
-                deviceName = data[0];
-                // deviceName = "All Devices";
+                //deviceName = data[0];
+                //$(".dropdown-toggle").html(deviceName +"<strong class='caret'></strong>");
                 
-                $(".dropdown-toggle").html(deviceName +"<strong class='caret'></strong>");
-                //$(".dropdown-toggle").html("All Devices" +"<strong class='caret'></strong>");
+                deviceName = "All";
+                $(".dropdown-toggle").html("All Devices <strong class='caret'></strong>");
                 
-                //requestData("All");
                 requestData();
                 requestIntervalData();
                 
@@ -679,7 +683,11 @@
         }
         
         function requestIntervalData() {
-            var url = "{% url 'restCurrentUsage' %}" + '?format=json&deviceId='+deviceName;
+            var url = "{% url 'restCurrentUsage' %}" + "?format=json&groupId="+groupId;
+                
+            if(deviceName.substring(0,4) == "wemo") {
+                url = url + '&deviceId='+deviceName;
+            }
             
             console.log("requestIntervalData() url : "+ url);
             
@@ -687,8 +695,8 @@
                 url :  url,
                 method: 'GET'
             }).then(function(data) {
-                var idx = updateChartData.labels.length;
                 /*
+                var idx = updateChartData.labels.length;
                 var label;
                 if(data.time.toString().length == 3) {
                     label = data.time.toString().substring(0,1) +":"+data.time.toString().substring(1,3);
@@ -704,14 +712,13 @@
                 
                 var curMin = nowHour*60 +nowMin;
                 var inputData = new Object;
+                
                 for(var i=0; i<21; i++) {
                     inputData[(curMin-i).toString()] = 0;
                 }
                 
                 for(var i=0; i<data.length; i++) {
-                    // console.log(data[i]);
                     var time = (data[i].time/100).toFixed(0) * 60 + (data[i].time % 100);
-                    // console.log("time : " + time);
                     if(typeof inputData[time.toString()] != "undefined") {
                         inputData[time.toString()] = data[i].value / 1000;
                     }
@@ -724,25 +731,14 @@
                     start = curMin -1;
                 }
                 
-                // console.log(inputData);
-                
                 for(var t=start-19; t<=start; t++) {
                     labelArr[t-(start-19)] = (Math.floor(t/60)).toString() + ":" + (t%60).toString();
                 }
+                
+                // console.log(inputData);
                 // console.log(labelArr);
                 
-                // for(var k = 0; k < 20; k++) {
-                //     labelArr[k] = nowHour + ":" + nowMin;
-                // }
-                
-                
-                // console.log(labelArr[0]);
-                // if(labelArr[0]=="17:31") {
-                //     console.log("true");
-                // }
-                
                 for(var i = data.length -1 ; i >= 0; i--) {
-                    //console.log(i + ":"+(data[data.length -1  - i].value / 1000).toFixed(2));
                     updateChartData.datasets[0].data[i] = (data[data.length -1  - i].value / 1000).toFixed(2);
                     
                     if(data[data.length -1  - i].time.toString().length == 3) {
@@ -769,17 +765,17 @@
                 var min = Math.min.apply(null,data_w);
                 var max = Math.max.apply(null,data_w);
                 
-                if(max < 100) {
-                    updateChartOptions.scaleStepWidth = 100 / updateChartOptions.scaleSteps;
-                } else if(max >= 100) {
-                    updateChartOptions.scaleStepWidth = 200 / updateChartOptions.scaleSteps;
-                } else if(max >= 200) {
-                    updateChartOptions.scaleStepWidth = 500 / updateChartOptions.scaleSteps;
+                if(max >= 1000) {
+                    updateChartOptions.scaleStepWidth = 2000 / updateChartOptions.scaleSteps;
                 } else if(max >= 500) {
                     updateChartOptions.scaleStepWidth = 1000 / updateChartOptions.scaleSteps;
-                } else if(max >= 1000) {
-                    updateChartOptions.scaleStepWidth = 2000 / updateChartOptions.scaleSteps;
-                }
+                } else if(max >= 200) {
+                    updateChartOptions.scaleStepWidth = 500 / updateChartOptions.scaleSteps;
+                } else if(max >= 100) {
+                    updateChartOptions.scaleStepWidth = 200 / updateChartOptions.scaleSteps;
+                } else if(max < 100) {
+                    updateChartOptions.scaleStepWidth = 100 / updateChartOptions.scaleSteps;
+                } 
                 
                 /*
                  updateChartData.labels[idx] = label;
@@ -792,20 +788,8 @@
             });
         }
         
-        function requestAllData() {
-            // var url = "{% url 'restDailyWholeUsage' %}" + '?format=json&date='+selectedDate;
-            
-            // jQuery.ajax({
-            //     url : url,
-            //     method: 'GET'
-            // }).then(function(data) {
-                
-            // }
-        }
-        
-        function requestData(type) {
-            var url = getUrl();
-            
+        function requestData() {
+            var url = getUrl(deviceName);
             console.log("requestData() url : " + url);
             
             $('.spinner-loader').show();
@@ -814,92 +798,111 @@
                 url : url,
                 method: 'GET'
             }).then(function(data) {
+                console.log("requestData()");
                 console.log(data);
+                
                 if(endPoint == "dailyUsage") {
-                    var data_w = [];
+                    dayChartData.datasets[0].data.splice(0,24);
                     
-                    for(var i =0; i< dayChartData.datasets[0].data.length; i++) {
-                        // data_w[i] = dayChartData.datasets[0].data;
-                        data_w[i] = data[i] / 1000 / 60;
+                    for(var i = 0; i<Object.keys(data).length;i++) {
+                        if(data[i] != 0) {
+                            dayChartData.datasets[0].data[i] = (data[i] / 1000 ).toFixed(2);
+                            //dayChartData.datasets[0].data[i] = (data[i] / 1000 / 60).toFixed(2);
+                        }
                     }
-                    // var minCeil = intCeil(Math.min.apply(null,data_w));
-                    // var maxCeil = intCeil(Math.max.apply(null,data_w));
-                    console.log(data_w);
+                    
+                    var data_w = [];
+                    for(var i =0; i< dayChartData.datasets[0].data.length; i++) {
+                        data_w[i] = data[i] / 1000;
+                        //data_w[i] = data[i] / 1000 / 60;
+                    }
+                    
                     var min = Math.min.apply(null,data_w);
                     var max = Math.max.apply(null,data_w);
-                    console.log(min + ' '+ max); 
                     
-                    /*
-                    dayChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10);
-                    console.log(maxCeil - minCeil);
-                    console.log("dayChartOptions.scaleStepWidth : " +  dayChartOptions.scaleStepWidth);
-                    */
-                    
-                    if(max < 50) {
-                        dayChartOptions.scaleStepWidth = 50 / dayChartOptions.scaleSteps;
-                    } else if(max >= 50) {
-                        dayChartOptions.scaleStepWidth = 100 / dayChartOptions.scaleSteps;
-                    } else if(max >= 100) {
-                        dayChartOptions.scaleStepWidth = 200 / dayChartOptions.scaleSteps;
+                    if(max >= 2000) {
+                        dayChartOptions.scaleStepWidth = 3000 / dayChartOptions.scaleSteps;
+                    }else if(max >= 1000) {
+                        dayChartOptions.scaleStepWidth = 2000 / dayChartOptions.scaleSteps;
+                    } else if(max >= 500) {
+                        dayChartOptions.scaleStepWidth = 1000 / dayChartOptions.scaleSteps;
                     } else if(max >= 200) {
                         dayChartOptions.scaleStepWidth = 500 / dayChartOptions.scaleSteps;
-                    } 
+                    } else if(max >= 100) {
+                        dayChartOptions.scaleStepWidth = 200 / dayChartOptions.scaleSteps;
+                    } else if(max >= 50) {
+                        dayChartOptions.scaleStepWidth = 100 / dayChartOptions.scaleSteps;
+                    } else if(max < 50) {
+                        dayChartOptions.scaleStepWidth = 50 / dayChartOptions.scaleSteps;
+                    }  
                     
                     dayChartOptions.scaleStartValue = 0;
                     
-                /*
-                    if(minCeil <= 0) {
-                        dayChartOptions.scaleStartValue = minCeil;
-                    } else {
-                        dayChartOptions.scaleStartValue = minCeil-diff;
-                    }
-                  */  
-                    for(var i = 0; i<Object.keys(data).length;i++) {
-                        if(data[i] != 0) {
-                            dayChartData.datasets[0].data[i] = (data[i] / 1000 / 60).toFixed(2);
-                        }
-                    }
-                    console.log(dayChartData.datasets[0].data);
                     updateChart(document.getElementById("periodCanvas").getContext("2d"), dayChartData, dayChartOptions, true, true);
-                    
-                    //clear
-                    for(var i = 0; i<Object.keys(data).length;i++) {
-                        dayChartData.datasets[0].data[i] = 0;
-                    }
                 } else {
-                    for(var i = 0; i <= Object.keys(Object.keys(data)[0]).length;i++) {
+                    weekChartData.datasets[0].data.splice(0,24);
+                    weekChartData.datasets[1].data.splice(0,24);
+                    
+                    for(var i = 0; i < Object.keys(Object.keys(data)[0]).length;i++) {
                         if(data.current[i] != 0) {
-                            weekChartData.datasets[0].data[i] = data.current[i] / 1000;    
+                            weekChartData.datasets[0].data[i] = (data.current[i] / 1000).toFixed(2);
+                            // weekChartData.datasets[0].data[i] = (data.current[i] / 1000 / 60).toFixed(2);    
                         } 
                         
                         if(data.target[i] != 0) {
-                            weekChartData.datasets[1].data[i] = data.target[i] / 1000;
+                            weekChartData.datasets[1].data[i] = (data.target[i] / 1000).toFixed(2);
+                            // weekChartData.datasets[1].data[i] = (data.target[i] / 1000 / 60).toFixed(2);
                         }
                     }
                     
-                    var data_w = weekChartData.datasets[0].data;
-                    var minCeil = intCeil(Math.min.apply(null,data_w));
-                    var maxCeil = intCeil(Math.max.apply(null,data_w));
-                    weekChartOptions.scaleStepWidth = Math.round((maxCeil - minCeil) / 10);
-                    
-                    if(minCeil <= 0) {
-                        weekChartOptions.scaleStartValue = minCeil;
-                    } else {
-                        weekChartOptions.scaleStartValue = minCeil-diff;
+                    var curArr = [];
+                    var curMax;
+                    var idx=0;
+                    for(var key in weekChartData.datasets[0].data) {
+                        curArr[idx] = weekChartData.datasets[0].data[key];
+                        idx=idx+1;
                     }
+                    curMax = Math.max.apply(null,curArr);
+                    console.log("curMax : " + curMax);
+                    
+                    var targArr = [];
+                    var targMax;
+                    idx=0;
+                    for(var key in weekChartData.datasets[1].data) {
+                        targArr[idx] = weekChartData.datasets[1].data[key];
+                        idx=idx+1;
+                    }
+                    targMax = Math.max.apply(null,targArr);
+                    console.log("targMax : " + targMax);
+                    
+                    var max;
+                    if(curMax >= targMax) {
+                        max = curMax;
+                    } else {
+                        max = targMax;
+                    }
+                    
+                    console.log("max : " + max);
+                    
+                    if(max >= 1000) {
+                        weekChartOptions.scaleStepWidth = 2000 / weekChartOptions.scaleSteps;
+                    } else if(max >= 500) {
+                        weekChartOptions.scaleStepWidth = 1000 / weekChartOptions.scaleSteps;
+                    } else if(max >= 200) {
+                        weekChartOptions.scaleStepWidth = 500 / weekChartOptions.scaleSteps;
+                    } else if(max >= 100) {
+                        weekChartOptions.scaleStepWidth = 200 / weekChartOptions.scaleSteps;
+                    } else if(max >= 50) {
+                        weekChartOptions.scaleStepWidth = 100 / weekChartOptions.scaleSteps;
+                    } else {
+                        weekChartOptions.scaleStepWidth = 50 / weekChartOptions.scaleSteps;
+                    }
+                    
+                    weekChartOptions.scaleStartValue = 0;
                     
                     updateChart(document.getElementById("periodCanvas").getContext("2d"), weekChartData, weekChartOptions, true, true);
-                    
-                    //clear
-                    
-                    for(var i = 0; i <= Object.keys(Object.keys(data)[0]).length;i++) {
-                            weekChartData.datasets[0].data[i] = 0;    
-                        
-                            weekChartData.datasets[1].data[i] = 0;
-                    }
-                    
                 }
-                 $('.spinner-loader').hide();
+                $('.spinner-loader').hide();
             });
         }
         
@@ -909,15 +912,13 @@
         $(document).ready(function () {
             getDeviceList();
             
-            var today = getToday();
-            
             $('#periodDatePicker').datepicker({
                 format: "yyyymmdd",
                 todayHighlight:true,
                 autoclose:true
             });  
             
-            $('#periodDatePicker').datepicker("setDate", today);
+            $('#periodDatePicker').datepicker("setDate", getToday());
             $('#periodDatePicker').change(function() {
                 requestData();
             });
