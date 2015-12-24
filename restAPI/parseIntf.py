@@ -39,7 +39,7 @@ class ParseIntf():
 ##  parse access
 ###############################################################################
     def getCurrentParseData(self, deviceId_, numOfData = 1):
-        print("PARAMS: ", deviceId_)
+        print("PARSE: getCurrentParseData: ", deviceId_)
         
         connection = http.client.HTTPSConnection('api.parse.com', 443)
         params = urllib.parse.urlencode({"where":json.dumps({
@@ -61,7 +61,7 @@ class ParseIntf():
         return result
 
     def getLastParseData(self, deviceId_, date_):
-        print("PARAMS: ", deviceId_, date_)
+        print("PARSE: getLastParseData: ", deviceId_, date_)
         
         connection = http.client.HTTPSConnection('api.parse.com', 443)
         params = urllib.parse.urlencode({"where":json.dumps({
@@ -85,7 +85,7 @@ class ParseIntf():
 
 
     def getLastParseDataBeforeSpecificDate(self, deviceId_, date_):
-        print("PARAMS: ", deviceId_, date_)
+        print("PARSE: getLastParseDataBeforeSpecificDate: ", deviceId_, date_)
         
         connection = http.client.HTTPSConnection('api.parse.com', 443)
         params = urllib.parse.urlencode({"where":json.dumps({
@@ -111,7 +111,7 @@ class ParseIntf():
 
 
     def getWeeklyParseData(self, deviceId_, date_current):
-        print("PARAMS: ", deviceId_, date_current)
+        print("PARSE: getWeeklyParseData: ", deviceId_, date_current)
         
         ##  int to date
         start_date = self.getDateFromInt(date_current)
@@ -144,7 +144,7 @@ class ParseIntf():
 
 
     def getParseData(self, deviceId_, date_, nth):
-        print("PARAMS: ", deviceId_, date_)
+        print("PARSE: getParseData: ", deviceId_, date_)
         
         connection = http.client.HTTPSConnection('api.parse.com', 443)
         params = urllib.parse.urlencode({"where":json.dumps({
@@ -171,6 +171,7 @@ class ParseIntf():
 
 
     def getParseDeviceList(self, groupId_):
+        print("PARSE: getParseDeviceList: ", groupId_)
         connection = http.client.HTTPSConnection('api.parse.com', 443)
         if groupId_ == 'All':
             params = urllib.parse.urlencode({
@@ -190,16 +191,20 @@ class ParseIntf():
         result = json.loads(connection.getresponse().read().decode('utf-8'))
 
         tmp_data = result.get('results')
-        groups = set()
         
+        groups = set()
         for d in tmp_data:
             if d.get('groupId') is None:
                 continue
-            
-            if d['groupId'] not in groups:
-                groups.add(d['groupId'])
+            groups.add(d['groupId'])
 
-        return result, groups
+        devices = set()
+        for d in tmp_data:
+            if d.get('deviceId') is None:
+                continue
+            devices.add(d['deviceId'])
+
+        return devices, groups
 
 
 ###############################################################################
@@ -230,33 +235,23 @@ class ParseIntf():
     def getDailyWholeData(self, groupId, date_):
         ## make device list
         deviceList, groups = self.getParseDeviceList(groupId)
-        deviceList = deviceList.get('results')
-        
-        ret = dict()
-        
+
         ## combine result
         accTotal = [0]*24
-        for s in deviceList:
-            devId = s['deviceId']
-            result = self.getParseData(devId, date_, 0).get('results') \
-            + self.getParseData(devId, date_, 1).get('results')
+        for deviceId in deviceList:
+            result = self.getParseData(deviceId, date_, 0).get('results') \
+            + self.getParseData(deviceId, date_, 1).get('results')
 
             acc = self.makeAccumulatedDataInTime(result)
 
-            tmpRet = dict()
             for i in range(24):
-                tmpRet[i] = acc[i]
                 accTotal[i] += acc[i]
             
-            ret[devId] = tmpRet
-
         tmpRet = dict()
         for i in range(24):
             tmpRet[i] = accTotal[i]
             
-        ret['TOTAL'] = tmpRet
-
-        return ret
+        return tmpRet
 
     def getDailyData(self, deviceId_, date_):
         result = self.getParseData(deviceId_, date_, 0).get('results') \
@@ -273,20 +268,17 @@ class ParseIntf():
     def getWeeklyWholeData(self, groupId, date_, targetDate_):
         ## make device list
         deviceList, groups = self.getParseDeviceList(groupId)
-        deviceList = deviceList.get('results')
-        
-        ## combine result
-        ret = dict()
-        for s in deviceList:
-            devId = s['deviceId']
-            tmpRet = self.getWeeklyData(devId, date_, targetDate_)
-            ret[devId] = tmpRet
 
-            tmpTotal = ret.get('Total')
+        ## combine result
+        tmpTotal = None
+        ##  s is deviceId
+        for deviceId in deviceList:
+            tmpRet = self.getWeeklyData(deviceId, date_, targetDate_)
+
             if tmpTotal is None:
                 tmpTotal = dict()
-                ret['Total'] = tmpTotal
-            
+
+            ##  cat is current/target
             for cat in tmpRet.keys():
                 subObj = tmpRet[cat]
                 
@@ -298,7 +290,7 @@ class ParseIntf():
                 for day in subObj.keys():
                     tmpObj[day] = tmpObj.get(day, 0) + subObj[day]
         
-        return ret
+        return tmpTotal
 
     def getWeeklyData(self, deviceId_, date_, targetDate_):
         totalRet = dict()
@@ -344,22 +336,13 @@ class ParseIntf():
     def getDeviceListData(self, groupId):
         
         result, groups = self.getParseDeviceList(groupId)
-        result = result.get('results')
-        
-        if len(result) == 0:
-            return  None
-        
-        ret = set()
-        for s in result:
-            ret.add(s['deviceId'])
-        
-        return ret, groups
+
+        return result, groups
 
     def getGroupInfo(self, groupId):
         ## make device list
         result, groups = self.getParseDeviceList(groupId)
-        result = result.get('results')
-        
+
         ret = list()
         
         ## make info per group
@@ -369,8 +352,7 @@ class ParseIntf():
         thisMonthPowerConsumption = 0
         today = datetime.date.today()
         
-        for s in result:
-            deviceId = s['deviceId']
+        for deviceId in result:
             if deviceId in deviceIds:
                 continue
             deviceIds.add(deviceId)
@@ -439,7 +421,7 @@ class ParseIntf():
     def getDetailInfoForDevice(self, groupId):
         # get device list
         result, groups = self.getParseDeviceList(groupId)
-        result = result.get('results')
+        # result = result.get('results')
         
         ret = list()
         
@@ -448,8 +430,7 @@ class ParseIntf():
         accumulatedPower = 0
         accumulateTodayPower = 0
         deviceIds = set()
-        for s in result:
-            deviceId = s['deviceId']
+        for deviceId in result:
             if deviceId in deviceIds:
                 continue
             deviceIds.add(deviceId)
