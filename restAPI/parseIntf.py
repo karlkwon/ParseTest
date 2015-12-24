@@ -27,13 +27,21 @@ class ParseIntf():
         return date_ - datetime.timedelta(days=(date_.day))
 
     def makeAccumulatedDataInTime(self, data):
+        count = [0]*24
         acc = [0]*24
         # print("size: ", len(data))
         for s in data:
             idx = int(int(s['time'])/100)
             acc[idx] = acc[idx] + int(s['current_spent_power_mw'])
+            count[idx] += 1
 
-        return acc
+        for idx in range(24):
+            if count[idx] == 0:
+                acc[idx] = 0
+            else:
+                acc[idx] /= count[idx]
+
+        return acc, count
 
 ###############################################################################
 ##  parse access
@@ -242,14 +250,14 @@ class ParseIntf():
             result = self.getParseData(deviceId, date_, 0).get('results') \
             + self.getParseData(deviceId, date_, 1).get('results')
 
-            acc = self.makeAccumulatedDataInTime(result)
+            acc, count = self.makeAccumulatedDataInTime(result)
 
             for i in range(24):
                 accTotal[i] += acc[i]
             
         tmpRet = dict()
         for i in range(24):
-            tmpRet[i] = accTotal[i]
+            tmpRet[i] = round(accTotal[i], 2)
             
         return tmpRet
 
@@ -257,11 +265,11 @@ class ParseIntf():
         result = self.getParseData(deviceId_, date_, 0).get('results') \
         + self.getParseData(deviceId_, date_, 1).get('results')
         
-        acc = self.makeAccumulatedDataInTime(result)
+        acc, count = self.makeAccumulatedDataInTime(result)
 
         ret = dict()
         for i in range(24):
-            ret[i] = acc[i]
+            ret[i] = round(acc[i], 2)
             
         return ret
 
