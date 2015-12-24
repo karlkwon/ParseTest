@@ -704,7 +704,8 @@
                     label = data.time.toString().substring(0,2) +":"+data.time.toString().substring(2,4);
                 }
                 */
-                
+                console.log("interval()~~~~`");
+                console.log(data);
                 var date = new Date();
                 var nowHour = date.getHours();
                 var nowMin = date.getMinutes();
@@ -724,6 +725,10 @@
                     }
                 }
     
+                console.log("init inputData");
+                console.log(inputData);
+                console.log("----");
+                
                 var start = curMin;
                 if(inputData[curMin] != 0) {
                     start = curMin;
@@ -733,11 +738,12 @@
                 
                 for(var t=start-19; t<=start; t++) {
                     labelArr[t-(start-19)] = (Math.floor(t/60)).toString() + ":" + (t%60).toString();
+                    // console.log(t);
                 }
                 
                 // console.log(inputData);
                 // console.log(labelArr);
-                
+                /* 기존코드
                 for(var i = data.length -1 ; i >= 0; i--) {
                     updateChartData.datasets[0].data[i] = (data[data.length -1  - i].value / 1000).toFixed(2);
                     
@@ -746,14 +752,12 @@
                     } else {
                        updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
                     }
-                    // console.log(i + " " + updateChartData.labels[i].substring(0,2) + " " + updateChartData.labels[i].toString().substring(3,5));
                     //날짜 비교도 해야 한다.
                 }
-                
+                */
                 var idx = 0;
                 for(var key in inputData) {
                     if(idx != 20)  {
-                        // console.log(key + " : " + inputData[key]);    
                         updateChartData.datasets[0].data[idx] = inputData[key];
                         idx = idx + 1;
                     }
@@ -884,7 +888,13 @@
                     
                     console.log("max : " + max);
                     
-                    if(max >= 1000) {
+                    if(max >= 50000) {
+                        weekChartOptions.scaleStepWidth = 150000 / weekChartOptions.scaleSteps;
+                    } else if(max >= 10000) {
+                        weekChartOptions.scaleStepWidth = 50000 / weekChartOptions.scaleSteps;
+                    } else if(max >= 5000) {
+                        weekChartOptions.scaleStepWidth = 10000 / weekChartOptions.scaleSteps;
+                    } else if(max >= 1000) {
                         weekChartOptions.scaleStepWidth = 2000 / weekChartOptions.scaleSteps;
                     } else if(max >= 500) {
                         weekChartOptions.scaleStepWidth = 1000 / weekChartOptions.scaleSteps;
