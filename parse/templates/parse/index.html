@@ -41,6 +41,12 @@
     <!-- Chart Setting -->
     <script src="{% static 'parse/js/chartNew_setting.js' %}"></script>
     
+    <!-- Calendar-->
+    <script src="{% static 'parse/js/calendar.js' %}"></script>
+    
+    
+    <script src="{% static 'parse/js/moment.js' %}"></script>
+        
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -71,58 +77,18 @@
     </nav>
     
     <div class="container-fluid">
-        <!-- Page Heading 
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">
-                     <small>Statistics Overview</small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li class="active">
-                        <i class="fa fa-dashboard"></i> Dashboard
-                    </li>
-                </ol>
-            </div>
-        </div>
-        <!-- /.row -->
-    
-        <!--
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="alert alert-info alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
-                </div>
-            </div>
-        </div>
-        <!-- /.row -->
-    
         <div class="row">
             <div class="col-lg-4 col-md-4">
                 <div class="col-lg-8 col-lg-offset-2">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
-                               <!--
-                                <div class="col-xs-2">
-                                    <i class="fa fa-comments fa-5x"></i>
-                                </div>
-                                -->
                                 <div class="col-xs-12 text-right">
                                     <div class="huge" id="summary_cur_power"></div>
                                     <div>현재 총사용 전력</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- remove 
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                        -->
                     </div>
                 </div>
             </div>
@@ -132,26 +98,12 @@
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
-                                <!--
-                                <div class="col-xs-2">
-                                    <i class="fa fa-tasks fa-5x"></i>
-                                </div>
-                                -->
                                 <div class="col-xs-12 text-right">
                                     <div class="huge" id="summary_expected_power"></div>
                                     <div>당월 예상 전력량</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- remove
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                        -->
                     </div>
                      </a>
                 </div>
@@ -162,27 +114,12 @@
                     <div class="panel panel-yellow">
                         <div class="panel-heading">
                             <div class="row">
-                                <!--
-                                <div class="col-xs-2">
-                                    <i class="fa fa-shopping-cart fa-5x"></i>
-                                </div>
-                                -->
                                 <div class="col-xs-12 text-right">
                                     <div class="huge" id="summary_expected_bill"></div>
                                     <div>당월 예상 요금</div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- remove
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                        -->
                     </div>
                 </a>
             </div>
@@ -230,7 +167,6 @@
             
             <div class="modal fade" id="expectedBillModal" role="dialog">
                 <div class="modal-dialog">
-                <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -263,13 +199,10 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-                
                 </div>
             </div>
-                      
         </div>
         <!-- /.row -->
-        
         
         <!-- test-->
     <div class="row">
@@ -316,7 +249,6 @@
             		</div>
             	</div>	<!--row-->
 	
-	
                 <!-- nav nav-tabs -->
                                         
                 <div class="tab-content">
@@ -332,6 +264,7 @@
                             // var myChart = setCanvas("Line",dataForDay,dayChartOptions);
                             // setCanvas("Line",dataForDay,dayChartOptions);
                             // new Chart(document.getElementById("_Tag_Canvas_0").getContext("2d")).Line(dataForWeek,weekChartOptions);
+                            
                             var periodChart =  new Chart(document.getElementById("periodCanvas").getContext("2d")).Line(dayChartData,dayChartOptions);
                        </script>
                    </div>
@@ -390,14 +323,10 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> 평균 사용량 대비 오늘의 사용량</h3>
                     </div>
-                    <div class="panel-body" id="test">
-                        <!-- div id="morris-donut-chart"></div>-->
+                    <div class="panel-body" id="doughnut-panel">
                         <div id="chart-container">
                             <div>
                                 <canvas id = "doughnut-canvas"></canvas>
-                                <script>
-                                    
-                                </script>
                             </div>
                         </div>
                     </div>
@@ -412,23 +341,12 @@
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover table-striped">
                                 <thead>
-                                        <!--
-                                        <th>Switch Name</th>
-                                        <th>Today use time</th>
-                                        <th>Daily avg. <br> use time</th>
-                                        <th>Current electric <br> power (w)</th>
-                                        <th>Avg. electric <br> power (w)</th>
-                                        <th>Expected monthly <br> electric energy</th>
-                                        <th>Expected monthly <br> bill (won)</th>
-                                        -->
-                                        
                                         <th>스위치</th>
                                         <th>오늘 사용 시간</th>
                                         <th>일 평균 사용 시간</th>
                                         <th>현재 사용 전력</th>
                                         <th>시간당 평균 사용 전력</th>
                                         <th>당월 예상 전력량</th>
-                                        <!--<th>당월 예상 전기세</th>-->
                                 </thead>
                                 <tbody id = "tableBody"></tbody>
                             </table>
@@ -443,119 +361,44 @@
     
     <script>
         var groupId = '{{ Data.groupId }}';
-        
-        var selectedDate = "20151104";
         var endPoint     = "dailyUsage";
-        var deviceName   = "";
+        var deviceName   = "All";
+        var selectedDate = "";
         
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var tabName = $(e.target).attr("href"); // activated tab
-            
-            /*
-            if(myChart == null) {
-                console.log("chart is null");
-            } else {
-               // $('#canvas').remove();
-               // $('#chart-container').append('<canvas id = canvas></canvas>');
-            }
-            */
-            
             var canvas = document.getElementById("periodCanvas");
-            // canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
-            // canvas.getContext("2d").beginPath();
-            // console.log("cv : " + canvas ); 
             
             if(tabName == '#day') {
                 updateChart(canvas.getContext("2d"),dayChartData,dayChartOptions);
-                // new Chart(canvas.getContext("2d")).Line(dataForDay,dayChartOptions);   
                 endPoint = "dailyUsage";
             } else {
                 updateChart(canvas.getContext("2d"),weekChartData,weekChartOptions);
-                //new Chart(canvas.getContext("2d")).Line(dataForWeek,weekChartOptions);
                 endPoint = "weeklyUsage";
             }
             
             requestData();
         });
         
-        function getPeriodDeviceId(e) {
-            var target = $(e.target).attr("href");
-            
-            $("#periodDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
-            
+        function getDeviceId(e) {
+            var label = $(e.target).parent().parent().attr("id");
+           // var target = $(e.target).attr("href");
             deviceName =  $(e.target).text();
             
-            requestData();
-        }
-        
-        function getCurrentDeviceId(e) {
-            var target = $(e.target).attr("href");
-            
-            $("#currentDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
-            
-            deviceName =  $(e.target).text();
+            if(label == "periodDropdown-menu") {
+                $("#periodDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
+                requestData();
+            } else {
+                $("#currentDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
+                requestIntervalData();
+            }
+        } 
 
-            requestIntervalData();
-        }
-        
-        /* 사용하지 않음
-        function initUpdateChart() {
-            console.log("initUpdateChart");
-            for(var i = data.length -1 ; i >= 0; i--) {
-                updateChartData.datasets[0].data[i] = data[data.length -1  - i].value;
-                
-                if(data[data.length -1  - i].time.toString().length == 3) {
-                   updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,1) +":"+data[data.length -1  - i].time.toString().substring(1,3);
-                } else {
-                   updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
-                }
-            }
-        }
-        */
-        
-        function getToday() {
-            var today = new Date();
-            today =  today.toISOString().slice(0,10).replace(/-/g,"");
-            
-            return today;
-        }
-        
-         function getLastDayOfWeek(date) {
-            //console.log("getLastDayOfWeek() date -  "+ date);
-            var cur = new Date();
-            
-            cur.setYear(Number(date.toString().substring(0,4)) + 1900);
-            cur.setMonth(Number(date.toString().substring(4,6)) - 1);
-            cur.setDate(Number(date.toString().substring(6,8)));
-            
-            var firstDay = cur.getDate() - cur.getDay();
-            var lastDay = firstDay + 8;
-            
-            var result = cur.getYear();
-            if(cur.getMonth() < 10) {
-                result = result + '0'+ (cur.getMonth() + 1);
-            } else {
-                result = result + '' + (cur.getMonth() + 1);
-            }
-            
-            if(lastDay < 10) {
-                result = result + '0'+ lastDay;
-            } else {
-                result = result + '' + lastDay;
-            }
-            
-            return result;
-        }
-        
-        function setTable(list) {
-            document.getElementById('tableBody').innerHTML =list;
-        }
-        
         function requestDetailInfo() {
             var url = "{% url 'restDetailInfoForDevice' %}" + '?format=json&groupId='+groupId;
             var currentTotalPower = 0;
-            var expectedPower = 0;
-            var expectedBill = 0;
+            //var expectedPower = 0;
+            //var expectedBill = 0;
             
             console.log("requestDetailInfo() url : "+ url);
              
@@ -571,9 +414,6 @@
                     
                     var today_hour = ((data[i].TodayUseTime_sec / 60) / 60) - (Math.floor((data[i].TodayUseTime_sec / 60) / 60)) ;
                     
-                    // console.log(today_hour);
-                    // console.log( Math.floor(today_hour * 60));
-                    
                     list = list + "<tr><td>"+data[i].DeviceId +"</td><td>"
                     + (Math.floor((data[i].TodayUseTime_sec / 60) / 60)) +" 시간 "+ Math.floor(today_hour * 60) + " 분</td><td>"
                     + daily_hour + " 시간 " + daily_min +" 분</td><td>"
@@ -582,10 +422,10 @@
                     + data[i].ExpectedMonthlyElectricPower_kWh+ " kWh</td><tr>"
                     
                     currentTotalPower = currentTotalPower + data[i].CurrentElectricPower_mWmin;
-                    expectedPower = expectedPower + data[i].ExpectedMonthlyElectricPower_kWh;
+                    //expectedPower = expectedPower + data[i].ExpectedMonthlyElectricPower_kWh;
                 }
                 
-                setTable(list);
+                document.getElementById('tableBody').innerHTML =list;
                 
                 var percentage = ((data[data.length-1].TodaySpendEnergy_Wh * 100) / data[data.length-1].DailyAverageElectricPower_Wh).toFixed(0);
                 
@@ -601,56 +441,45 @@
             });
         }    
     
-        function getUrl(type) {
+        function getUrl() {
             var url;
             selectedDate = $("input:text").val();  
             
-            if(endPoint== "dailyUsage") {
-                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+selectedDate+'&deviceId='+deviceName;    
+            if(endPoint == "dailyUsage") {
                 url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate +'&groupId='+groupId;
-                console.log("getUrl : " + type);
-                
-                if(deviceName.substring(0,4) == "wemo") {
+               
+                if(isWemo(deviceName)) {
                     url = url + '&deviceId='+deviceName;
                 }
             } else {
-                // url = 'https://parse-test-jisungkim.c9users.io/' + endPoint + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(selectedDate)+'&deviceId='+deviceName;  
-                
-                var targetDate;
-                if(getLastDayOfWeek(getToday()) == getLastDayOfWeek(selectedDate)) {
-                    targetDate = getToday() -7;
-                    // console.log("same week  : "+ targetDate);
-                    // console.log(document.getElementById("dateInput").value);
+               var targetDate;
+               
+               if(moment().format("YYYYMMDD") == selectedDate) {
+                    targetDate =  moment().subtract(7, 'days').format("YYYYMMDD");
                     
                     document.getElementById("dateInput").value = targetDate;
                 } else {
                     targetDate = selectedDate;
-                    // console.log(getLastDayOfWeek(targetDate));
-                    
-                    // if(Number(getLastDayOfWeek(targetDate).substring(6,8)) > new Date(2015, 12, 0).getDate()) {
-                    //     console.log("ddd");    
-                    // }
                 } 
                 
                 url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(targetDate);
-                
-                if(deviceName.substring(0,4) == "wemo") {
+               
+                if(isWemo(deviceName)) {
                     url = url + '&deviceId='+deviceName;
                 }
             }
             
+            console.log("url : " + url);
+            
             return url;
         }
         
-        function intCeil(num) {
-            var diff = 100;
-            return Math.ceil((num/diff)) * diff;
-        }
-        
-        function moneyFormat(n) {
-            return n.toFixed(0).replace(/./g, function(c, i, a) {
-                return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
-            });
+        function isWemo(devName) {
+            if(devName.substring(0,4) === "wemo") {
+                return true;
+            } else {
+                return false;
+            }
         }
         
         function getDeviceList() {
@@ -661,30 +490,30 @@
                 method: 'GET'
             }).then(function(data) {
                 var list = "<li><a href='#allDev' id='allDev'>All Devices</a></li>";
+                
                 for(var i = 0; i< data.length; i++) {
                     list = list+ " <li><a href='#dev"+(i+1)+"' id='dev"+ (i+1)+"'>"+data[i]+"</a></li>";
                 }
                 
-                document.getElementById('periodDropdown-menu').innerHTML =list;
-                document.getElementById('currentDropdown-menu').innerHTML =list;
+                document.getElementById('periodDropdown-menu').innerHTML  = list;
+                document.getElementById('currentDropdown-menu').innerHTML = list;
                 
-                //deviceName = data[0];
-                //$(".dropdown-toggle").html(deviceName +"<strong class='caret'></strong>");
-                
-                deviceName = "All";
                 $(".dropdown-toggle").html("All Devices <strong class='caret'></strong>");
                 
                 requestData();
                 requestIntervalData();
                 
-                setInterval(function() {requestIntervalData();},60000);
+                setInterval(function() {
+                    requestIntervalData();
+                },60000);
             });
         }
         
         function requestIntervalData() {
             var url = "{% url 'restCurrentUsage' %}" + "?format=json&groupId="+groupId;
                 
-            if(deviceName.substring(0,4) == "wemo") {
+            //if(deviceName.substring(0,4) == "wemo") {
+            if(isWemo(deviceName)) {
                 url = url + '&deviceId='+deviceName;
             }
             
@@ -694,17 +523,7 @@
                 url :  url,
                 method: 'GET'
             }).then(function(data) {
-                /*
-                var idx = updateChartData.labels.length;
-                var label;
-                if(data.time.toString().length == 3) {
-                    label = data.time.toString().substring(0,1) +":"+data.time.toString().substring(1,3);
-                } else {
-                    label = data.time.toString().substring(0,2) +":"+data.time.toString().substring(2,4);
-                }
-                */
-                console.log("interval()~~~~`");
-                console.log(data);
+                //console.log(data);
                 var date = new Date();
                 var nowHour = date.getHours();
                 var nowMin = date.getMinutes();
@@ -713,47 +532,48 @@
                 var curMin = nowHour*60 +nowMin;
                 var inputData = new Object;
                 
-                for(var i=0; i<21; i++) {
+                for(var i=0; i<20; i++) {
                     inputData[(curMin-i).toString()] = 0;
                 }
+                //console.log(inputData);
                 
                 for(var i=0; i<data.length; i++) {
-                    var time = (data[i].time/100).toFixed(0) * 60 + (data[i].time % 100);
+                    var time = Math.floor(data[i].time/100) * 60 + (data[i].time % 100);
+                    
                     if(typeof inputData[time.toString()] != "undefined") {
                         inputData[time.toString()] = data[i].value / 1000;
                     }
+                    
+                    /* for Test
+                     if(typeof inputData[time.toString()] != "undefined") {
+                        inputData[time.toString()] = data[i].value / 1000;
+                        console.log(data[i].time + " " +time.toString() + " " + data[i].value / 1000);
+                    } else {
+                        console.log(data[i].time + " " + time.toString() + " " + inputData[time.toString()] + " is undefined");  
+                    }
+                    */
                 }
-    
-                console.log("init inputData");
-                console.log(inputData);
-                console.log("----");
                 
+                //console.log(inputData);
+                /*
                 var start = curMin;
                 if(inputData[curMin] != 0) {
                     start = curMin;
                 } else {
                     start = curMin -1;
-                }
+                }*/
                 
+                var start = curMin;
+                //console.log(start);
                 for(var t=start-19; t<=start; t++) {
                     labelArr[t-(start-19)] = (Math.floor(t/60)).toString() + ":" + (t%60).toString();
-                    // console.log(t);
                 }
                 
-                // console.log(inputData);
-                // console.log(labelArr);
-                /* 기존코드
-                for(var i = data.length -1 ; i >= 0; i--) {
-                    updateChartData.datasets[0].data[i] = (data[data.length -1  - i].value / 1000).toFixed(2);
-                    
-                    if(data[data.length -1  - i].time.toString().length == 3) {
-                       updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,1) +":"+data[data.length -1  - i].time.toString().substring(1,3);
-                    } else {
-                       updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
-                    }
-                    //날짜 비교도 해야 한다.
-                }
-                */
+                updateChartData.labels = labelArr;
+                
+                //console.log(labelArr);
+                //console.log(inputData);
+                
                 var idx = 0;
                 for(var key in inputData) {
                     if(idx != 20)  {
@@ -762,161 +582,91 @@
                     }
                 }
                 
-                updateChartData.labels = labelArr;
-                
                 var data_w = updateChartData.datasets[0].data;
-                var min = Math.min.apply(null,data_w);
-                var max = Math.max.apply(null,data_w);
+                var max = Math.max.apply(null,updateChartData.datasets[0].data);
+                //var max = Math.max.apply(null,data_w);
                 
-                if(max >= 1000) {
-                    updateChartOptions.scaleStepWidth = 2000 / updateChartOptions.scaleSteps;
-                } else if(max >= 500) {
-                    updateChartOptions.scaleStepWidth = 1000 / updateChartOptions.scaleSteps;
-                } else if(max >= 200) {
-                    updateChartOptions.scaleStepWidth = 500 / updateChartOptions.scaleSteps;
-                } else if(max >= 100) {
-                    updateChartOptions.scaleStepWidth = 200 / updateChartOptions.scaleSteps;
-                } else if(max < 100) {
-                    updateChartOptions.scaleStepWidth = 100 / updateChartOptions.scaleSteps;
-                } 
-                
-                /*
-                 updateChartData.labels[idx] = label;
-                    updateChartData.datasets[0].data[idx] = data.value;
-                    updateChartData.labels.splice(0,1);
-                    updateChartData.datasets[0].data.splice(0,1);
-                */
+                setScale(max, updateChartOptions);
                 
                 updateChart(document.getElementById("currentCanvas").getContext("2d"), updateChartData, updateChartOptions, true, true);
             });
         }
         
         function requestData() {
-            var url = getUrl(deviceName);
-            console.log("requestData() url : " + url);
+            console.log("requestData()");
             
             $('.spinner-loader').show();
            
             jQuery.ajax({
-                url : url,
+                url : getUrl(),
                 method: 'GET'
             }).then(function(data) {
-                console.log("requestData()");
-                console.log(data);
-                
                 if(endPoint == "dailyUsage") {
                     dayChartData.datasets[0].data.splice(0,24);
                     
                     for(var i = 0; i<Object.keys(data).length;i++) {
                         if(data[i] != 0) {
                             dayChartData.datasets[0].data[i] = (data[i] / 1000 ).toFixed(2);
-                            //dayChartData.datasets[0].data[i] = (data[i] / 1000 / 60).toFixed(2);
                         }
                     }
                     
-                    var data_w = [];
-                    for(var i =0; i< dayChartData.datasets[0].data.length; i++) {
-                        data_w[i] = data[i] / 1000;
-                        //data_w[i] = data[i] / 1000 / 60;
-                    }
-                    
-                    var min = Math.min.apply(null,data_w);
-                    var max = Math.max.apply(null,data_w);
-                    
-                    if(max >= 2000) {
-                        dayChartOptions.scaleStepWidth = 3000 / dayChartOptions.scaleSteps;
-                    }else if(max >= 1000) {
-                        dayChartOptions.scaleStepWidth = 2000 / dayChartOptions.scaleSteps;
-                    } else if(max >= 500) {
-                        dayChartOptions.scaleStepWidth = 1000 / dayChartOptions.scaleSteps;
-                    } else if(max >= 200) {
-                        dayChartOptions.scaleStepWidth = 500 / dayChartOptions.scaleSteps;
-                    } else if(max >= 100) {
-                        dayChartOptions.scaleStepWidth = 200 / dayChartOptions.scaleSteps;
-                    } else if(max >= 50) {
-                        dayChartOptions.scaleStepWidth = 100 / dayChartOptions.scaleSteps;
-                    } else if(max < 50) {
-                        dayChartOptions.scaleStepWidth = 50 / dayChartOptions.scaleSteps;
-                    }  
-                    
-                    dayChartOptions.scaleStartValue = 0;
+                    setScale(Math.max.apply(null,dayChartData.datasets[0].data), dayChartOptions);
                     
                     updateChart(document.getElementById("periodCanvas").getContext("2d"), dayChartData, dayChartOptions, true, true);
                 } else {
-                    weekChartData.datasets[0].data.splice(0,24);
-                    weekChartData.datasets[1].data.splice(0,24);
+                    var maxList = [];
+                    var curData = [];
+                    var targData = [];
                     
-                    for(var i = 0; i < Object.keys(Object.keys(data)[0]).length;i++) {
-                        if(data.current[i] != 0) {
+                    for(var i=0; i<7 ;i++) {
+                        if(typeof data.current[i] == "undefined"){
+                            weekChartData.datasets[0].data[i] = 0;
+                        } else if(data.current[i] != 0) {
                             weekChartData.datasets[0].data[i] = (data.current[i] / 1000).toFixed(2);
-                            // weekChartData.datasets[0].data[i] = (data.current[i] / 1000 / 60).toFixed(2);    
-                        } 
+                        } else {
+                            weekChartData.datasets[0].data[i] = undefined;
+                        }
                         
-                        if(data.target[i] != 0) {
+                        if(typeof data.target[i] == "undefined"){
+                            weekChartData.datasets[1].data[i] = 0;
+                        } else if(data.target[i] != 0) {
                             weekChartData.datasets[1].data[i] = (data.target[i] / 1000).toFixed(2);
-                            // weekChartData.datasets[1].data[i] = (data.target[i] / 1000 / 60).toFixed(2);
+                        } else {
+                            weekChartData.datasets[1].data[i] = undefined;
                         }
                     }
                     
-                    var curArr = [];
-                    var curMax;
-                    var idx=0;
-                    for(var key in weekChartData.datasets[0].data) {
-                        curArr[idx] = weekChartData.datasets[0].data[key];
-                        idx=idx+1;
-                    }
-                    curMax = Math.max.apply(null,curArr);
-                    console.log("curMax : " + curMax);
-                    
-                    var targArr = [];
-                    var targMax;
-                    idx=0;
-                    for(var key in weekChartData.datasets[1].data) {
-                        targArr[idx] = weekChartData.datasets[1].data[key];
-                        idx=idx+1;
-                    }
-                    targMax = Math.max.apply(null,targArr);
-                    console.log("targMax : " + targMax);
-                    
-                    var max;
-                    if(curMax >= targMax) {
-                        max = curMax;
-                    } else {
-                        max = targMax;
+                    for(var i=0; i<7; i++) {
+                        curData[i] = weekChartData.datasets[0].data[i];
+                        targData[i] = weekChartData.datasets[1].data[i];
+                        
+                        if(typeof curData[i] == "undefined") {
+                            curData[i] = 0;
+                        }
+                        if(typeof targData[i] == "undefined") {
+                            targData[i] = 0;
+                        }
+                        
+                        if(curData[i] > targData[i]) {
+                            maxList[i] = curData[i]; 
+                        } else {
+                            maxList[i] = targData[i]; 
+                        }
                     }
                     
-                    console.log("max : " + max);
+                    var max = Math.max.apply(null, maxList);
                     
-                    if(max >= 50000) {
-                        weekChartOptions.scaleStepWidth = 150000 / weekChartOptions.scaleSteps;
-                    } else if(max >= 10000) {
-                        weekChartOptions.scaleStepWidth = 50000 / weekChartOptions.scaleSteps;
-                    } else if(max >= 5000) {
-                        weekChartOptions.scaleStepWidth = 10000 / weekChartOptions.scaleSteps;
-                    } else if(max >= 1000) {
-                        weekChartOptions.scaleStepWidth = 2000 / weekChartOptions.scaleSteps;
-                    } else if(max >= 500) {
-                        weekChartOptions.scaleStepWidth = 1000 / weekChartOptions.scaleSteps;
-                    } else if(max >= 200) {
-                        weekChartOptions.scaleStepWidth = 500 / weekChartOptions.scaleSteps;
-                    } else if(max >= 100) {
-                        weekChartOptions.scaleStepWidth = 200 / weekChartOptions.scaleSteps;
-                    } else if(max >= 50) {
-                        weekChartOptions.scaleStepWidth = 100 / weekChartOptions.scaleSteps;
-                    } else {
-                        weekChartOptions.scaleStepWidth = 50 / weekChartOptions.scaleSteps;
-                    }
-                    
-                    weekChartOptions.scaleStartValue = 0;
-                    
+                    setScale(max, weekChartOptions);
+                 
                     updateChart(document.getElementById("periodCanvas").getContext("2d"), weekChartData, weekChartOptions, true, true);
                 }
+                
                 $('.spinner-loader').hide();
             });
         }
         
-        $("#periodDropdown-menu").on("click","li",getPeriodDeviceId);
-        $("#currentDropdown-menu").on("click","li",getCurrentDeviceId);
+        $("#periodDropdown-menu").on("click","li",getDeviceId);
+        $("#currentDropdown-menu").on("click","li",getDeviceId);
         
         $(document).ready(function () {
             getDeviceList();
@@ -937,15 +687,62 @@
         });
         
         function setTablePanelSize() {
-            var height= document.getElementById('test').offsetHeight;
+            var height= document.getElementById('doughnut-panel').offsetHeight;
+            
             document.getElementById('tablePanel').style["height"] = height+"px";
+        }
+
+        function moneyFormat(n) {
+            return n.toFixed(0).replace(/./g, function(c, i, a) {
+                return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+            });
         }
         
         window.onresize = function(e) {
             setTablePanelSize();
+        }        
+        //setRefreshCanvas();                
+        /*
+        function intCeil(num) {
+            var diff = 100;
+            return Math.ceil((num/diff)) * diff;
         }
         
-        //setRefreshCanvas();
+        function getPeriodDeviceId(e) {
+            var target = $(e.target).attr("href");
+            console.log("target : " + target);
+            $("#periodDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
+            
+            deviceName =  $(e.target).text();
+            
+            requestData();
+        }
+        
+        function getCurrentDeviceId(e) {
+            var target = $(e.target).attr("href");
+            
+            $("#currentDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
+            
+            deviceName =  $(e.target).text();
+
+            
+        }
+        */
+        
+        /* 사용하지 않음
+        function initUpdateChart() {
+            console.log("initUpdateChart");
+            for(var i = data.length -1 ; i >= 0; i--) {
+                updateChartData.datasets[0].data[i] = data[data.length -1  - i].value;
+                
+                if(data[data.length -1  - i].time.toString().length == 3) {
+                   updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,1) +":"+data[data.length -1  - i].time.toString().substring(1,3);
+                } else {
+                   updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
+                }
+            }
+        }
+        */
     </script>
 </body>
 

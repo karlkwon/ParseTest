@@ -7,6 +7,7 @@ var dayChartData = {
 	datasets : [
 		{
 		    type:"Line",
+		    //type:"Bar",
 			fillColor : "rgba(151,187,151,0.5)",
 	        strokeColor : "rgba(151,187,151,1)",
 	        pointColor : "rgba(151,187,151,1)",
@@ -101,6 +102,7 @@ var doughnutChartOptions = {
 var dayChartOptions = {
     annotateDisplay : true,
     detectAnnotateOnFullLine : true,
+    //annotateLabel: annotateForDailyBar,
     annotateLabel: annotateForDaily,
     // yAxis
     scaleOverride : true,
@@ -180,30 +182,6 @@ var updateChartOptions = {
 	scaleSteps: 10,
 	scaleStepWidth: 10,
 	scaleStartValue: 0,
-	
-	/*
-      animationStartWithDataset : startWithDataset,
-      animationStartWithData : startWithData,
-      animation : false,
-      animationLeftToRight : true,
-      animationSteps : 20,
-      animationEasing: "linear",
-      canvasBorders : true,
-      canvasBordersWidth : 3,
-      canvasBordersColor : "black",
-    graphTitle : "animation With Update",  
-      legend : true,
-//      inGraphDataShow : true,
-      annotateDisplay : true,
-      onAnimationComplete : startUpdate,
-      graphTitleFontSize: 18, 
-	responsive : true,
-
-	fmtXLabel : "fmttime hh:mm:ss",
-	animationCount: 1,
-	animationPauseTime : 0,
-	animationBackward: true
-	*/
 };
 
 
@@ -234,4 +212,43 @@ function annotateForDaily(area,ctx,data,statData,posi,posj,othervars) {
     }
     	
     return "<%='"+retstring+"'%>";
+}
+
+function annotateForDailyBar(area,ctx,data,statData,posi,posj,othervars) {
+    retstring=statData[posi][posj].v2+'<BR>';
+    	    
+    /*	retstring=retstring+'<BR><U>Line Data:</U><BR>'; */
+        	
+    for(var i=0;i<data.datasets.length;i++){
+        if(typeof statData[i][posj].datavalue!="undefined" && data.datasets[i].type == "Bar") {
+    	   // retstring=retstring+statData[i][posj].v1+"="+statData[i][posj].datavalue+"<BR>";
+    	      retstring="["+statData[posi][posj].v2+"]  "+statData[i][posj].datavalue+" Wh<BR>";
+        }
+    }
+    	
+    return "<%='"+retstring+"'%>";
+}
+
+function setScale(max, chartOptions) {
+    if(max >= 50000) {
+        chartOptions.scaleStepWidth = 150000 / chartOptions.scaleSteps;
+    } else if(max >= 10000) {
+        chartOptions.scaleStepWidth = 50000 / chartOptions.scaleSteps;
+    } else if(max >= 5000) {
+        chartOptions.scaleStepWidth = 10000 / chartOptions.scaleSteps;
+    } else if(max >= 1000) {
+        chartOptions.scaleStepWidth = 2000 / chartOptions.scaleSteps;
+    } else if(max >= 500) {
+        chartOptions.scaleStepWidth = 1000 / chartOptions.scaleSteps;
+    } else if(max >= 200) {
+        chartOptions.scaleStepWidth = 500 / chartOptions.scaleSteps;
+    } else if(max >= 100) {
+        chartOptions.scaleStepWidth = 200 / chartOptions.scaleSteps;
+    } else if(max >= 50) {
+        chartOptions.scaleStepWidth = 100 / chartOptions.scaleSteps;
+    } else {
+        chartOptions.scaleStepWidth = 50 / chartOptions.scaleSteps;
+    }
+    
+    chartOptions.scaleStartValue = 0;
 }
