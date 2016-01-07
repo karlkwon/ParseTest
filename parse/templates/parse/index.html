@@ -27,25 +27,23 @@
     <link href="{% static 'parse/css/spinner.css' %}" rel="stylesheet" type="text/css">
     
     <!-- jQuery -->
-    <script src="{% static 'parse/js/jquery.js' %}"></script>
+    <script src="{% static 'parse/js/lib/jquery.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="{% static 'parse/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'parse/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'parse/js/lib/bootstrap.min.js' %}"></script>
+    <script src="{% static 'parse/js/lib/bootstrap-datepicker.js' %}"></script>
     <script src="{% static 'parse/locales/bootstrap-datepicker.ko.min.js' %}"></script>
 
     <!-- Chart lib-->
-    <script src="{% static 'parse/js/chartNew.js' %}"></script>
-    <script src="{% static 'parse/js/bootstrap_ChartNew.js' %}"></script>
+    <script src="{% static 'parse/js/lib/chartNew.js' %}"></script>
+    <script src="{% static 'parse/js/lib/bootstrap_ChartNew.js' %}"></script>
     
     <!-- Chart Setting -->
-    <script src="{% static 'parse/js/chartNew_setting.js' %}"></script>
+    <script src="{% static 'parse/js/chartNew-setting.js' %}"></script>
     
     <!-- Calendar-->
-    <script src="{% static 'parse/js/calendar.js' %}"></script>
-    
-    
-    <script src="{% static 'parse/js/moment.js' %}"></script>
+    <script src="{% static 'parse/js/lib/moment.js' %}"></script>
+    <script src="{% static 'parse/js/calendar-setting.js' %}"></script>
         
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,10 +51,6 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-   
-    <script>
-       
-    </script>
 </head>
 
 <body> 
@@ -363,89 +357,189 @@
         var groupId = '{{ Data.groupId }}';
         var endPoint     = "dailyUsage";
         var deviceName   = "All";
-        var selectedDate = "";
+        var currentTotalPower = 0;
         
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            var tabName = $(e.target).attr("href"); // activated tab
-            var canvas = document.getElementById("periodCanvas");
-            
-            if(tabName == '#day') {
-                updateChart(canvas.getContext("2d"),dayChartData,dayChartOptions);
-                endPoint = "dailyUsage";
+        /////////////////////////////////////////////////////////////////////////
+        function isWemo(devName) {
+            if(devName.substring(0,4) === "wemo") {
+                return true;
             } else {
-                updateChart(canvas.getContext("2d"),weekChartData,weekChartOptions);
-                endPoint = "weeklyUsage";
+                return false;
+            }
+        }
+        
+        function registerIntervalTask() {
+            setInterval(function() {
+                requestLiveChartData();
+            },60000);
+        }
+
+        function setCurrentTotalPower(value){
+            currentTotalPower = value;
+        }
+        
+        function getCurrentTotalPower() {
+            return currentTotalPower;
+        }
+        
+        function setEndPoint(ep) {
+            endPoint = ep;
+        }
+        
+        function getEndPoint() {
+            return endPoint;
+        }
+        
+        // UI ///////////////////////////////////////////////////////////////////
+        function setDeviceList(data) {
+            var list = "<li><a href='#allDev' id='allDev'>All Devices</a></li>";
+                
+            for(var i = 0; i< data.length; i++) {
+                list = list+ " <li><a href='#dev"+(i+1)+"' id='dev"+ (i+1)+"'>"+data[i]+"</a></li>";
             }
             
-            requestData();
-        });
-        
-        function getDeviceId(e) {
-            var label = $(e.target).parent().parent().attr("id");
-           // var target = $(e.target).attr("href");
-            deviceName =  $(e.target).text();
+            document.getElementById('periodDropdown-menu').innerHTML  = list;
+            document.getElementById('currentDropdown-menu').innerHTML = list;
             
+            $(".dropdown-toggle").html("All Devices <strong class='caret'></strong>");
+        }
+        
+        function showSummary(cur_power, expected_power, expected_bill) {
+            $("#summary_cur_power").text(cur_power);
+            $("#summary_expected_power").text(expected_power);
+            $("#summary_expected_bill").text(expected_bill);
+        }
+        
+        function showTableData(data) {
+            var currentTotalPower = 0;
+            var list = "";
+            for(var i = 0; i< data.length - 1 ; i++) {
+                var daily_hour = Math.floor(data[i].DailyAvgUseTime_min / 60);
+                var daily_min = (data[i].DailyAvgUseTime_min / 60) - daily_hour;
+                daily_min = Math.floor(daily_min * 60);
+                
+                var today_hour = ((data[i].TodayUseTime_sec / 60) / 60) - (Math.floor((data[i].TodayUseTime_sec / 60) / 60)) ;
+                
+                list = list + "<tr><td>"+data[i].DeviceId +"</td><td>"
+                + (Math.floor((data[i].TodayUseTime_sec / 60) / 60)) +" 시간 "+ Math.floor(today_hour * 60) + " 분</td><td>"
+                + daily_hour + " 시간 " + daily_min +" 분</td><td>"
+                + (data[i].CurrentElectricPower_mWmin/1000).toFixed(2) + " W</td><td>"
+                + data[i].AverageElectricPower_Wh + " W</td><td>"
+                + data[i].ExpectedMonthlyElectricPower_kWh+ " kWh</td><tr>"
+                
+                currentTotalPower = currentTotalPower + data[i].CurrentElectricPower_mWmin;
+            }
+            
+            setCurrentTotalPower(currentTotalPower);
+            document.getElementById('tableBody').innerHTML = list;
+        }
+        
+        function showDeviceName(label, e) {
             if(label == "periodDropdown-menu") {
                 $("#periodDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
-                requestData();
             } else {
                 $("#currentDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
-                requestIntervalData();
             }
-        } 
-
-        function requestDetailInfo() {
-            var url = "{% url 'restDetailInfoForDevice' %}" + '?format=json&groupId='+groupId;
-            var currentTotalPower = 0;
-            //var expectedPower = 0;
-            //var expectedBill = 0;
+        }
+        
+        function showDate(targetDate) {
+             document.getElementById("dateInput").value = targetDate;
+        }
+        //////////////////////////////////////////////////////////////////////////////
+        
+        
+        function requestDeviceList() {
+            var url = "{% url 'restDeviceList' %}" + "?format=json&groupId="+groupId;
             
-            console.log("requestDetailInfo() url : "+ url);
+            jQuery.ajax({
+                url : url,
+                method: 'GET'
+            }).then(function(data) {
+                setDeviceList(data);
+            }).then(function(data) {
+                requestData();
+                requestLiveChartData();
+                
+                registerIntervalTask();    
+            });
+        }
+        
+        function requestData(e) {
+            console.log("requestData()");
+            
+            if(typeof e != "undefined") {
+                getDeviceId(e);    
+            }
+            
+            $('.spinner-loader').show();
+           
+            jQuery.ajax({
+                url : getUrl(),
+                method: 'GET'
+            }).then(function(data) {
+                if(getEndPoint() == "dailyUsage") {
+                    setDayChartData(data);
+                  
+                    updateChart(document.getElementById("periodCanvas").getContext("2d"), dayChartData, dayChartOptions, true, true);
+                } else {
+                    setWeekChartData(data);
+                    
+                    updateChart(document.getElementById("periodCanvas").getContext("2d"), weekChartData, weekChartOptions, true, true);
+                }
+            }).then(function() {
+                $('.spinner-loader').hide();
+            });
+        }
+        
+        function requestLiveChartData(e) {
+            var url = "{% url 'restCurrentUsage' %}" + "?format=json&groupId="+groupId;
+            
+            if(typeof e != "undefined") {
+                getDeviceId(e);    
+            }
+            
+            if(isWemo(deviceName)) {
+                url = url + '&deviceId='+deviceName;
+            }
+            
+            console.log("requestLiveChartData() url : "+ url);
+            
+            jQuery.ajax({
+                url :  url,
+                method: 'GET'
+            }).then(function(data) {
+                setLiveChartData(data);
+                
+                updateChart(document.getElementById("currentCanvas").getContext("2d"), updateChartData, updateChartOptions, true, true);
+            });
+        }
+        
+        function requestTableData() {
+            var url = "{% url 'restDetailInfoForDevice' %}" + '?format=json&groupId=' + groupId;
+            
+            console.log("requestTableData() url : "+ url);
              
             jQuery.ajax({
                 url :  url,
                 method: 'GET'
             }).then(function(data) {
-                var list = "";
-                for(var i = 0; i< data.length - 1 ; i++) {
-                    var daily_hour = Math.floor(data[i].DailyAvgUseTime_min / 60);
-                    var daily_min = (data[i].DailyAvgUseTime_min / 60) - daily_hour;
-                    daily_min = Math.floor(daily_min * 60);
-                    
-                    var today_hour = ((data[i].TodayUseTime_sec / 60) / 60) - (Math.floor((data[i].TodayUseTime_sec / 60) / 60)) ;
-                    
-                    list = list + "<tr><td>"+data[i].DeviceId +"</td><td>"
-                    + (Math.floor((data[i].TodayUseTime_sec / 60) / 60)) +" 시간 "+ Math.floor(today_hour * 60) + " 분</td><td>"
-                    + daily_hour + " 시간 " + daily_min +" 분</td><td>"
-                    + (data[i].CurrentElectricPower_mWmin/1000).toFixed(2) + " W</td><td>"
-                    + data[i].AverageElectricPower_Wh + " W</td><td>"
-                    + data[i].ExpectedMonthlyElectricPower_kWh+ " kWh</td><tr>"
-                    
-                    currentTotalPower = currentTotalPower + data[i].CurrentElectricPower_mWmin;
-                    //expectedPower = expectedPower + data[i].ExpectedMonthlyElectricPower_kWh;
-                }
+                showTableData(data);
                 
-                document.getElementById('tableBody').innerHTML =list;
+                setAverageChartData(data);
+                new Chart(document.getElementById("doughnut-canvas").getContext("2d")).Doughnut(doughnutChartData,doughnutChartOptions);
                 
-                var percentage = ((data[data.length-1].TodaySpendEnergy_Wh * 100) / data[data.length-1].DailyAverageElectricPower_Wh).toFixed(0);
-                
-                doughnutChartOptions.crossText[0] = percentage.toString() + "%";
-                doughnutChartData[0].value = percentage;
-                doughnutChartData[1].value = 100-percentage;
-                
-                var doughnutChart = new Chart(document.getElementById("doughnut-canvas").getContext("2d")).Doughnut(doughnutChartData,doughnutChartOptions);
-                
-                $("#summary_cur_power").text((currentTotalPower / 1000).toFixed(2) + " W");
-                $("#summary_expected_power").text(data[data.length-1].ExpectedMonthlyElectricPower_kWh.toFixed(2) + " kWh");
-                $("#summary_expected_bill").text(moneyFormat(data[data.length-1].ExpectedMonthlyElectricBill) + " 원");
+                var cur_power = (getCurrentTotalPower() / 1000).toFixed(2) + " W";
+                var expected_power = data[data.length-1].ExpectedMonthlyElectricPower_kWh.toFixed(2) + " kWh";
+                var expected_bill = moneyFormat(data[data.length-1].ExpectedMonthlyElectricBill) + " 원";
+                showSummary(cur_power, expected_power, expected_bill);
             });
         }    
-    
+        
         function getUrl() {
             var url;
-            selectedDate = $("input:text").val();  
+            var selectedDate = $("input:text").val();  
             
-            if(endPoint == "dailyUsage") {
+            if(getEndPoint() == "dailyUsage") {
                 url = "{% url 'restDailyUsage' %}" + '?format=json&date='+selectedDate +'&groupId='+groupId;
                
                 if(isWemo(deviceName)) {
@@ -457,11 +551,11 @@
                if(moment().format("YYYYMMDD") == selectedDate) {
                     targetDate =  moment().subtract(7, 'days').format("YYYYMMDD");
                     
-                    document.getElementById("dateInput").value = targetDate;
+                    showDate(targetDate);
                 } else {
                     targetDate = selectedDate;
                 } 
-                
+                //console.log("getUrl() targetDate " + targetDate);
                 url = "{% url 'restWeeklyUsage' %}" + '?format=json&date='+ getToday()+'&targetDate='+getLastDayOfWeek(targetDate);
                
                 if(isWemo(deviceName)) {
@@ -473,218 +567,17 @@
             
             return url;
         }
+        /////////////////////////////////////////////////////////////////////////////////////////
         
-        function isWemo(devName) {
-            if(devName.substring(0,4) === "wemo") {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        
-        function getDeviceList() {
-            var url = "{% url 'restDeviceList' %}" + "?format=json&groupId="+groupId;
-            
-            jQuery.ajax({
-                url : url,
-                method: 'GET'
-            }).then(function(data) {
-                var list = "<li><a href='#allDev' id='allDev'>All Devices</a></li>";
-                
-                for(var i = 0; i< data.length; i++) {
-                    list = list+ " <li><a href='#dev"+(i+1)+"' id='dev"+ (i+1)+"'>"+data[i]+"</a></li>";
-                }
-                
-                document.getElementById('periodDropdown-menu').innerHTML  = list;
-                document.getElementById('currentDropdown-menu').innerHTML = list;
-                
-                $(".dropdown-toggle").html("All Devices <strong class='caret'></strong>");
-                
-                requestData();
-                requestIntervalData();
-                
-                setInterval(function() {
-                    requestIntervalData();
-                },60000);
-            });
-        }
-        
-        function requestIntervalData() {
-            var url = "{% url 'restCurrentUsage' %}" + "?format=json&groupId="+groupId;
-                
-            //if(deviceName.substring(0,4) == "wemo") {
-            if(isWemo(deviceName)) {
-                url = url + '&deviceId='+deviceName;
-            }
-            
-            console.log("requestIntervalData() url : "+ url);
-            
-            jQuery.ajax({
-                url :  url,
-                method: 'GET'
-            }).then(function(data) {
-                //console.log(data);
-                var date = new Date();
-                var nowHour = date.getHours();
-                var nowMin = date.getMinutes();
-                var labelArr = [];
-                
-                var curMin = nowHour*60 +nowMin;
-                var inputData = new Object;
-                
-                for(var i=0; i<20; i++) {
-                    inputData[(curMin-i).toString()] = 0;
-                }
-                //console.log(inputData);
-                
-                for(var i=0; i<data.length; i++) {
-                    var time = Math.floor(data[i].time/100) * 60 + (data[i].time % 100);
-                    
-                    if(typeof inputData[time.toString()] != "undefined") {
-                        inputData[time.toString()] = data[i].value / 1000;
-                    }
-                    
-                    /* for Test
-                     if(typeof inputData[time.toString()] != "undefined") {
-                        inputData[time.toString()] = data[i].value / 1000;
-                        console.log(data[i].time + " " +time.toString() + " " + data[i].value / 1000);
-                    } else {
-                        console.log(data[i].time + " " + time.toString() + " " + inputData[time.toString()] + " is undefined");  
-                    }
-                    */
-                }
-                
-                //console.log(inputData);
-                /*
-                var start = curMin;
-                if(inputData[curMin] != 0) {
-                    start = curMin;
-                } else {
-                    start = curMin -1;
-                }*/
-                
-                var start = curMin;
-                //console.log(start);
-                for(var t=start-19; t<=start; t++) {
-                    labelArr[t-(start-19)] = (Math.floor(t/60)).toString() + ":" + (t%60).toString();
-                }
-                
-                updateChartData.labels = labelArr;
-                
-                //console.log(labelArr);
-                //console.log(inputData);
-                
-                var idx = 0;
-                for(var key in inputData) {
-                    if(idx != 20)  {
-                        updateChartData.datasets[0].data[idx] = inputData[key];
-                        idx = idx + 1;
-                    }
-                }
-                
-                var data_w = updateChartData.datasets[0].data;
-                var max = Math.max.apply(null,updateChartData.datasets[0].data);
-                //var max = Math.max.apply(null,data_w);
-                
-                setScale(max, updateChartOptions);
-                
-                updateChart(document.getElementById("currentCanvas").getContext("2d"), updateChartData, updateChartOptions, true, true);
-            });
-        }
-        
-        function requestData() {
-            console.log("requestData()");
-            
-            $('.spinner-loader').show();
-           
-            jQuery.ajax({
-                url : getUrl(),
-                method: 'GET'
-            }).then(function(data) {
-                if(endPoint == "dailyUsage") {
-                    dayChartData.datasets[0].data.splice(0,24);
-                    
-                    for(var i = 0; i<Object.keys(data).length;i++) {
-                        if(data[i] != 0) {
-                            dayChartData.datasets[0].data[i] = (data[i] / 1000 ).toFixed(2);
-                        }
-                    }
-                    
-                    setScale(Math.max.apply(null,dayChartData.datasets[0].data), dayChartOptions);
-                    
-                    updateChart(document.getElementById("periodCanvas").getContext("2d"), dayChartData, dayChartOptions, true, true);
-                } else {
-                    var maxList = [];
-                    var curData = [];
-                    var targData = [];
-                    
-                    for(var i=0; i<7 ;i++) {
-                        if(typeof data.current[i] == "undefined"){
-                            weekChartData.datasets[0].data[i] = 0;
-                        } else if(data.current[i] != 0) {
-                            weekChartData.datasets[0].data[i] = (data.current[i] / 1000).toFixed(2);
-                        } else {
-                            weekChartData.datasets[0].data[i] = undefined;
-                        }
-                        
-                        if(typeof data.target[i] == "undefined"){
-                            weekChartData.datasets[1].data[i] = 0;
-                        } else if(data.target[i] != 0) {
-                            weekChartData.datasets[1].data[i] = (data.target[i] / 1000).toFixed(2);
-                        } else {
-                            weekChartData.datasets[1].data[i] = undefined;
-                        }
-                    }
-                    
-                    for(var i=0; i<7; i++) {
-                        curData[i] = weekChartData.datasets[0].data[i];
-                        targData[i] = weekChartData.datasets[1].data[i];
-                        
-                        if(typeof curData[i] == "undefined") {
-                            curData[i] = 0;
-                        }
-                        if(typeof targData[i] == "undefined") {
-                            targData[i] = 0;
-                        }
-                        
-                        if(curData[i] > targData[i]) {
-                            maxList[i] = curData[i]; 
-                        } else {
-                            maxList[i] = targData[i]; 
-                        }
-                    }
-                    
-                    var max = Math.max.apply(null, maxList);
-                    
-                    setScale(max, weekChartOptions);
-                 
-                    updateChart(document.getElementById("periodCanvas").getContext("2d"), weekChartData, weekChartOptions, true, true);
-                }
-                
-                $('.spinner-loader').hide();
-            });
-        }
-        
-        $("#periodDropdown-menu").on("click","li",getDeviceId);
-        $("#currentDropdown-menu").on("click","li",getDeviceId);
-        
-        $(document).ready(function () {
-            getDeviceList();
-            
+        function initDatePicker() {
             $('#periodDatePicker').datepicker({
                 format: "yyyymmdd",
                 todayHighlight:true,
-                autoclose:true
+                autoclose:true,
             });  
             
             $('#periodDatePicker').datepicker("setDate", getToday());
-            $('#periodDatePicker').change(function() {
-                requestData();
-            });
-            
-            requestDetailInfo();
-            setTablePanelSize();
-        });
+        }
         
         function setTablePanelSize() {
             var height= document.getElementById('doughnut-panel').offsetHeight;
@@ -698,51 +591,49 @@
             });
         }
         
+        function getDeviceId(e) {
+            var label = $(e.target).parent().parent().attr("id");
+            deviceName =  $(e.target).text();
+            
+            showDeviceName(label, e);            
+        } 
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $("#periodDropdown-menu").on("click","li", requestData);
+        $("#currentDropdown-menu").on("click","li", requestLiveChartData);
+        
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var tabName = $(e.target).attr("href"); // activated tab
+            var canvas = document.getElementById("periodCanvas");
+            
+            if(tabName == '#day') {
+                updateChart(canvas.getContext("2d"),dayChartData,dayChartOptions);
+                setEndPoint("dailyUsage");
+            } else {
+                updateChart(canvas.getContext("2d"),weekChartData,weekChartOptions);
+                setEndPoint("weeklyUsage");
+            }
+            
+            requestData();
+        });
+        
+        $(document).ready(function () {
+            
+            requestDeviceList();
+            
+            initDatePicker();
+          
+            $('#periodDatePicker').change(function() {
+                requestData();
+            });
+            
+            requestTableData();
+            setTablePanelSize();
+        });
+        
         window.onresize = function(e) {
             setTablePanelSize();
         }        
-        //setRefreshCanvas();                
-        /*
-        function intCeil(num) {
-            var diff = 100;
-            return Math.ceil((num/diff)) * diff;
-        }
-        
-        function getPeriodDeviceId(e) {
-            var target = $(e.target).attr("href");
-            console.log("target : " + target);
-            $("#periodDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
-            
-            deviceName =  $(e.target).text();
-            
-            requestData();
-        }
-        
-        function getCurrentDeviceId(e) {
-            var target = $(e.target).attr("href");
-            
-            $("#currentDropdown-toggle").html($(e.target).text() + "<strong class='caret'></strong>");
-            
-            deviceName =  $(e.target).text();
-
-            
-        }
-        */
-        
-        /* 사용하지 않음
-        function initUpdateChart() {
-            console.log("initUpdateChart");
-            for(var i = data.length -1 ; i >= 0; i--) {
-                updateChartData.datasets[0].data[i] = data[data.length -1  - i].value;
-                
-                if(data[data.length -1  - i].time.toString().length == 3) {
-                   updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,1) +":"+data[data.length -1  - i].time.toString().substring(1,3);
-                } else {
-                   updateChartData.labels[i] = data[data.length -1  - i].time.toString().substring(0,2) +":"+data[data.length -1  - i].time.toString().substring(2,4);
-                }
-            }
-        }
-        */
     </script>
 </body>
 
